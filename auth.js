@@ -1,7 +1,8 @@
-// 1. YOUR PROJECT CONFIGURATION
+// 1. YOUR PROJECT CONFIGURATION (Realtime Database Version)
 const firebaseConfig = {
   apiKey: "AIzaSyA86k-osavaNRKxd8HP1J45E_QsC7YUW74",
   authDomain: "nyx-platform.firebaseapp.com",
+  databaseURL: "https://nyx-platform-default-rtdb.firebaseio.com", 
   projectId: "nyx-platform",
   storageBucket: "nyx-platform.firebasestorage.app",
   messagingSenderId: "800094078742",
@@ -12,7 +13,7 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-const db = firebase.firestore();
+const database = firebase.database();
 
 // 2. SIGNUP LOGIC
 async function handleSignup() {
@@ -26,28 +27,23 @@ async function handleSignup() {
         return;
     }
 
-    // Replace 'YOUR_RECAPTCHA_SITE_KEY' with your actual key from Google reCAPTCHA
-    grecaptcha.ready(function() {
-        grecaptcha.execute('YOUR_RECAPTCHA_SITE_KEY', {action: 'signup'}).then(async (token) => {
-            try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
-                const user = userCredential.user;
+    try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
+        const user = userCredential.user;
 
-                // Save initial user data with "Free" plan
-                await db.collection("users").doc(user.uid).set({
-                    username: username,
-                    email: email,
-                    plan: "Free", 
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert("Account created successfully!");
-                window.location.href = "launcher.html"; 
-            } catch (error) {
-                alert("Error: " + error.message);
-            }
+        // Save User Profile to Realtime Database
+        await database.ref('users/' + user.uid).set({
+            username: username,
+            email: email,
+            plan: "Free", // Everyone starts as Free
+            joinedAt: Date.now()
         });
-    });
+
+        alert("Account created! Welcome to Nyx.");
+        window.location.href = "launcher.html"; 
+    } catch (error) {
+        alert("Signup Error: " + error.message);
+    }
 }
 
 // 3. LOGIN LOGIC
@@ -71,26 +67,26 @@ function handleLogout() {
 }
 
 // 5. SHARED SESSION & AUTO-LOGIN
-// This runs automatically on every page to check if the user is already logged in
-auth.onAuthStateChanged(async (user) => {
+// This makes sure if they are logged in on the launcher, they stay logged in on games.
+auth.onAuthStateChanged((user) => {
     const currentPath = window.location.pathname;
     
     if (user) {
-        // Fetch user data from Firestore
-        const userDoc = await db.collection("users").doc(user.uid).get();
-        if (userDoc.exists) {
-            const userData = userDoc.data();
-            
-            // Auto-fill UI elements if they exist on the page
-            if(document.getElementById('user-name-display')) {
-                document.getElementById('user-name-display').innerText = userData.username;
+        // Fetch user rank/plan from the Database
+        database.ref('users/' + user.uid).on('value', (snapshot) => {
+            const userData = snapshot.val();
+            if (userData) {
+                // Update text on the page if these IDs exist
+                if(document.getElementById('user-name-display')) {
+                    document.getElementById('user-name-display').innerText = userData.username;
+                }
+                if(document.getElementById('user-plan-display')) {
+                    document.getElementById('user-plan-display').innerText = userData.plan;
+                }
             }
-            if(document.getElementById('user-plan-display')) {
-                document.getElementById('user-plan-display').innerText = userData.plan;
-            }
-        }
+        });
     } else {
-        // If logged out and not on the login page, redirect back to home
+        // If logged out and not on the home page, send them back to login
         if (!currentPath.endsWith("index.html") && currentPath !== "/Nyx/") {
             window.location.href = "https://thenyxeddev.github.io/Nyx/index.html";
         }
@@ -98,16 +94,17 @@ auth.onAuthStateChanged(async (user) => {
 });
 
 // 6. CLOAKED IFRAME OPENER (about:blank)
-// Use this to launch your games/apps
+// Use this for your Minecraft mods and games
 function launchCloaked(url) {
     const win = window.open('about:blank', '_blank');
     if (!win) {
-        alert("Please disable popup blockers!");
+        alert("Pop-up blocked! Please allow pop-ups for this site.");
         return;
     }
     
     win.document.body.style.margin = '0';
     win.document.body.style.height = '100vh';
+    win.document.body.style.overflow = 'hidden';
     
     const iframe = win.document.createElement('iframe');
     iframe.style.border = 'none';
