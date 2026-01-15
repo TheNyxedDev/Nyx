@@ -1,1 +1,59 @@
-print("Test for HTML pages")
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyx Platform | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #7289da; --bg: #0f1218; --card: #1c212c; --text: #ffffff; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .container { background: var(--card); padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 400px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        h1 { margin-bottom: 10px; font-size: 28px; }
+        p { color: #8a8f98; margin-bottom: 30px; font-size: 14px; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #333; background: #0f1218; color: white; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+        button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px; }
+        button:hover { background: #5b6eae; transform: translateY(-2px); }
+        .toggle-link { margin-top: 20px; font-size: 13px; color: #8a8f98; cursor: pointer; display: block; }
+        .toggle-link:hover { color: var(--primary); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="login-section">
+            <h1>Welcome Back</h1>
+            <p>Please enter your details to continue.</p>
+            <input type="email" id="login-email" placeholder="Email Address">
+            <input type="password" id="login-password" placeholder="Password">
+            <button onclick="handleLogin()">Login</button>
+            <span class="toggle-link" onclick="toggleView()">Don't have an account? Sign Up</span>
+        </div>
+
+        <div id="signup-section" class="hidden">
+            <h1>Create Account</h1>
+            <p>Join the Nyx community today.</p>
+            <input type="text" id="reg-username" placeholder="Username">
+            <input type="email" id="reg-email" placeholder="Email Address">
+            <input type="password" id="reg-password" placeholder="Password">
+            <input type="password" id="reg-confirm" placeholder="Confirm Password">
+            <button onclick="handleSignup()">Register</button>
+            <span class="toggle-link" onclick="toggleView()">Already have an account? Login</span>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        function toggleView() {
+            document.getElementById('login-section').classList.toggle('hidden');
+            document.getElementById('signup-section').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
