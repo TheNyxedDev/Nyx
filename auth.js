@@ -1,4 +1,4 @@
-// 1. YOUR PROJECT CONFIGURATION (Realtime Database Version)
+// 1. CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyA86k-osavaNRKxd8HP1J45E_QsC7YUW74",
   authDomain: "nyx-platform.firebaseapp.com",
@@ -6,111 +6,78 @@ const firebaseConfig = {
   projectId: "nyx-platform",
   storageBucket: "nyx-platform.firebasestorage.app",
   messagingSenderId: "800094078742",
-  appId: "1:800094078742:web:21220d722b0254a525b237",
-  measurementId: "G-3P4YNM8RBS"
+  appId: "1:800094078742:web:21220d722b0254a525b237"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const database = firebase.database();
 
-// 2. SIGNUP LOGIC
+// 2. SIGNUP (with duplicate username check)
 async function handleSignup() {
-    const username = document.getElementById('reg-username').value;
-    const email = document.getElementById('reg-email').value;
-    const pass = document.getElementById('reg-password').value;
-    const confirm = document.getElementById('reg-confirm').value;
+    const userVal = document.getElementById('reg-username').value.toLowerCase();
+    const emailVal = document.getElementById('reg-email').value;
+    const passVal = document.getElementById('reg-password').value;
+    const confirmVal = document.getElementById('reg-confirm').value;
 
-    if (pass !== confirm) {
-        alert("Passwords do not match!");
-        return;
-    }
+    if (passVal !== confirmVal) return alert("Passwords do not match!");
 
     try {
-        const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
+        // Check if username is taken
+        const snapshot = await database.ref('usernames/' + userVal).once('value');
+        if (snapshot.exists()) return alert("Username already taken!");
+
+        const userCredential = await auth.createUserWithEmailAndPassword(emailVal, passVal);
         const user = userCredential.user;
 
-        // Save User Profile to Realtime Database
+        // Save to Database
         await database.ref('users/' + user.uid).set({
-            username: username,
-            email: email,
-            plan: "Free", // Everyone starts as Free
-            joinedAt: Date.now()
+            username: userVal,
+            email: emailVal,
+            plan: "Free"
         });
+        
+        // Save to username index for quick login lookup
+        await database.ref('usernames/' + userVal).set(emailVal);
 
-        alert("Account created! Welcome to Nyx.");
-        window.location.href = "launcher.html"; 
-    } catch (error) {
-        alert("Signup Error: " + error.message);
-    }
+        window.location.href = "launcher.html";
+    } catch (e) { alert(e.message); }
 }
 
-// 3. LOGIN LOGIC
+// 3. LOGIN (Username or Email)
 async function handleLogin() {
-    const email = document.getElementById('login-email').value;
-    const pass = document.getElementById('login-password').value;
+    const identifier = document.getElementById('login-identifier').value.toLowerCase();
+    const passVal = document.getElementById('login-password').value;
+    let email = identifier;
 
     try {
-        await auth.signInWithEmailAndPassword(email, pass);
+        // If it's not an email, look up the email via username
+        if (!identifier.includes('@')) {
+            const snapshot = await database.ref('usernames/' + identifier).once('value');
+            if (!snapshot.exists()) throw new Error("Username not found.");
+            email = snapshot.val();
+        }
+
+        await auth.signInWithEmailAndPassword(email, passVal);
         window.location.href = "launcher.html";
-    } catch (error) {
-        alert("Login Error: " + error.message);
-    }
+    } catch (e) { alert(e.message); }
 }
 
-// 4. LOGOUT LOGIC
-function handleLogout() {
-    auth.signOut().then(() => {
-        window.location.href = "index.html";
-    });
-}
-
-// 5. SHARED SESSION & AUTO-LOGIN
-// This makes sure if they are logged in on the launcher, they stay logged in on games.
+// 4. AUTO-REDIRECT LOGIC
 auth.onAuthStateChanged((user) => {
-    const currentPath = window.location.pathname;
-    
+    const path = window.location.pathname;
     if (user) {
-        // Fetch user rank/plan from the Database
-        database.ref('users/' + user.uid).on('value', (snapshot) => {
-            const userData = snapshot.val();
-            if (userData) {
-                // Update text on the page if these IDs exist
-                if(document.getElementById('user-name-display')) {
-                    document.getElementById('user-name-display').innerText = userData.username;
-                }
-                if(document.getElementById('user-plan-display')) {
-                    document.getElementById('user-plan-display').innerText = userData.plan;
-                }
+        database.ref('users/' + user.uid).on('value', (snap) => {
+            const data = snap.val();
+            if (data && document.getElementById('user-name-display')) {
+                document.getElementById('user-name-display').innerText = data.username;
+                document.getElementById('user-plan-display').innerText = data.plan;
             }
         });
     } else {
-        // If logged out and not on the home page, send them back to login
-        if (!currentPath.endsWith("index.html") && currentPath !== "/Nyx/") {
-            window.location.href = "https://thenyxeddev.github.io/Nyx/index.html";
+        // If they aren't logged in, send them to login.html
+        if (!path.endsWith("login.html")) {
+            window.location.href = "login.html";
         }
     }
 });
-
-// 6. CLOAKED IFRAME OPENER (about:blank)
-// Use this for your Minecraft mods and games
-function launchCloaked(url) {
-    const win = window.open('about:blank', '_blank');
-    if (!win) {
-        alert("Pop-up blocked! Please allow pop-ups for this site.");
-        return;
-    }
-    
-    win.document.body.style.margin = '0';
-    win.document.body.style.height = '100vh';
-    win.document.body.style.overflow = 'hidden';
-    
-    const iframe = win.document.createElement('iframe');
-    iframe.style.border = 'none';
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
-    iframe.src = url;
-    
-    win.document.body.appendChild(iframe);
-}
