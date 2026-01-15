@@ -3,44 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nyx Platform | Login</title>
+    <title>Nyx | Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #7289da; --bg: #0f1218; --card: #1c212c; --text: #ffffff; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; }
+        
+        /* Header Style */
+        header { width: 100%; padding: 20px; display: flex; align-items: center; justify-content: center; background: rgba(28, 33, 44, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .logo-box { display: flex; align-items: center; gap: 15px; }
+        .logo-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+        .logo-text { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+
+        .main-content { flex: 1; display: flex; justify-content: center; align-items: center; }
         .container { background: var(--card); padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 400px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        h1 { margin-bottom: 10px; font-size: 28px; }
+        h1 { margin-bottom: 10px; font-size: 24px; }
         p { color: #8a8f98; margin-bottom: 30px; font-size: 14px; }
         input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #333; background: #0f1218; color: white; box-sizing: border-box; outline: none; transition: 0.3s; }
         input:focus { border-color: var(--primary); }
         button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px; }
         button:hover { background: #5b6eae; transform: translateY(-2px); }
         .toggle-link { margin-top: 20px; font-size: 13px; color: #8a8f98; cursor: pointer; display: block; }
-        .toggle-link:hover { color: var(--primary); }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="login-section">
-            <h1>Welcome Back</h1>
-            <p>Please enter your details to continue.</p>
-            <input type="email" id="login-email" placeholder="Email Address">
-            <input type="password" id="login-password" placeholder="Password">
-            <button onclick="handleLogin()">Login</button>
-            <span class="toggle-link" onclick="toggleView()">Don't have an account? Sign Up</span>
+    <header>
+        <div class="logo-box">
+            <img src="your-logo.png" alt="Logo" class="logo-img"> <span class="logo-text">NYX | LOGIN</span>
         </div>
+    </header>
 
-        <div id="signup-section" class="hidden">
-            <h1>Create Account</h1>
-            <p>Join the Nyx community today.</p>
-            <input type="text" id="reg-username" placeholder="Username">
-            <input type="email" id="reg-email" placeholder="Email Address">
-            <input type="password" id="reg-password" placeholder="Password">
-            <input type="password" id="reg-confirm" placeholder="Confirm Password">
-            <button onclick="handleSignup()">Register</button>
-            <span class="toggle-link" onclick="toggleView()">Already have an account? Login</span>
+    <div class="main-content">
+        <div class="container">
+            <div id="login-section">
+                <h1>Welcome Back</h1>
+                <p>Login with your username or email.</p>
+                <input type="text" id="login-identifier" placeholder="Username or Email">
+                <input type="password" id="login-password" placeholder="Password">
+                <button onclick="handleLogin()">Login</button>
+                <span class="toggle-link" onclick="toggleView()">New here? Create an account</span>
+            </div>
+
+            <div id="signup-section" class="hidden">
+                <h1>Create Account</h1>
+                <p>Join Nyx and get started.</p>
+                <input type="text" id="reg-username" placeholder="Choose a Username">
+                <input type="email" id="reg-email" placeholder="Email Address">
+                <input type="password" id="reg-password" placeholder="Password">
+                <input type="password" id="reg-confirm" placeholder="Confirm Password">
+                <button onclick="handleSignup()">Register</button>
+                <span class="toggle-link" onclick="toggleView()">Already have an account? Login</span>
+            </div>
         </div>
     </div>
 
