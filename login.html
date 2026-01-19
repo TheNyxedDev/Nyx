@@ -7,37 +7,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #7289da; --bg: #0f1218; --card: #1c212c; --text: #ffffff; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; }
         
-        /* Header */
-        header { width: 100%; padding: 15px 30px; display: flex; align-items: center; justify-content: flex-start; background: var(--card); border-bottom: 1px solid #333; box-sizing: border-box; }
+        header { width: 100%; padding: 15px 30px; display: flex; align-items: center; background: var(--card); border-bottom: 1px solid #333; box-sizing: border-box; }
         .logo-box { display: flex; align-items: center; gap: 12px; }
-        .logo-text { font-size: 22px; font-weight: 800; color: var(--primary); letter-spacing: 1px; }
         .logo-img { width: 35px; height: 35px; border-radius: 6px; }
+        .logo-text { font-size: 22px; font-weight: 700; color: var(--primary); letter-spacing: 0.5px; }
 
-        /* Main Container */
         .main-content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .container { background: var(--card); padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 380px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .container { background: var(--card); padding: 40px; border-radius: 16px; width: 100%; max-width: 380px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         
-        h2 { margin-top: 0; font-size: 24px; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #333; background: #0b0e14; color: white; box-sizing: border-box; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #333; background: #0b0e14; color: white; box-sizing: border-box; outline: none; }
+        .login-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; }
         
-        button { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 15px; }
-        .login-btn { background: var(--primary); color: white; margin-top: 5px; }
-        .login-btn:hover { background: #5b6eae; }
-
-        /* Divider */
-        .divider { display: flex; align-items: center; text-align: center; margin: 25px 0; color: #555; font-size: 12px; font-weight: bold; }
+        .divider { display: flex; align-items: center; margin: 25px 0; color: #555; font-size: 12px; font-weight: bold; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #333; }
         .divider:not(:empty)::before { margin-right: .5em; }
         .divider:not(:empty)::after { margin-left: .5em; }
 
-        /* Google SSO */
-        .google-btn { background: #ffffff; color: #000; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid #ddd; }
-        .google-btn img { width: 18px; }
-        .google-btn:hover { background: #f1f1f1; }
-
+        .google-btn { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; background: white; color: black; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; cursor: pointer; }
         .toggle-link { margin-top: 20px; font-size: 13px; color: #8a8f98; cursor: pointer; display: block; }
         .hidden { display: none; }
     </style>
@@ -46,35 +34,34 @@
 
     <header>
         <div class="logo-box">
-            <span class="logo-text">NYX</span>
-            <img src="YOUR_LOGO_URL_HERE" alt="Logo" class="logo-img">
-            <span class="logo-text">| LOGIN</span>
+            <img src="YOUR_LOGO_URL" alt="Logo" class="logo-img">
+            <span class="logo-text">Nyx</span>
         </div>
     </header>
 
     <div class="main-content">
         <div class="container">
             <div id="login-form">
-                <h2>Welcome Back</h2>
+                <h2>Welcome</h2>
                 <input type="text" id="login-identifier" placeholder="Username or Email">
                 <input type="password" id="login-password" placeholder="Password">
                 <button class="login-btn" onclick="handleLogin()">Login</button>
-                <span class="toggle-link" onclick="toggleView()">Don't have an account? Sign Up</span>
+                <span class="toggle-link" onclick="toggleView()">Create an account</span>
             </div>
 
             <div id="signup-form" class="hidden">
-                <h2>Create Account</h2>
+                <h2>Join Nyx</h2>
                 <input type="text" id="reg-username" placeholder="Username">
                 <input type="email" id="reg-email" placeholder="Email">
                 <input type="password" id="reg-password" placeholder="Password">
                 <button class="login-btn" onclick="handleSignup()">Register</button>
-                <span class="toggle-link" onclick="toggleView()">Already have an account? Login</span>
+                <span class="toggle-link" onclick="toggleView()">Back to Login</span>
             </div>
 
             <div class="divider">OR</div>
 
             <button class="google-btn" onclick="handleGoogleLogin()">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
                 Continue with Google
             </button>
         </div>
