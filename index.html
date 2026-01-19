@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyx | Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #7289da; --bg: #0f1218; --card: #1c212c; --text: #ffffff; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+        /* HEADER STYLES */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            background: var(--card);
+            height: 70px;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .logo-text { font-size: 26px; font-weight: 800; color: var(--primary); letter-spacing: 1px; }
+        .logo-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+
+        .nav-links { display: flex; gap: 25px; margin-left: 40px; }
+        .nav-links a { color: #8a8f98; text-decoration: none; font-weight: 600; font-size: 14px; transition: 0.3s; }
+        .nav-links a:hover { color: white; }
+
+        /* USER DROPDOWN */
+        .header-right { position: relative; }
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        .profile-trigger:hover { background: rgba(255,255,255,0.05); }
+        .nav-pfp { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
+        
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 55px;
+            width: 240px;
+            background: #232834;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            display: none; /* Hidden by default */
+            padding: 15px;
+        }
+        .dropdown-menu.show { display: block; }
+
+        .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 1px solid #333; margin-bottom: 10px; }
+        .user-info-box p { margin: 5px 0; font-size: 14px; color: #8a8f98; }
+        .plan-badge { 
+            background: var(--primary); 
+            color: white; 
+            padding: 2px 10px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: bold; 
+            text-transform: uppercase;
+        }
+
+        .dropdown-links a {
+            display: block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        .dropdown-links a:hover { background: #3a4152; }
+        .logout-link { color: #ff4d4d !important; margin-top: 5px; }
+
+        /* MAIN CONTENT */
+        .content { padding: 40px; max-width: 1200px; margin: 0 auto; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-left">
+            <span class="logo-text">NYX</span>
+            <img src="YOUR_LOGO_IMAGE_LINK" alt="Logo" class="logo-img">
+            
+            <nav class="nav-links">
+                <a href="launcher.html">Games</a>
+                <a href="minecraft.html">Minecraft</a>
+                <a href="fidget.html">Fidgeting Toys</a>
+            </nav>
+        </div>
+
+        <div class="header-right">
+            <div class="profile-trigger" onclick="toggleDropdown()">
+                <span id="nav-username">Loading...</span>
+                <img src="https://via.placeholder.com/35" id="nav-pfp" class="nav-pfp">
+            </div>
+
+            <div class="dropdown-menu" id="userMenu">
+                <div class="user-info-box">
+                    <strong id="drop-username">Username</strong>
+                    <p>Plan: <span id="nav-plan" class="plan-badge">Free</span></p>
+                    <p id="nav-staff-role" style="color: #ffcc00; font-weight: bold; font-size: 12px; margin-top: 5px;"></p>
+                </div>
+                <div class="dropdown-links">
+                    <a href="settings.html">Account Settings</a>
+                    <a href="customize.html">Change Username/PFP</a>
+                    <a href="#" class="logout-link" onclick="handleLogout()">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="content">
+        <h1>Welcome to the Nyx Hub</h1>
+        <p>Select a category from the header to get started.</p>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        function toggleDropdown() {
+            document.getElementById("userMenu").classList.toggle("show");
+        }
+
+        // Close dropdown if user clicks elsewhere
+        window.onclick = function(event) {
+            if (!event.target.closest('.profile-trigger')) {
+                document.getElementById("userMenu").classList.remove("show");
+            }
+        }
+    </script>
+</body>
+</html>
