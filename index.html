@@ -27,7 +27,7 @@
         /* PROFILE DROPDOWN */
         .header-right { position: relative; }
         .profile-trigger { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px; border-radius: 8px; }
-        .nav-pfp { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary); }
+        .nav-pfp { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
         
         .dropdown-menu {
             position: absolute; right: 0; top: 55px; width: 220px;
@@ -36,7 +36,7 @@
         }
         .dropdown-menu.show { display: block; }
         .user-info { text-align: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
-        .plan-badge { background: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: bold; text-transform: uppercase;}
+        .plan-badge { background: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: bold; }
 
         .dropdown-links a { display: block; padding: 10px; color: #ccc; text-decoration: none; font-size: 14px; border-radius: 6px; }
         .dropdown-links a:hover { background: #2d3446; color: white; }
@@ -46,7 +46,7 @@
 
     <header class="main-header">
         <div class="header-left">
-            <img src="YOUR_LOGO_URL" alt="Logo" class="logo-img">
+            <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkdfHzyRnUdHmkGbNXkFPgicepqP4km32J9QLIFcVmEpJgU47T7Fy6ndc5aUrlySGOslQsyiknEB7bezBD-yg6Fk1a8i0lIQk3dCudfF2YVi6HmcpPf3SwCy_6QV7-xSQcFfGmU7XgCynwobfr22spOw6TnOWZ8ZN3VHy8MUL8Xvos2ovIOHHYMQMC4=w16383" alt="Logo" class="logo-img">
             <span class="logo-text">Nyx</span>
             
             <nav class="nav-links">
@@ -59,7 +59,7 @@
         <div class="header-right">
             <div class="profile-trigger" onclick="toggleDropdown()">
                 <span id="nav-username">User</span>
-                <img src="default-pfp.png" id="nav-pfp" class="nav-pfp">
+                <img src="https://via.placeholder.com/35" id="nav-pfp" class="nav-pfp">
             </div>
             <div class="dropdown-menu" id="userMenu">
                 <div class="user-info">
