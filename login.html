@@ -6,20 +6,21 @@
     <title>Nyx — Sign In</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- EmailJS — free email sending. Set up at https://emailjs.com -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         :root {
-            --bg:        #07070e;
-            --surface:   #0e0d1c;
-            --surface2:  #15132b;
-            --border:    rgba(124,58,237,0.18);
-            --violet:    #7c3aed;
-            --violet-lt: #a78bfa;
-            --violet-glow: rgba(124,58,237,0.35);
-            --text:      #f0eeff;
-            --muted:     #7e7a9e;
-            --error:     #f87171;
-            --success:   #a78bfa;
-            --google:    #fff;
+            --bg:          #07070e;
+            --surface:     #0e0d1c;
+            --surface2:    #15132b;
+            --border:      rgba(124,58,237,0.18);
+            --violet:      #7c3aed;
+            --violet-lt:   #a78bfa;
+            --violet-glow: rgba(124,58,237,0.32);
+            --text:        #f0eeff;
+            --muted:       #7e7a9e;
+            --error:       #f87171;
+            --success:     #a78bfa;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,272 +36,235 @@
             overflow: hidden;
         }
 
-        /* ── Ambient background orbs ── */
+        /* ── Ambient orbs ── */
         .bg-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(120px);
-            pointer-events: none;
-            z-index: 0;
+            position: fixed; border-radius: 50%;
+            filter: blur(120px); pointer-events: none; z-index: 0;
             animation: drift 18s ease-in-out infinite alternate;
         }
-        .orb1 { width: 500px; height: 500px; background: rgba(124,58,237,0.2); top: -150px; left: -150px; }
-        .orb2 { width: 350px; height: 350px; background: rgba(167,139,250,0.12); bottom: -100px; right: -100px; animation-delay: -6s; }
-        .orb3 { width: 250px; height: 250px; background: rgba(79,26,191,0.15); top: 50%; left: 55%; animation-delay: -12s; }
-
+        .orb1 { width:500px;height:500px;background:rgba(124,58,237,0.2);  top:-150px;left:-150px; }
+        .orb2 { width:350px;height:350px;background:rgba(167,139,250,0.12);bottom:-100px;right:-100px;animation-delay:-6s; }
+        .orb3 { width:250px;height:250px;background:rgba(79,26,191,0.15);  top:50%;left:55%;animation-delay:-12s; }
         @keyframes drift {
-            from { transform: translate(0,0) scale(1); }
-            to   { transform: translate(30px, 20px) scale(1.08); }
+            from { transform: translate(0,0)      scale(1); }
+            to   { transform: translate(30px,20px) scale(1.08); }
         }
 
-        /* ── Grid texture overlay ── */
+        /* ── Grid overlay ── */
         body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
+            content:''; position:fixed; inset:0;
             background-image:
                 linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
             background-size: 48px 48px;
-            pointer-events: none;
-            z-index: 0;
+            pointer-events:none; z-index:0;
         }
 
-        /* ── Card ── */
+        /* ── Card (80% of original 400px) ── */
         .card {
-            position: relative;
-            z-index: 1;
+            position:relative; z-index:1;
             background: rgba(14,13,28,0.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 44px 40px 36px;
-            width: 400px;
-            box-shadow: 0 0 0 1px rgba(255,255,255,0.03),
-                        0 40px 80px rgba(0,0,0,0.6),
-                        0 0 60px var(--violet-glow);
+            border-radius: 16px;
+            padding: 35px 32px 29px;
+            width: 320px;
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.03),
+                0 40px 80px rgba(0,0,0,0.6),
+                0 0 60px var(--violet-glow);
             animation: cardIn 0.7s cubic-bezier(0.16,1,0.3,1) both;
         }
-
         @keyframes cardIn {
             from { opacity:0; transform: translateY(28px) scale(0.97); }
-            to   { opacity:1; transform: translateY(0) scale(1); }
+            to   { opacity:1; transform: translateY(0)    scale(1); }
         }
 
         /* ── Logo ── */
         .logo {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 1.9rem;
-            font-weight: 900;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #fff 30%, var(--violet-lt) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 4px;
+            font-family:'Unbounded',sans-serif; font-size:1.52rem; font-weight:900;
+            letter-spacing:-0.03em;
+            background: linear-gradient(135deg,#fff 30%,var(--violet-lt) 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            margin-bottom:3px;
         }
-
         .tagline {
-            font-size: 0.78rem;
-            color: var(--muted);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 32px;
-            font-family: 'DM Mono', monospace;
+            font-size:0.62rem; color:var(--muted); letter-spacing:0.12em;
+            text-transform:uppercase; margin-bottom:26px;
+            font-family:'DM Mono',monospace;
         }
 
-        /* ── Tab switcher ── */
+        /* ── Tabs ── */
         .tabs {
-            display: flex;
-            background: var(--surface2);
-            border-radius: 10px;
-            padding: 4px;
-            margin-bottom: 28px;
-            border: 1px solid var(--border);
+            display:flex; background:var(--surface2); border-radius:8px;
+            padding:3px; margin-bottom:22px; border:1px solid var(--border);
         }
         .tab {
-            flex: 1;
-            text-align: center;
-            padding: 9px;
-            border-radius: 7px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            color: var(--muted);
-            transition: all 0.25s ease;
-            user-select: none;
+            flex:1; text-align:center; padding:7px; border-radius:6px;
+            font-size:0.68rem; font-weight:500; cursor:pointer;
+            color:var(--muted); transition:all 0.25s ease; user-select:none;
         }
-        .tab.active {
-            background: var(--violet);
-            color: #fff;
-            box-shadow: 0 4px 14px rgba(124,58,237,0.4);
-        }
+        .tab.active { background:var(--violet); color:#fff; box-shadow:0 4px 14px rgba(124,58,237,0.4); }
 
-        /* ── Sections ── */
-        .form-section { display: none; animation: fadeUp 0.3s ease; }
-        .form-section.visible { display: block; }
-
+        /* ── Form sections ── */
+        .form-section { display:none; }
+        .form-section.visible { display:block; animation: fadeUp 0.3s ease; }
         @keyframes fadeUp {
-            from { opacity:0; transform: translateY(8px); }
-            to   { opacity:1; transform: translateY(0); }
+            from { opacity:0; transform:translateY(8px); }
+            to   { opacity:1; transform:translateY(0); }
         }
 
-        /* ── Inputs ── */
-        .field { margin-bottom: 16px; }
+        /* ── Fields ── */
+        .field { margin-bottom:13px; }
         .field label {
-            display: block;
-            font-size: 0.78rem;
-            font-weight: 500;
-            color: var(--muted);
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-bottom: 7px;
+            display:block; font-size:0.62rem; font-weight:500; color:var(--muted);
+            letter-spacing:0.06em; text-transform:uppercase; margin-bottom:6px;
         }
         .field input {
-            width: 100%;
-            padding: 11px 14px;
-            background: var(--surface2);
-            border: 1px solid rgba(124,58,237,0.2);
-            border-radius: 9px;
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.9rem;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            width:100%; padding:9px 11px;
+            background:var(--surface2); border:1px solid rgba(124,58,237,0.2);
+            border-radius:7px; color:var(--text);
+            font-family:'DM Sans',sans-serif; font-size:0.8rem; outline:none;
+            transition:border-color 0.2s,box-shadow 0.2s;
         }
-        .field input:focus {
-            border-color: var(--violet);
-            box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
-        }
-        .field input::placeholder { color: #3d3a5a; }
+        .field input:focus { border-color:var(--violet); box-shadow:0 0 0 3px rgba(124,58,237,0.13); }
+        .field input::placeholder { color:#3d3a5a; }
 
         /* ── Buttons ── */
         .btn-primary {
-            width: 100%;
-            padding: 12px;
-            background: var(--violet);
-            border: none;
-            border-radius: 9px;
-            color: #fff;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.92rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 8px;
-            position: relative;
-            overflow: hidden;
-            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-            box-shadow: 0 4px 18px rgba(124,58,237,0.35);
+            width:100%; padding:10px; background:var(--violet); border:none;
+            border-radius:7px; color:#fff; font-family:'DM Sans',sans-serif;
+            font-size:0.78rem; font-weight:600; cursor:pointer; margin-top:6px;
+            display:flex; align-items:center; justify-content:center; gap:6px;
+            transition:background 0.2s,transform 0.1s,box-shadow 0.2s;
+            box-shadow:0 4px 18px rgba(124,58,237,0.35);
         }
-        .btn-primary:hover  { background: #6d28d9; box-shadow: 0 6px 24px rgba(124,58,237,0.5); transform: translateY(-1px); }
-        .btn-primary:active { transform: translateY(0); }
+        .btn-primary:hover  { background:#6d28d9; box-shadow:0 6px 24px rgba(124,58,237,0.5); transform:translateY(-1px); }
+        .btn-primary:active { transform:translateY(0); }
 
-        /* ── Divider ── */
         .divider {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 20px 0;
-            color: var(--muted);
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
+            display:flex; align-items:center; gap:8px;
+            margin:16px 0; color:var(--muted); font-size:0.6rem;
+            letter-spacing:0.1em; text-transform:uppercase;
         }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
+        .divider::before,.divider::after { content:'';flex:1;height:1px;background:var(--border); }
 
-        /* ── Google button ── */
         .btn-google {
-            width: 100%;
-            padding: 11px 14px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 9px;
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: background 0.2s, border-color 0.2s, transform 0.1s;
+            width:100%; padding:9px 11px;
+            background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12);
+            border-radius:7px; color:var(--text); font-family:'DM Sans',sans-serif;
+            font-size:0.78rem; font-weight:500; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; gap:8px;
+            transition:background 0.2s,border-color 0.2s,transform 0.1s;
         }
-        .btn-google:hover  { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.22); transform: translateY(-1px); }
-        .btn-google:active { transform: translateY(0); }
-
-        .google-icon {
-            width: 18px;
-            height: 18px;
-            flex-shrink: 0;
-        }
+        .btn-google:hover  { background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.22);transform:translateY(-1px); }
+        .btn-google:active { transform:translateY(0); }
+        .google-icon { width:14px;height:14px;flex-shrink:0; }
 
         /* ── Messages ── */
         .msg {
-            font-size: 0.8rem;
-            padding: 10px 12px;
-            border-radius: 7px;
-            margin-top: 12px;
-            display: none;
+            font-size:0.68rem; padding:8px 10px; border-radius:6px;
+            margin-top:10px; display:none; line-height:1.4;
         }
-        .msg.error   { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.25); color: var(--error); }
-        .msg.success { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.25); color: var(--success); }
+        .msg.error   { background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--error); }
+        .msg.success { background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);color:var(--success); }
 
-        /* ── Password strength ── */
-        .strength-bar {
-            height: 3px;
-            border-radius: 2px;
-            background: var(--surface2);
-            margin-top: 6px;
-            overflow: hidden;
-        }
-        .strength-fill {
-            height: 100%;
-            border-radius: 2px;
-            width: 0%;
-            transition: width 0.3s, background 0.3s;
-        }
+        /* ── Strength bar ── */
+        .strength-bar  { height:2px;border-radius:2px;background:var(--surface2);margin-top:5px;overflow:hidden; }
+        .strength-fill { height:100%;border-radius:2px;width:0%;transition:width 0.3s,background 0.3s; }
 
-        /* ── Forgot password ── */
-        .forgot {
-            text-align: right;
-            margin-top: -8px;
-            margin-bottom: 16px;
-        }
-        .forgot a {
-            font-size: 0.78rem;
-            color: var(--muted);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .forgot a:hover { color: var(--violet-lt); }
+        /* ── Forgot ── */
+        .forgot { text-align:right;margin-top:-5px;margin-bottom:13px; }
+        .forgot a { font-size:0.62rem;color:var(--muted);text-decoration:none;transition:color 0.2s; }
+        .forgot a:hover { color:var(--violet-lt); }
 
-        /* ── Footer note ── */
-        .card-footer {
-            text-align: center;
-            font-size: 0.72rem;
-            color: var(--muted);
-            margin-top: 20px;
-            line-height: 1.6;
-        }
+        /* ── Footer ── */
+        .card-footer { text-align:center;font-size:0.58rem;color:var(--muted);margin-top:16px;line-height:1.6; }
 
-        /* ── Loading spinner on buttons ── */
+        /* ── Spinner ── */
         .spinner {
-            display: none;
-            width: 16px; height: 16px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-            margin: 0 auto;
+            display:none; width:14px;height:14px;
+            border:2px solid rgba(255,255,255,0.3); border-top-color:#fff;
+            border-radius:50%; animation:spin 0.6s linear infinite;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin { to { transform:rotate(360deg); } }
+
+        /* ══════════════════════════════════════
+           OTP SCREEN
+        ══════════════════════════════════════ */
+        #otp-screen { display:none; }
+        #otp-screen.visible { display:block; animation:fadeUp 0.35s ease; }
+
+        .otp-icon {
+            width:44px;height:44px;
+            background:rgba(124,58,237,0.13);
+            border:1px solid rgba(124,58,237,0.28);
+            border-radius:12px; font-size:1.2rem;
+            display:flex;align-items:center;justify-content:center;
+            margin:0 auto 14px;
+        }
+        .otp-title {
+            font-family:'Unbounded',sans-serif; font-size:0.9rem;
+            font-weight:700; text-align:center; margin-bottom:6px;
+        }
+        .otp-sub {
+            font-size:0.64rem; color:var(--muted); text-align:center;
+            line-height:1.6; margin-bottom:22px;
+        }
+        .otp-sub strong { color:var(--violet-lt); }
+
+        /* 6 digit input boxes */
+        .otp-inputs {
+            display:flex; gap:7px; justify-content:center; margin-bottom:18px;
+        }
+        .otp-box {
+            width:36px; height:44px;
+            background:var(--surface2);
+            border:1px solid rgba(124,58,237,0.22); border-radius:8px;
+            text-align:center; font-family:'DM Mono',monospace;
+            font-size:1.1rem; font-weight:500; color:var(--text);
+            outline:none; transition:border-color 0.2s,box-shadow 0.2s,background 0.2s;
+            caret-color: transparent;
+        }
+        .otp-box:focus {
+            border-color:var(--violet);
+            box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+            background:rgba(124,58,237,0.07);
+        }
+        .otp-box.filled { border-color:rgba(167,139,250,0.4); background:rgba(124,58,237,0.08); }
+        .otp-box.shake  { animation:shake 0.4s ease; }
+        @keyframes shake {
+            0%,100% { transform:translateX(0); }
+            20%     { transform:translateX(-5px); }
+            60%     { transform:translateX(5px); }
+        }
+
+        .otp-actions { display:flex; flex-direction:column; gap:10px; }
+
+        #otp-msg {
+            font-size:0.66rem; text-align:center;
+            min-height:16px; transition:color 0.2s;
+        }
+        #otp-msg.error   { color:var(--error); }
+        #otp-msg.success { color:var(--success); }
+
+        .resend-row {
+            text-align:center; font-size:0.62rem; color:var(--muted);
+        }
+        .resend-link {
+            color:var(--violet-lt); cursor:pointer;
+            text-decoration:underline; display:none;
+        }
+        .resend-link:hover { color:#fff; }
+
+        .btn-back {
+            background:transparent; border:1px solid var(--border);
+            border-radius:7px; color:var(--muted);
+            font-family:'DM Sans',sans-serif; font-size:0.72rem;
+            padding:8px; cursor:pointer; width:100%;
+            transition:background 0.2s,color 0.2s;
+        }
+        .btn-back:hover { background:rgba(124,58,237,0.08); color:var(--text); }
     </style>
 </head>
 <body>
@@ -310,219 +274,464 @@
 <div class="bg-orb orb3"></div>
 
 <div class="card">
-    <div class="logo">Nyx</div>
-    <div class="tagline">Secure Access Portal</div>
 
-    <div class="tabs">
-        <div class="tab active" id="tab-login" onclick="switchTab('login')">Sign In</div>
-        <div class="tab" id="tab-signup" onclick="switchTab('signup')">Create Account</div>
+    <!-- ══ AUTH PANEL ══ -->
+    <div id="auth-panel">
+        <div class="logo">Nyx</div>
+        <div class="tagline">Secure Access Portal</div>
+
+        <div class="tabs">
+            <div class="tab active" id="tab-login"  onclick="switchTab('login')">Sign In</div>
+            <div class="tab"        id="tab-signup" onclick="switchTab('signup')">Create Account</div>
+        </div>
+
+        <!-- LOGIN -->
+        <div class="form-section visible" id="login-section">
+            <div class="field">
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="you@example.com">
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="••••••••">
+            </div>
+            <div class="forgot"><a href="#" id="forgot-link">Forgot password?</a></div>
+            <button class="btn-primary" id="btn-login">
+                <span id="btn-login-text">Sign In</span>
+                <div class="spinner" id="login-spinner"></div>
+            </button>
+            <div class="divider">or</div>
+            <button class="btn-google" id="btn-google-login">
+                <svg class="google-icon" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                Continue with Google
+            </button>
+            <div id="login-msg" class="msg"></div>
+        </div>
+
+        <!-- SIGNUP -->
+        <div class="form-section" id="signup-section">
+            <div class="field">
+                <label>Email</label>
+                <input type="email" id="signup-email" placeholder="you@example.com">
+            </div>
+            <div class="field">
+                <label>Username</label>
+                <input type="text" id="signup-username" placeholder="Choose a username">
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="signup-password" placeholder="••••••••" oninput="checkStrength(this.value)">
+                <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+            </div>
+            <div class="field">
+                <label>Confirm Password</label>
+                <input type="password" id="signup-confirm" placeholder="••••••••">
+            </div>
+            <button class="btn-primary" id="btn-signup">
+                <span id="btn-signup-text">Create Account</span>
+                <div class="spinner" id="signup-spinner"></div>
+            </button>
+            <div class="divider">or</div>
+            <button class="btn-google" id="btn-google-signup">
+                <svg class="google-icon" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                Sign up with Google
+            </button>
+            <div id="signup-msg" class="msg"></div>
+        </div>
+
+        <div class="card-footer">Protected by Firebase · End-to-end encrypted</div>
     </div>
 
-    <!-- ── LOGIN ── -->
-    <div class="form-section visible" id="login-section">
-        <div class="field">
-            <label>Email</label>
-            <input type="email" id="login-email" placeholder="you@example.com">
+    <!-- ══ OTP PANEL ══ -->
+    <div id="otp-screen">
+        <div class="otp-icon">✉️</div>
+        <div class="otp-title">Check your email</div>
+        <div class="otp-sub">
+            We sent a 6-digit code to<br>
+            <strong id="otp-email-display"></strong>
         </div>
-        <div class="field">
-            <label>Password</label>
-            <input type="password" id="login-password" placeholder="••••••••">
+
+        <div class="otp-inputs">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="0">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="1">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="2">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="3">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="4">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="5">
         </div>
-        <div class="forgot"><a href="#" id="forgot-link">Forgot password?</a></div>
-        <button class="btn-primary" id="btn-login">
-            <span id="btn-login-text">Sign In</span>
-            <div class="spinner" id="login-spinner"></div>
-        </button>
-        <div class="divider">or</div>
-        <button class="btn-google" id="btn-google-login">
-            <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-            </svg>
-            Continue with Google
-        </button>
-        <div id="login-msg" class="msg error"></div>
+
+        <div class="otp-actions">
+            <div id="otp-msg"></div>
+            <button class="btn-primary" id="btn-verify">
+                <span id="btn-verify-text">Verify Code</span>
+                <div class="spinner" id="verify-spinner"></div>
+            </button>
+            <div class="resend-row">
+                <span id="resend-timer">Resend in <b id="resend-countdown">60</b>s</span>
+                <span class="resend-link" id="resend-link" onclick="resendCode()">Resend code</span>
+            </div>
+            <button class="btn-back" id="btn-back">← Go back</button>
+        </div>
     </div>
 
-    <!-- ── SIGNUP ── -->
-    <div class="form-section" id="signup-section">
-        <div class="field">
-            <label>Email</label>
-            <input type="email" id="signup-email" placeholder="you@example.com">
-        </div>
-        <div class="field">
-            <label>Username</label>
-            <input type="text" id="signup-username" placeholder="Choose a username">
-        </div>
-        <div class="field">
-            <label>Password</label>
-            <input type="password" id="signup-password" placeholder="••••••••" id="signup-password" oninput="checkStrength(this.value)">
-            <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
-        </div>
-        <div class="field">
-            <label>Confirm Password</label>
-            <input type="password" id="signup-confirm" placeholder="••••••••">
-        </div>
-        <button class="btn-primary" id="btn-signup">
-            <span id="btn-signup-text">Create Account</span>
-            <div class="spinner" id="signup-spinner"></div>
-        </button>
-        <div class="divider">or</div>
-        <button class="btn-google" id="btn-google-signup">
-            <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-            </svg>
-            Sign up with Google
-        </button>
-        <div id="signup-msg" class="msg error"></div>
-    </div>
-
-    <div class="card-footer">Protected by Firebase · End-to-end encrypted</div>
-</div>
+</div><!-- /card -->
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import {
         getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-        sendEmailVerification, signOut, sendPasswordResetEmail,
-        GoogleAuthProvider, signInWithPopup, updateProfile
+        signOut, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup,
+        updateProfile
     } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import {
+        getFirestore, doc, setDoc, getDoc
+    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
+    /* ─────────────────────────────────────────────────────────
+       EmailJS Setup (https://emailjs.com — free tier is fine)
+       ─────────────────────────────────────────────────────────
+       1. Create account → Email Services → connect Gmail/etc.
+       2. Email Templates → New Template:
+            To:      {{to_email}}
+            Subject: Your Nyx verification code
+            Body:    Your code is: {{code}}  (expires in 10 min)
+       3. Paste your IDs below:
+    ───────────────────────────────────────────────────────── */
+    const EJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';    // Account → General → Public Key
+    const EJS_SERVICE_ID  = 'YOUR_SERVICE_ID';    // Email Services → Service ID
+    const EJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';   // Email Templates → Template ID
+
+    emailjs.init(EJS_PUBLIC_KEY);
+
+    /* ── Firebase ── */
     const firebaseConfig = {
-        apiKey: "AIzaSyAaRvkBoiZe2_h7tPsRYv3YmS487L09-H4",
-        authDomain: "nyx-platform1.firebaseapp.com",
-        projectId: "nyx-platform1",
-        storageBucket: "nyx-platform1.firebasestorage.app",
+        apiKey:            "AIzaSyAaRvkBoiZe2_h7tPsRYv3YmS487L09-H4",
+        authDomain:        "nyx-platform1.firebaseapp.com",
+        projectId:         "nyx-platform1",
+        storageBucket:     "nyx-platform1.firebasestorage.app",
         messagingSenderId: "55921089818",
-        appId: "1:55921089818:web:6458294efcf6e6263260a3",
+        appId:             "1:55921089818:web:6458294efcf6e6263260a3",
     };
-
     const app      = initializeApp(firebaseConfig);
     const auth     = getAuth(app);
     const db       = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    // ── Tab switching ──
+    /* ── OTP state ── */
+    let pendingUser     = null;   // Firebase user object (uid captured before signOut)
+    let pendingUID      = null;   // uid string (survives signOut)
+    let pendingCode     = null;
+    let pendingCodeExp  = null;
+    let pendingIsSignup = false;
+    let pendingData     = null;   // { email, username }
+    let resendTimer     = null;
+
+    /* ════════════════════════
+       TAB SWITCHING
+    ════════════════════════ */
     window.switchTab = (tab) => {
-        document.getElementById('login-section').classList.toggle('visible', tab === 'login');
-        document.getElementById('signup-section').classList.toggle('visible', tab === 'signup');
-        document.getElementById('tab-login').classList.toggle('active', tab === 'login');
-        document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+        document.getElementById('login-section').classList.toggle('visible', tab==='login');
+        document.getElementById('signup-section').classList.toggle('visible', tab==='signup');
+        document.getElementById('tab-login').classList.toggle('active',  tab==='login');
+        document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
     };
 
-    // ── Password strength ──
+    /* ════════════════════════
+       HELPERS
+    ════════════════════════ */
     window.checkStrength = (pw) => {
         const fill = document.getElementById('strength-fill');
-        let score = 0;
-        if (pw.length >= 8) score++;
-        if (/[A-Z]/.test(pw)) score++;
-        if (/[0-9]/.test(pw)) score++;
-        if (/[^A-Za-z0-9]/.test(pw)) score++;
-        const widths = ['0%','25%','55%','80%','100%'];
-        const colors = ['#f87171','#fb923c','#facc15','#34d399','#a78bfa'];
-        fill.style.width  = widths[score];
-        fill.style.background = colors[score];
+        let s = 0;
+        if (pw.length>=8)              s++;
+        if (/[A-Z]/.test(pw))         s++;
+        if (/[0-9]/.test(pw))         s++;
+        if (/[^A-Za-z0-9]/.test(pw))  s++;
+        fill.style.width      = ['0%','25%','55%','80%','100%'][s];
+        fill.style.background = ['#f87171','#fb923c','#facc15','#34d399','#a78bfa'][s];
     };
 
-    function showMsg(id, text, type = 'error') {
+    function showMsg(id, text, type='error') {
         const el = document.getElementById(id);
-        el.textContent  = text;
-        el.className    = `msg ${type}`;
-        el.style.display = 'block';
+        el.textContent = text; el.className = `msg ${type}`; el.style.display = 'block';
+    }
+    function setLoading(txtId, spnId, on) {
+        document.getElementById(txtId).style.display = on ? 'none'  : 'inline';
+        document.getElementById(spnId).style.display = on ? 'block' : 'none';
+    }
+    function maskEmail(e) {
+        const [l,d] = e.split('@');
+        return l.slice(0,2)+'***@'+d;
+    }
+    function gen6() { return String(Math.floor(100000 + Math.random()*900000)); }
+
+    /* ════════════════════════
+       OTP SCREEN
+    ════════════════════════ */
+    function showOTP(email) {
+        document.getElementById('auth-panel').style.display = 'none';
+        const otp = document.getElementById('otp-screen');
+        otp.classList.add('visible');
+        document.getElementById('otp-email-display').textContent = maskEmail(email);
+        clearBoxes();
+        startCountdown();
+        setTimeout(() => document.querySelector('.otp-box[data-index="0"]').focus(), 80);
     }
 
-    function setLoading(btnId, spinnerId, loading) {
-        document.getElementById(btnId).style.opacity = loading ? '0' : '1';
-        document.getElementById(spinnerId).style.display = loading ? 'block' : 'none';
+    function hideOTP() {
+        document.getElementById('auth-panel').style.display = 'block';
+        document.getElementById('otp-screen').classList.remove('visible');
+        clearInterval(resendTimer);
+        pendingUser=null; pendingUID=null; pendingCode=null;
+        pendingCodeExp=null; pendingIsSignup=false; pendingData=null;
     }
 
-    // ── Google SSO helper ──
-    async function handleGoogleSSO() {
-        try {
-            const result = await signInWithPopup(auth, provider);
-            const user   = result.user;
-            // If new Google user, write to Firestore
-            const snap = await getDoc(doc(db, "users", user.uid));
-            if (!snap.exists()) {
-                await setDoc(doc(db, "users", user.uid), {
-                    email:    user.email,
-                    username: user.displayName || user.email.split('@')[0],
-                    tier:     'Free'
-                });
+    function clearBoxes() {
+        document.querySelectorAll('.otp-box').forEach(b=>{b.value='';b.className='otp-box';});
+        document.getElementById('otp-msg').textContent='';
+        document.getElementById('otp-msg').className='';
+    }
+
+    function setOtpMsg(txt, type) {
+        const el = document.getElementById('otp-msg');
+        el.textContent = txt; el.className = type;
+    }
+
+    function startCountdown() {
+        let s = 60;
+        document.getElementById('resend-countdown').textContent = s;
+        document.getElementById('resend-timer').style.display = 'inline';
+        document.getElementById('resend-link').style.display  = 'none';
+        clearInterval(resendTimer);
+        resendTimer = setInterval(() => {
+            s--;
+            document.getElementById('resend-countdown').textContent = s;
+            if (s <= 0) {
+                clearInterval(resendTimer);
+                document.getElementById('resend-timer').style.display = 'none';
+                document.getElementById('resend-link').style.display  = 'inline';
             }
-            window.location.href = 'home.html';
+        }, 1000);
+    }
+
+    async function sendOTP(email, code) {
+        return emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_ID, { to_email: email, code });
+    }
+
+    window.resendCode = async () => {
+        if (!pendingData && !pendingUser) return;
+        const email = (pendingData||pendingUser).email;
+        pendingCode    = gen6();
+        pendingCodeExp = Date.now() + 10*60*1000;
+        clearBoxes();
+        document.getElementById('resend-link').style.display = 'none';
+        try {
+            await sendOTP(email, pendingCode);
+            setOtpMsg('New code sent!', 'success');
+            startCountdown();
+        } catch {
+            setOtpMsg('Failed to resend. Try again.', 'error');
+            document.getElementById('resend-link').style.display = 'inline';
+        }
+    };
+
+    /* ════════════════════════
+       OTP INPUT BEHAVIOUR
+    ════════════════════════ */
+    const boxes = [...document.querySelectorAll('.otp-box')];
+
+    boxes.forEach((box, i) => {
+        box.addEventListener('input', e => {
+            const v = e.target.value.replace(/\D/g,'');
+            e.target.value = v ? v[0] : '';
+            e.target.classList.toggle('filled', !!v);
+            if (v && i < 5) boxes[i+1].focus();
+            if (i===5 && v) verifyOTP();
+        });
+        box.addEventListener('keydown', e => {
+            if (e.key==='Backspace' && !box.value && i>0) {
+                boxes[i-1].value=''; boxes[i-1].classList.remove('filled'); boxes[i-1].focus();
+            }
+            if (e.key==='Enter') verifyOTP();
+        });
+        box.addEventListener('paste', e => {
+            e.preventDefault();
+            const paste = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');
+            if (!paste) return;
+            paste.slice(0,6).split('').forEach((ch,pi) => {
+                if (boxes[pi]) { boxes[pi].value=ch; boxes[pi].classList.add('filled'); }
+            });
+            boxes[Math.min(paste.length,5)].focus();
+            if (paste.length>=6) verifyOTP();
+        });
+    });
+
+    /* ════════════════════════
+       VERIFY OTP
+    ════════════════════════ */
+    async function verifyOTP() {
+        const entered = boxes.map(b=>b.value).join('');
+        if (entered.length < 6) { setOtpMsg('Enter all 6 digits.', 'error'); return; }
+
+        if (Date.now() > pendingCodeExp) {
+            setOtpMsg('Code expired. Request a new one.', 'error');
+            boxes.forEach(b=>{b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');});
+            return;
+        }
+
+        if (entered !== pendingCode) {
+            setOtpMsg('Incorrect code. Try again.', 'error');
+            boxes.forEach(b=>{b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');});
+            return;
+        }
+
+        setLoading('btn-verify-text','verify-spinner',true);
+        setOtpMsg('✓ Verified!','success');
+
+        try {
+            if (pendingIsSignup) {
+                // Write user to Firestore and mark verified
+                await setDoc(doc(db,'users',pendingUID), {
+                    ...pendingData, emailVerified: true
+                });
+                setTimeout(() => {
+                    hideOTP();
+                    switchTab('login');
+                    showMsg('login-msg','✓ Account verified! You can now sign in.','success');
+                }, 1000);
+            } else {
+                // For login: mark verified in Firestore then navigate
+                await setDoc(doc(db,'users',pendingUID), { emailVerified:true }, { merge:true });
+                setTimeout(() => { window.location.href = 'home.html'; }, 800);
+            }
         } catch (err) {
-            showMsg('login-msg', err.message);
+            setOtpMsg(err.message, 'error');
+            setLoading('btn-verify-text','verify-spinner',false);
         }
     }
 
-    document.getElementById('btn-google-login').onclick  = handleGoogleSSO;
-    document.getElementById('btn-google-signup').onclick = handleGoogleSSO;
+    document.getElementById('btn-verify').onclick = verifyOTP;
 
-    // ── Email Sign Up ──
+    document.getElementById('btn-back').onclick = () => {
+        // If signup was pending, clean up the half-created auth account
+        if (pendingIsSignup && pendingUser) {
+            pendingUser.delete().catch(()=>{});
+        }
+        hideOTP();
+        if (!pendingIsSignup) signOut(auth).catch(()=>{});
+    };
+
+    /* ════════════════════════
+       GOOGLE SSO (skip OTP)
+    ════════════════════════ */
+    async function googleSSO() {
+        try {
+            const { user } = await signInWithPopup(auth, provider);
+            const snap = await getDoc(doc(db,'users',user.uid));
+            if (!snap.exists()) {
+                await setDoc(doc(db,'users',user.uid), {
+                    email:         user.email,
+                    username:      user.displayName || user.email.split('@')[0],
+                    tier:          'Free',
+                    emailVerified: true
+                });
+            }
+            window.location.href = 'home.html';
+        } catch (err) { showMsg('login-msg', err.message); }
+    }
+    document.getElementById('btn-google-login').onclick  = googleSSO;
+    document.getElementById('btn-google-signup').onclick = googleSSO;
+
+    /* ════════════════════════
+       SIGN UP
+    ════════════════════════ */
     document.getElementById('btn-signup').onclick = async () => {
         const email    = document.getElementById('signup-email').value.trim();
         const username = document.getElementById('signup-username').value.trim();
         const password = document.getElementById('signup-password').value;
         const confirm  = document.getElementById('signup-confirm').value;
 
-        if (!email || !username || !password) return showMsg('signup-msg', 'Please fill in all fields.');
-        if (password !== confirm) return showMsg('signup-msg', 'Passwords do not match.');
-        if (password.length < 6)  return showMsg('signup-msg', 'Password must be at least 6 characters.');
+        if (!email||!username||!password)  return showMsg('signup-msg','Please fill in all fields.');
+        if (password!==confirm)            return showMsg('signup-msg','Passwords do not match.');
+        if (password.length<6)            return showMsg('signup-msg','Password must be at least 6 characters.');
 
-        setLoading('btn-signup-text', 'signup-spinner', true);
+        setLoading('btn-signup-text','signup-spinner',true);
         try {
             const { user } = await createUserWithEmailAndPassword(auth, email, password);
             await updateProfile(user, { displayName: username });
-            await sendEmailVerification(user);
-            await setDoc(doc(db, "users", user.uid), { email, username, tier: 'Free' });
+
+            // Store uid before signing out
+            pendingUID      = user.uid;
+            pendingUser     = user;
+            pendingIsSignup = true;
+            pendingData     = { email, username, tier:'Free' };
+            pendingCode     = gen6();
+            pendingCodeExp  = Date.now() + 10*60*1000;
+
+            // Sign out immediately — user must verify before getting in
             await signOut(auth);
-            showMsg('signup-msg', '✓ Account created! Check your email to verify before signing in.', 'success');
+
+            await sendOTP(email, pendingCode);
+            showOTP(email);
         } catch (err) {
-            showMsg('signup-msg', err.message);
+            showMsg('signup-msg', err.message.replace('Firebase: ','').replace(/\(.*\)/,'').trim());
         } finally {
-            setLoading('btn-signup-text', 'signup-spinner', false);
+            setLoading('btn-signup-text','signup-spinner',false);
         }
     };
 
-    // ── Email Login ──
+    /* ════════════════════════
+       LOGIN
+    ════════════════════════ */
     document.getElementById('btn-login').onclick = async () => {
         const email    = document.getElementById('login-email').value.trim();
         const password = document.getElementById('login-password').value;
 
-        if (!email || !password) return showMsg('login-msg', 'Please enter your email and password.');
+        if (!email||!password) return showMsg('login-msg','Please enter your email and password.');
 
-        setLoading('btn-login-text', 'login-spinner', true);
+        setLoading('btn-login-text','login-spinner',true);
         try {
             const { user } = await signInWithEmailAndPassword(auth, email, password);
-            if (!user.emailVerified) {
-                await signOut(auth);
-                return showMsg('login-msg', 'Please verify your email before signing in.');
+
+            // Check verification: Firebase native flag (accounts created in console)
+            // OR our custom Firestore flag (accounts verified via OTP)
+            const snap              = await getDoc(doc(db,'users',user.uid));
+            const firestoreVerified = snap.exists() && snap.data().emailVerified === true;
+
+            if (user.emailVerified || firestoreVerified) {
+                // Already verified — go straight home
+                window.location.href = 'home.html';
+                return;
             }
-            window.location.href = 'home.html';
+
+            // Not verified yet — send OTP
+            pendingUID      = user.uid;
+            pendingUser     = user;
+            pendingIsSignup = false;
+            pendingData     = { email };
+            pendingCode     = gen6();
+            pendingCodeExp  = Date.now() + 10*60*1000;
+
+            await sendOTP(email, pendingCode);
+            showOTP(email);
         } catch {
-            showMsg('login-msg', 'Invalid email or password.');
+            showMsg('login-msg','Invalid email or password.');
         } finally {
-            setLoading('btn-login-text', 'login-spinner', false);
+            setLoading('btn-login-text','login-spinner',false);
         }
     };
 
-    // ── Forgot password ──
+    /* ════════════════════════
+       FORGOT PASSWORD
+    ════════════════════════ */
     document.getElementById('forgot-link').onclick = async (e) => {
         e.preventDefault();
         const email = document.getElementById('login-email').value.trim();
-        if (!email) return showMsg('login-msg', 'Enter your email above first.');
+        if (!email) return showMsg('login-msg','Enter your email above first.');
         try {
             await sendPasswordResetEmail(auth, email);
-            showMsg('login-msg', '✓ Password reset email sent! Check your inbox.', 'success');
+            showMsg('login-msg','✓ Reset email sent! Check your inbox.','success');
         } catch {
-            showMsg('login-msg', 'Could not send reset email. Check the address and try again.');
+            showMsg('login-msg','Could not send reset email. Check the address.');
         }
     };
 </script>
