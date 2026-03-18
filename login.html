@@ -6,7 +6,6 @@
     <title>Nyx — Sign In</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <!-- EmailJS — free email sending. Set up at https://emailjs.com -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         :root {
@@ -36,7 +35,6 @@
             overflow: hidden;
         }
 
-        /* ── Ambient orbs ── */
         .bg-orb {
             position: fixed; border-radius: 50%;
             filter: blur(120px); pointer-events: none; z-index: 0;
@@ -46,11 +44,10 @@
         .orb2 { width:350px;height:350px;background:rgba(167,139,250,0.12);bottom:-100px;right:-100px;animation-delay:-6s; }
         .orb3 { width:250px;height:250px;background:rgba(79,26,191,0.15);  top:50%;left:55%;animation-delay:-12s; }
         @keyframes drift {
-            from { transform: translate(0,0)      scale(1); }
+            from { transform: translate(0,0) scale(1); }
             to   { transform: translate(30px,20px) scale(1.08); }
         }
 
-        /* ── Grid overlay ── */
         body::before {
             content:''; position:fixed; inset:0;
             background-image:
@@ -60,7 +57,7 @@
             pointer-events:none; z-index:0;
         }
 
-        /* ── Card (80% of original 400px) ── */
+        /* ── Card (80% size = 320px) ── */
         .card {
             position:relative; z-index:1;
             background: rgba(14,13,28,0.85);
@@ -77,10 +74,9 @@
         }
         @keyframes cardIn {
             from { opacity:0; transform: translateY(28px) scale(0.97); }
-            to   { opacity:1; transform: translateY(0)    scale(1); }
+            to   { opacity:1; transform: translateY(0) scale(1); }
         }
 
-        /* ── Logo ── */
         .logo {
             font-family:'Unbounded',sans-serif; font-size:1.52rem; font-weight:900;
             letter-spacing:-0.03em;
@@ -94,7 +90,6 @@
             font-family:'DM Mono',monospace;
         }
 
-        /* ── Tabs ── */
         .tabs {
             display:flex; background:var(--surface2); border-radius:8px;
             padding:3px; margin-bottom:22px; border:1px solid var(--border);
@@ -106,15 +101,18 @@
         }
         .tab.active { background:var(--violet); color:#fff; box-shadow:0 4px 14px rgba(124,58,237,0.4); }
 
-        /* ── Form sections ── */
-        .form-section { display:none; }
-        .form-section.visible { display:block; animation: fadeUp 0.3s ease; }
+        /* ── Panels (auth / otp / username) ── */
+        .panel { display:none; }
+        .panel.visible { display:block; animation: fadeUp 0.3s ease; }
         @keyframes fadeUp {
             from { opacity:0; transform:translateY(8px); }
             to   { opacity:1; transform:translateY(0); }
         }
 
-        /* ── Fields ── */
+        /* ── Form sections inside auth panel ── */
+        .form-section { display:none; }
+        .form-section.visible { display:block; animation: fadeUp 0.3s ease; }
+
         .field { margin-bottom:13px; }
         .field label {
             display:block; font-size:0.62rem; font-weight:500; color:var(--muted);
@@ -130,7 +128,6 @@
         .field input:focus { border-color:var(--violet); box-shadow:0 0 0 3px rgba(124,58,237,0.13); }
         .field input::placeholder { color:#3d3a5a; }
 
-        /* ── Buttons ── */
         .btn-primary {
             width:100%; padding:10px; background:var(--violet); border:none;
             border-radius:7px; color:#fff; font-family:'DM Sans',sans-serif;
@@ -143,9 +140,8 @@
         .btn-primary:active { transform:translateY(0); }
 
         .divider {
-            display:flex; align-items:center; gap:8px;
-            margin:16px 0; color:var(--muted); font-size:0.6rem;
-            letter-spacing:0.1em; text-transform:uppercase;
+            display:flex; align-items:center; gap:8px; margin:16px 0;
+            color:var(--muted); font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase;
         }
         .divider::before,.divider::after { content:'';flex:1;height:1px;background:var(--border); }
 
@@ -161,7 +157,6 @@
         .btn-google:active { transform:translateY(0); }
         .google-icon { width:14px;height:14px;flex-shrink:0; }
 
-        /* ── Messages ── */
         .msg {
             font-size:0.68rem; padding:8px 10px; border-radius:6px;
             margin-top:10px; display:none; line-height:1.4;
@@ -169,19 +164,15 @@
         .msg.error   { background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--error); }
         .msg.success { background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);color:var(--success); }
 
-        /* ── Strength bar ── */
         .strength-bar  { height:2px;border-radius:2px;background:var(--surface2);margin-top:5px;overflow:hidden; }
         .strength-fill { height:100%;border-radius:2px;width:0%;transition:width 0.3s,background 0.3s; }
 
-        /* ── Forgot ── */
         .forgot { text-align:right;margin-top:-5px;margin-bottom:13px; }
         .forgot a { font-size:0.62rem;color:var(--muted);text-decoration:none;transition:color 0.2s; }
         .forgot a:hover { color:var(--violet-lt); }
 
-        /* ── Footer ── */
         .card-footer { text-align:center;font-size:0.58rem;color:var(--muted);margin-top:16px;line-height:1.6; }
 
-        /* ── Spinner ── */
         .spinner {
             display:none; width:14px;height:14px;
             border:2px solid rgba(255,255,255,0.3); border-top-color:#fff;
@@ -189,12 +180,9 @@
         }
         @keyframes spin { to { transform:rotate(360deg); } }
 
-        /* ══════════════════════════════════════
-           OTP SCREEN
-        ══════════════════════════════════════ */
-        #otp-screen { display:none; }
-        #otp-screen.visible { display:block; animation:fadeUp 0.35s ease; }
-
+        /* ══════════════════════════════════
+           OTP PANEL
+        ══════════════════════════════════ */
         .otp-icon {
             width:44px;height:44px;
             background:rgba(124,58,237,0.13);
@@ -204,16 +192,15 @@
             margin:0 auto 14px;
         }
         .otp-title {
-            font-family:'Unbounded',sans-serif; font-size:0.9rem;
+            font-family:'Unbounded',sans-serif; font-size:0.88rem;
             font-weight:700; text-align:center; margin-bottom:6px;
         }
         .otp-sub {
-            font-size:0.64rem; color:var(--muted); text-align:center;
+            font-size:0.63rem; color:var(--muted); text-align:center;
             line-height:1.6; margin-bottom:22px;
         }
-        .otp-sub strong { color:var(--violet-lt); }
+        .otp-sub strong { color:var(--violet-lt); font-style:normal; }
 
-        /* 6 digit input boxes */
         .otp-inputs {
             display:flex; gap:7px; justify-content:center; margin-bottom:18px;
         }
@@ -226,11 +213,7 @@
             outline:none; transition:border-color 0.2s,box-shadow 0.2s,background 0.2s;
             caret-color: transparent;
         }
-        .otp-box:focus {
-            border-color:var(--violet);
-            box-shadow:0 0 0 3px rgba(124,58,237,0.15);
-            background:rgba(124,58,237,0.07);
-        }
+        .otp-box:focus { border-color:var(--violet); box-shadow:0 0 0 3px rgba(124,58,237,0.15); background:rgba(124,58,237,0.07); }
         .otp-box.filled { border-color:rgba(167,139,250,0.4); background:rgba(124,58,237,0.08); }
         .otp-box.shake  { animation:shake 0.4s ease; }
         @keyframes shake {
@@ -239,32 +222,45 @@
             60%     { transform:translateX(5px); }
         }
 
-        .otp-actions { display:flex; flex-direction:column; gap:10px; }
+        .otp-status {
+            font-size:0.66rem; text-align:center; min-height:16px;
+            margin-bottom:12px; transition:color 0.2s;
+        }
+        .otp-status.error   { color:var(--error); }
+        .otp-status.success { color:var(--success); }
 
-        #otp-msg {
-            font-size:0.66rem; text-align:center;
-            min-height:16px; transition:color 0.2s;
-        }
-        #otp-msg.error   { color:var(--error); }
-        #otp-msg.success { color:var(--success); }
-
-        .resend-row {
-            text-align:center; font-size:0.62rem; color:var(--muted);
-        }
-        .resend-link {
-            color:var(--violet-lt); cursor:pointer;
-            text-decoration:underline; display:none;
-        }
+        .resend-row { text-align:center; font-size:0.62rem; color:var(--muted); margin-top:10px; }
+        .resend-link { color:var(--violet-lt); cursor:pointer; text-decoration:underline; display:none; }
         .resend-link:hover { color:#fff; }
 
-        .btn-back {
+        .btn-ghost {
             background:transparent; border:1px solid var(--border);
             border-radius:7px; color:var(--muted);
             font-family:'DM Sans',sans-serif; font-size:0.72rem;
             padding:8px; cursor:pointer; width:100%;
-            transition:background 0.2s,color 0.2s;
+            transition:background 0.2s,color 0.2s; margin-top:8px;
         }
-        .btn-back:hover { background:rgba(124,58,237,0.08); color:var(--text); }
+        .btn-ghost:hover { background:rgba(124,58,237,0.08); color:var(--text); }
+
+        /* ══════════════════════════════════
+           USERNAME PANEL (Google SSO)
+        ══════════════════════════════════ */
+        .username-icon {
+            width:44px;height:44px;
+            background:rgba(124,58,237,0.13);
+            border:1px solid rgba(124,58,237,0.28);
+            border-radius:50%; font-size:1.3rem;
+            display:flex;align-items:center;justify-content:center;
+            margin:0 auto 14px;
+        }
+        .username-title {
+            font-family:'Unbounded',sans-serif; font-size:0.88rem;
+            font-weight:700; text-align:center; margin-bottom:6px;
+        }
+        .username-sub {
+            font-size:0.63rem; color:var(--muted); text-align:center;
+            line-height:1.6; margin-bottom:20px;
+        }
     </style>
 </head>
 <body>
@@ -275,8 +271,8 @@
 
 <div class="card">
 
-    <!-- ══ AUTH PANEL ══ -->
-    <div id="auth-panel">
+    <!-- ══ PANEL 1: AUTH (Login / Signup) ══ -->
+    <div id="panel-auth" class="panel visible">
         <div class="logo">Nyx</div>
         <div class="tagline">Secure Access Portal</div>
 
@@ -342,13 +338,14 @@
         <div class="card-footer">Protected by Firebase · End-to-end encrypted</div>
     </div>
 
-    <!-- ══ OTP PANEL ══ -->
-    <div id="otp-screen">
+    <!-- ══ PANEL 2: OTP VERIFICATION (signup only) ══ -->
+    <div id="panel-otp" class="panel">
         <div class="otp-icon">✉️</div>
-        <div class="otp-title">Check your email</div>
+        <div class="otp-title">Verify your email</div>
         <div class="otp-sub">
             We sent a 6-digit code to<br>
-            <strong id="otp-email-display"></strong>
+            <strong id="otp-email-display"></strong><br>
+            <span style="font-size:0.6rem;opacity:0.7">Check your spam folder too</span>
         </div>
 
         <div class="otp-inputs">
@@ -360,18 +357,34 @@
             <input class="otp-box" type="text" inputmode="numeric" maxlength="1" data-index="5">
         </div>
 
-        <div class="otp-actions">
-            <div id="otp-msg"></div>
-            <button class="btn-primary" id="btn-verify">
-                <span id="btn-verify-text">Verify Code</span>
-                <div class="spinner" id="verify-spinner"></div>
-            </button>
-            <div class="resend-row">
-                <span id="resend-timer">Resend in <b id="resend-countdown">60</b>s</span>
-                <span class="resend-link" id="resend-link" onclick="resendCode()">Resend code</span>
-            </div>
-            <button class="btn-back" id="btn-back">← Go back</button>
+        <div id="otp-status" class="otp-status"></div>
+        <button class="btn-primary" id="btn-verify">
+            <span id="btn-verify-text">Verify &amp; Create Account</span>
+            <div class="spinner" id="verify-spinner"></div>
+        </button>
+        <div class="resend-row">
+            <span id="resend-timer">Resend in <b id="resend-countdown">120</b>s</span>
+            <span class="resend-link" id="resend-link" onclick="resendOTP()">Resend code</span>
         </div>
+        <button class="btn-ghost" id="btn-back-otp">← Back to Sign Up</button>
+    </div>
+
+    <!-- ══ PANEL 3: USERNAME (Google SSO new users) ══ -->
+    <div id="panel-username" class="panel">
+        <div class="username-icon">👤</div>
+        <div class="username-title">Choose a username</div>
+        <div class="username-sub">
+            You're almost in! Just pick a username<br>to complete your Nyx profile.
+        </div>
+        <div class="field">
+            <label>Username</label>
+            <input type="text" id="sso-username" placeholder="e.g. shadowhunter99">
+        </div>
+        <button class="btn-primary" id="btn-sso-confirm">
+            <span id="btn-sso-text">Enter Nyx</span>
+            <div class="spinner" id="sso-spinner"></div>
+        </button>
+        <div id="sso-msg" class="msg"></div>
     </div>
 
 </div><!-- /card -->
@@ -387,19 +400,10 @@
         getFirestore, doc, setDoc, getDoc
     } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    /* ─────────────────────────────────────────────────────────
-       EmailJS Setup (https://emailjs.com — free tier is fine)
-       ─────────────────────────────────────────────────────────
-       1. Create account → Email Services → connect Gmail/etc.
-       2. Email Templates → New Template:
-            To:      {{to_email}}
-            Subject: Your Nyx verification code
-            Body:    Your code is: {{code}}  (expires in 10 min)
-       3. Paste your IDs below:
-    ───────────────────────────────────────────────────────── */
-    const EJS_PUBLIC_KEY  = 'AwkpdlBeVnPLu0JTp';    // Account → General → Public Key
-    const EJS_SERVICE_ID  = 'service_nyx_platform1';    // Email Services → Service ID
-    const EJS_TEMPLATE_ID = 'template_wpjj0dj';   // Email Templates → Template ID
+    /* ── EmailJS credentials ── */
+    const EJS_PUBLIC_KEY  = 'AwkpdlBeVnPLu0JTp';
+    const EJS_SERVICE_ID  = 'service_nyx_platform1';
+    const EJS_TEMPLATE_ID = 'template_wpjj0dj';
 
     emailjs.init(EJS_PUBLIC_KEY);
 
@@ -415,20 +419,29 @@
     const app      = initializeApp(firebaseConfig);
     const auth     = getAuth(app);
     const db       = getFirestore(app);
-    const provider = new GoogleAuthProvider();
+    const gProvider = new GoogleAuthProvider();
 
-    /* ── OTP state ── */
-    let pendingUser     = null;   // Firebase user object (uid captured before signOut)
-    let pendingUID      = null;   // uid string (survives signOut)
-    let pendingCode     = null;
-    let pendingCodeExp  = null;
-    let pendingIsSignup = false;
-    let pendingData     = null;   // { email, username }
-    let resendTimer     = null;
+    /* ── State ── */
+    let otpCode    = null;
+    let otpExpiry  = null;
+    let otpUID     = null;    // uid captured before signOut
+    let otpUser    = null;    // full user obj (for delete on back)
+    let otpPayload = null;    // { email, username }
+    let resendTmr  = null;
 
-    /* ════════════════════════
+    let ssoUser    = null;    // Google user waiting for username
+
+    /* ══════════════════════
+       PANEL SWITCHING
+    ══════════════════════ */
+    function showPanel(id) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('visible'));
+        document.getElementById(id).classList.add('visible');
+    }
+
+    /* ══════════════════════
        TAB SWITCHING
-    ════════════════════════ */
+    ══════════════════════ */
     window.switchTab = (tab) => {
         document.getElementById('login-section').classList.toggle('visible', tab==='login');
         document.getElementById('signup-section').classList.toggle('visible', tab==='signup');
@@ -436,293 +449,290 @@
         document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
     };
 
-    /* ════════════════════════
+    /* ══════════════════════
        HELPERS
-    ════════════════════════ */
+    ══════════════════════ */
     window.checkStrength = (pw) => {
         const fill = document.getElementById('strength-fill');
         let s = 0;
-        if (pw.length>=8)              s++;
-        if (/[A-Z]/.test(pw))         s++;
-        if (/[0-9]/.test(pw))         s++;
-        if (/[^A-Za-z0-9]/.test(pw))  s++;
+        if (pw.length>=8)             s++;
+        if (/[A-Z]/.test(pw))        s++;
+        if (/[0-9]/.test(pw))        s++;
+        if (/[^A-Za-z0-9]/.test(pw)) s++;
         fill.style.width      = ['0%','25%','55%','80%','100%'][s];
         fill.style.background = ['#f87171','#fb923c','#facc15','#34d399','#a78bfa'][s];
     };
 
-    function showMsg(id, text, type='error') {
+    function showMsg(id, txt, type='error') {
         const el = document.getElementById(id);
-        el.textContent = text; el.className = `msg ${type}`; el.style.display = 'block';
+        el.textContent = txt; el.className = `msg ${type}`; el.style.display = 'block';
     }
-    function setLoading(txtId, spnId, on) {
+    function setLoad(txtId, spnId, on) {
         document.getElementById(txtId).style.display = on ? 'none'  : 'inline';
         document.getElementById(spnId).style.display = on ? 'block' : 'none';
     }
     function maskEmail(e) {
         const [l,d] = e.split('@');
-        return l.slice(0,2)+'***@'+d;
+        return l.slice(0,2) + '***@' + d;
     }
     function gen6() { return String(Math.floor(100000 + Math.random()*900000)); }
 
-    /* ════════════════════════
-       OTP SCREEN
-    ════════════════════════ */
-    function showOTP(email) {
-        document.getElementById('auth-panel').style.display = 'none';
-        const otp = document.getElementById('otp-screen');
-        otp.classList.add('visible');
-        document.getElementById('otp-email-display').textContent = maskEmail(email);
-        clearBoxes();
-        startCountdown();
-        setTimeout(() => document.querySelector('.otp-box[data-index="0"]').focus(), 80);
+    /* ══════════════════════
+       OTP UTILITIES
+    ══════════════════════ */
+    async function sendOTP(email, code) {
+        return emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_ID, { to_email: email, code });
     }
 
-    function hideOTP() {
-        document.getElementById('auth-panel').style.display = 'block';
-        document.getElementById('otp-screen').classList.remove('visible');
-        clearInterval(resendTimer);
-        pendingUser=null; pendingUID=null; pendingCode=null;
-        pendingCodeExp=null; pendingIsSignup=false; pendingData=null;
+    function setOtpStatus(txt, type) {
+        const el = document.getElementById('otp-status');
+        el.textContent = txt; el.className = `otp-status ${type}`;
     }
 
-    function clearBoxes() {
-        document.querySelectorAll('.otp-box').forEach(b=>{b.value='';b.className='otp-box';});
-        document.getElementById('otp-msg').textContent='';
-        document.getElementById('otp-msg').className='';
+    function clearOtpBoxes() {
+        document.querySelectorAll('.otp-box').forEach(b => { b.value=''; b.className='otp-box'; });
+        setOtpStatus('','');
     }
 
-    function setOtpMsg(txt, type) {
-        const el = document.getElementById('otp-msg');
-        el.textContent = txt; el.className = type;
-    }
-
-    function startCountdown() {
-        let s = 60;
-        document.getElementById('resend-countdown').textContent = s;
+    function startCountdown(seconds = 120) {
+        document.getElementById('resend-countdown').textContent = seconds;
         document.getElementById('resend-timer').style.display = 'inline';
         document.getElementById('resend-link').style.display  = 'none';
-        clearInterval(resendTimer);
-        resendTimer = setInterval(() => {
-            s--;
-            document.getElementById('resend-countdown').textContent = s;
-            if (s <= 0) {
-                clearInterval(resendTimer);
+        clearInterval(resendTmr);
+        resendTmr = setInterval(() => {
+            seconds--;
+            document.getElementById('resend-countdown').textContent = seconds;
+            if (seconds <= 0) {
+                clearInterval(resendTmr);
                 document.getElementById('resend-timer').style.display = 'none';
                 document.getElementById('resend-link').style.display  = 'inline';
             }
         }, 1000);
     }
 
-    async function sendOTP(email, code) {
-        return emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_ID, { to_email: email, code });
-    }
-
-    window.resendCode = async () => {
-        if (!pendingData && !pendingUser) return;
-        const email = (pendingData||pendingUser).email;
-        pendingCode    = gen6();
-        pendingCodeExp = Date.now() + 10*60*1000;
-        clearBoxes();
+    window.resendOTP = async () => {
+        if (!otpPayload) return;
+        otpCode   = gen6();
+        otpExpiry = Date.now() + 10*60*1000;
+        clearOtpBoxes();
         document.getElementById('resend-link').style.display = 'none';
         try {
-            await sendOTP(email, pendingCode);
-            setOtpMsg('New code sent!', 'success');
+            await sendOTP(otpPayload.email, otpCode);
+            setOtpStatus('New code sent!', 'success');
             startCountdown();
         } catch {
-            setOtpMsg('Failed to resend. Try again.', 'error');
+            setOtpStatus('Failed to send. Try again.', 'error');
             document.getElementById('resend-link').style.display = 'inline';
         }
     };
 
-    /* ════════════════════════
-       OTP INPUT BEHAVIOUR
-    ════════════════════════ */
-    const boxes = [...document.querySelectorAll('.otp-box')];
+    function openOtpPanel(email) {
+        document.getElementById('otp-email-display').textContent = maskEmail(email);
+        clearOtpBoxes();
+        startCountdown(120);
+        showPanel('panel-otp');
+        setTimeout(() => document.querySelector('.otp-box[data-index="0"]').focus(), 80);
+    }
 
-    boxes.forEach((box, i) => {
+    /* ══════════════════════
+       OTP BOX KEYBOARD
+    ══════════════════════ */
+    const otpBoxes = [...document.querySelectorAll('.otp-box')];
+    otpBoxes.forEach((box, i) => {
         box.addEventListener('input', e => {
             const v = e.target.value.replace(/\D/g,'');
             e.target.value = v ? v[0] : '';
             e.target.classList.toggle('filled', !!v);
-            if (v && i < 5) boxes[i+1].focus();
-            if (i===5 && v) verifyOTP();
+            if (v && i < 5) otpBoxes[i+1].focus();
+            if (i === 5 && v) verifyOTP();
         });
         box.addEventListener('keydown', e => {
             if (e.key==='Backspace' && !box.value && i>0) {
-                boxes[i-1].value=''; boxes[i-1].classList.remove('filled'); boxes[i-1].focus();
+                otpBoxes[i-1].value=''; otpBoxes[i-1].classList.remove('filled'); otpBoxes[i-1].focus();
             }
             if (e.key==='Enter') verifyOTP();
         });
         box.addEventListener('paste', e => {
             e.preventDefault();
-            const paste = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');
-            if (!paste) return;
-            paste.slice(0,6).split('').forEach((ch,pi) => {
-                if (boxes[pi]) { boxes[pi].value=ch; boxes[pi].classList.add('filled'); }
+            const p = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');
+            if (!p) return;
+            p.slice(0,6).split('').forEach((ch,pi) => {
+                if (otpBoxes[pi]) { otpBoxes[pi].value=ch; otpBoxes[pi].classList.add('filled'); }
             });
-            boxes[Math.min(paste.length,5)].focus();
-            if (paste.length>=6) verifyOTP();
+            otpBoxes[Math.min(p.length,5)].focus();
+            if (p.length >= 6) verifyOTP();
         });
     });
 
-    /* ════════════════════════
-       VERIFY OTP
-    ════════════════════════ */
     async function verifyOTP() {
-        const entered = boxes.map(b=>b.value).join('');
-        if (entered.length < 6) { setOtpMsg('Enter all 6 digits.', 'error'); return; }
-
-        if (Date.now() > pendingCodeExp) {
-            setOtpMsg('Code expired. Request a new one.', 'error');
-            boxes.forEach(b=>{b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');});
+        const entered = otpBoxes.map(b=>b.value).join('');
+        if (entered.length < 6) { setOtpStatus('Enter all 6 digits.', 'error'); return; }
+        if (Date.now() > otpExpiry) {
+            setOtpStatus('Code expired. Resend a new one.', 'error');
+            otpBoxes.forEach(b=>{b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');});
+            return;
+        }
+        if (entered !== otpCode) {
+            setOtpStatus('Incorrect code. Try again.', 'error');
+            otpBoxes.forEach(b=>{b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');});
             return;
         }
 
-        if (entered !== pendingCode) {
-            setOtpMsg('Incorrect code. Try again.', 'error');
-            boxes.forEach(b=>{b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');});
-            return;
-        }
-
-        setLoading('btn-verify-text','verify-spinner',true);
-        setOtpMsg('✓ Verified!','success');
-
+        // ✅ Correct
+        setLoad('btn-verify-text','verify-spinner',true);
+        setOtpStatus('✓ Code verified!', 'success');
         try {
-            if (pendingIsSignup) {
-                // Write user to Firestore and mark verified
-                await setDoc(doc(db,'users',pendingUID), {
-                    ...pendingData, emailVerified: true
-                });
-                setTimeout(() => {
-                    hideOTP();
-                    switchTab('login');
-                    showMsg('login-msg','✓ Account verified! You can now sign in.','success');
-                }, 1000);
-            } else {
-                // For login: mark verified in Firestore then navigate
-                await setDoc(doc(db,'users',pendingUID), { emailVerified:true }, { merge:true });
-                setTimeout(() => { window.location.href = 'home.html'; }, 800);
-            }
-        } catch (err) {
-            setOtpMsg(err.message, 'error');
-            setLoading('btn-verify-text','verify-spinner',false);
+            // Save user to Firestore and mark verified
+            await setDoc(doc(db,'users',otpUID), {
+                email:         otpPayload.email,
+                username:      otpPayload.username,
+                tier:          'Free',
+                emailVerified: true
+            });
+            clearInterval(resendTmr);
+            setTimeout(() => {
+                // Go back to login with success message
+                showPanel('panel-auth');
+                switchTab('login');
+                showMsg('login-msg','✓ Account created! You can now sign in.','success');
+                otpCode=null; otpExpiry=null; otpUID=null; otpUser=null; otpPayload=null;
+            }, 1000);
+        } catch(err) {
+            setOtpStatus(err.message, 'error');
+            setLoad('btn-verify-text','verify-spinner',false);
         }
     }
 
     document.getElementById('btn-verify').onclick = verifyOTP;
 
-    document.getElementById('btn-back').onclick = () => {
-        // If signup was pending, clean up the half-created auth account
-        if (pendingIsSignup && pendingUser) {
-            pendingUser.delete().catch(()=>{});
-        }
-        hideOTP();
-        if (!pendingIsSignup) signOut(auth).catch(()=>{});
+    document.getElementById('btn-back-otp').onclick = () => {
+        clearInterval(resendTmr);
+        // Delete the half-created auth account
+        if (otpUser) otpUser.delete().catch(()=>{});
+        otpCode=null; otpExpiry=null; otpUID=null; otpUser=null; otpPayload=null;
+        showPanel('panel-auth');
+        switchTab('signup');
     };
 
-    /* ════════════════════════
-       GOOGLE SSO (skip OTP)
-    ════════════════════════ */
-    async function googleSSO() {
-        try {
-            const { user } = await signInWithPopup(auth, provider);
-            const snap = await getDoc(doc(db,'users',user.uid));
-            if (!snap.exists()) {
-                await setDoc(doc(db,'users',user.uid), {
-                    email:         user.email,
-                    username:      user.displayName || user.email.split('@')[0],
-                    tier:          'Free',
-                    emailVerified: true
-                });
-            }
-            window.location.href = 'home.html';
-        } catch (err) { showMsg('login-msg', err.message); }
-    }
-    document.getElementById('btn-google-login').onclick  = googleSSO;
-    document.getElementById('btn-google-signup').onclick = googleSSO;
-
-    /* ════════════════════════
+    /* ══════════════════════
        SIGN UP
-    ════════════════════════ */
+    ══════════════════════ */
     document.getElementById('btn-signup').onclick = async () => {
         const email    = document.getElementById('signup-email').value.trim();
         const username = document.getElementById('signup-username').value.trim();
         const password = document.getElementById('signup-password').value;
         const confirm  = document.getElementById('signup-confirm').value;
 
-        if (!email||!username||!password)  return showMsg('signup-msg','Please fill in all fields.');
-        if (password!==confirm)            return showMsg('signup-msg','Passwords do not match.');
-        if (password.length<6)            return showMsg('signup-msg','Password must be at least 6 characters.');
+        if (!email||!username||!password) return showMsg('signup-msg','Please fill in all fields.');
+        if (password!==confirm)           return showMsg('signup-msg','Passwords do not match.');
+        if (password.length<6)           return showMsg('signup-msg','Password must be at least 6 characters.');
 
-        setLoading('btn-signup-text','signup-spinner',true);
+        setLoad('btn-signup-text','signup-spinner',true);
         try {
+            // Create Firebase Auth account (shows in console immediately)
             const { user } = await createUserWithEmailAndPassword(auth, email, password);
             await updateProfile(user, { displayName: username });
 
-            // Store uid before signing out
-            pendingUID      = user.uid;
-            pendingUser     = user;
-            pendingIsSignup = true;
-            pendingData     = { email, username, tier:'Free' };
-            pendingCode     = gen6();
-            pendingCodeExp  = Date.now() + 10*60*1000;
+            // Capture state before signing out
+            otpUID     = user.uid;
+            otpUser    = user;
+            otpPayload = { email, username };
+            otpCode    = gen6();
+            otpExpiry  = Date.now() + 10*60*1000;
 
-            // Sign out immediately — user must verify before getting in
+            // Sign them out — must verify before getting in
             await signOut(auth);
 
-            await sendOTP(email, pendingCode);
-            showOTP(email);
-        } catch (err) {
+            // Send OTP email
+            await sendOTP(email, otpCode);
+            openOtpPanel(email);
+        } catch(err) {
             showMsg('signup-msg', err.message.replace('Firebase: ','').replace(/\(.*\)/,'').trim());
         } finally {
-            setLoading('btn-signup-text','signup-spinner',false);
+            setLoad('btn-signup-text','signup-spinner',false);
         }
     };
 
-    /* ════════════════════════
-       LOGIN
-    ════════════════════════ */
+    /* ══════════════════════
+       LOGIN — straight to home, no OTP
+    ══════════════════════ */
     document.getElementById('btn-login').onclick = async () => {
         const email    = document.getElementById('login-email').value.trim();
         const password = document.getElementById('login-password').value;
 
         if (!email||!password) return showMsg('login-msg','Please enter your email and password.');
 
-        setLoading('btn-login-text','login-spinner',true);
+        setLoad('btn-login-text','login-spinner',true);
         try {
             const { user } = await signInWithEmailAndPassword(auth, email, password);
-
-            // Check verification: Firebase native flag (accounts created in console)
-            // OR our custom Firestore flag (accounts verified via OTP)
-            const snap              = await getDoc(doc(db,'users',user.uid));
-            const firestoreVerified = snap.exists() && snap.data().emailVerified === true;
-
-            if (user.emailVerified || firestoreVerified) {
-                // Already verified — go straight home
-                window.location.href = 'home.html';
-                return;
-            }
-
-            // Not verified yet — send OTP
-            pendingUID      = user.uid;
-            pendingUser     = user;
-            pendingIsSignup = false;
-            pendingData     = { email };
-            pendingCode     = gen6();
-            pendingCodeExp  = Date.now() + 10*60*1000;
-
-            await sendOTP(email, pendingCode);
-            showOTP(email);
+            // Go straight to home — no OTP required for login
+            window.location.href = 'home.html';
         } catch {
             showMsg('login-msg','Invalid email or password.');
         } finally {
-            setLoading('btn-login-text','login-spinner',false);
+            setLoad('btn-login-text','login-spinner',false);
         }
     };
 
-    /* ════════════════════════
+    /* ══════════════════════
+       GOOGLE SSO
+    ══════════════════════ */
+    async function handleGoogleSSO() {
+        try {
+            const result = await signInWithPopup(auth, gProvider);
+            const user   = result.user;
+
+            // Check if this Google user already exists in Firestore
+            const snap = await getDoc(doc(db,'users',user.uid));
+
+            if (snap.exists()) {
+                // Returning user — go straight home
+                window.location.href = 'home.html';
+            } else {
+                // New Google user — ask for a username
+                ssoUser = user;
+                showPanel('panel-username');
+                setTimeout(() => document.getElementById('sso-username').focus(), 80);
+            }
+        } catch(err) {
+            showMsg('login-msg', err.message.replace('Firebase: ',''));
+        }
+    }
+
+    document.getElementById('btn-google-login').onclick  = handleGoogleSSO;
+    document.getElementById('btn-google-signup').onclick = handleGoogleSSO;
+
+    /* ── Confirm username for Google SSO ── */
+    document.getElementById('btn-sso-confirm').onclick = async () => {
+        const username = document.getElementById('sso-username').value.trim();
+        if (!username) return showMsg('sso-msg','Please choose a username.');
+        if (username.length < 2) return showMsg('sso-msg','Username must be at least 2 characters.');
+
+        setLoad('btn-sso-text','sso-spinner',true);
+        try {
+            await updateProfile(ssoUser, { displayName: username });
+            // Save to Firestore — auto-added as a user
+            await setDoc(doc(db,'users',ssoUser.uid), {
+                email:         ssoUser.email,
+                username:      username,
+                tier:          'Free',
+                emailVerified: true
+            });
+            window.location.href = 'home.html';
+        } catch(err) {
+            showMsg('sso-msg', err.message);
+            setLoad('btn-sso-text','sso-spinner',false);
+        }
+    };
+
+    // Allow Enter key in username field
+    document.getElementById('sso-username').addEventListener('keydown', e => {
+        if (e.key==='Enter') document.getElementById('btn-sso-confirm').click();
+    });
+
+    /* ══════════════════════
        FORGOT PASSWORD
-    ════════════════════════ */
+    ══════════════════════ */
     document.getElementById('forgot-link').onclick = async (e) => {
         e.preventDefault();
         const email = document.getElementById('login-email').value.trim();
