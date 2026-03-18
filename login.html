@@ -3,79 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nyx | Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Nyx - Secure Login</title>
     <style>
-        :root { --primary: #7289da; --bg: #0f1218; --card: #1c212c; --text: #ffffff; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; }
-        
-        header { width: 100%; padding: 15px 30px; display: flex; align-items: center; background: var(--card); border-bottom: 1px solid #333; box-sizing: border-box; }
-        .logo-box { display: flex; align-items: center; gap: 12px; }
-        .logo-img { width: 35px; height: 35px; border-radius: 6px; }
-        .logo-text { font-size: 22px; font-weight: 700; color: var(--primary); letter-spacing: 0.5px; }
-
-        .main-content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .container { background: var(--card); padding: 40px; border-radius: 16px; width: 100%; max-width: 380px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        
-        input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #333; background: #0b0e14; color: white; box-sizing: border-box; outline: none; }
-        .login-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; }
-        
-        .divider { display: flex; align-items: center; margin: 25px 0; color: #555; font-size: 12px; font-weight: bold; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #333; }
-        .divider:not(:empty)::before { margin-right: .5em; }
-        .divider:not(:empty)::after { margin-left: .5em; }
-
-        .google-btn { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; background: white; color: black; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; cursor: pointer; }
-        .toggle-link { margin-top: 20px; font-size: 13px; color: #8a8f98; cursor: pointer; display: block; }
-        .hidden { display: none; }
+        /* Same Nyx dark theme as before */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f0f13; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background-color: #1a1a24; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 300px; text-align: center; }
+        h1 { margin-top: 0; color: #a275ff; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #333; border-radius: 5px; background-color: #2a2a35; color: white; }
+        button { width: 100%; padding: 10px; background-color: #a275ff; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background-color: #8b5cf6; }
+        .toggle-text { margin-top: 15px; font-size: 0.9em; color: #aaa; cursor: pointer; }
+        .toggle-text:hover { color: white; }
+        #signup-section { display: none; }
+        .error { color: #ff5c5c; font-size: 0.8em; margin-top: 5px; display: none;}
+        .message { color: #a275ff; font-size: 0.8em; margin-top: 5px; display: none;}
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-box">
-            <img src="YOUR_LOGO_URL" alt="Logo" class="logo-img">
-            <span class="logo-text">Nyx</span>
-        </div>
-    </header>
-
-    <div class="main-content">
-        <div class="container">
-            <div id="login-form">
-                <h2>Welcome</h2>
-                <input type="text" id="login-identifier" placeholder="Username or Email">
-                <input type="password" id="login-password" placeholder="Password">
-                <button class="login-btn" onclick="handleLogin()">Login</button>
-                <span class="toggle-link" onclick="toggleView()">Create an account</span>
-            </div>
-
-            <div id="signup-form" class="hidden">
-                <h2>Join Nyx</h2>
-                <input type="text" id="reg-username" placeholder="Username">
-                <input type="email" id="reg-email" placeholder="Email">
-                <input type="password" id="reg-password" placeholder="Password">
-                <button class="login-btn" onclick="handleSignup()">Register</button>
-                <span class="toggle-link" onclick="toggleView()">Back to Login</span>
-            </div>
-
-            <div class="divider">OR</div>
-
-            <button class="google-btn" onclick="handleGoogleLogin()">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
-                Continue with Google
-            </button>
-        </div>
+<div class="container">
+    <h1>Nyx</h1>
+    
+    <div id="login-section">
+        <h2>Login</h2>
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <div id="login-message" class="error"></div>
+        <button id="btn-login">Log In</button>
+        <div class="toggle-text" id="toggle-to-signup">Need an account? Sign Up</div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="auth.js"></script>
-    <script>
-        function toggleView() {
-            document.getElementById('login-form').classList.toggle('hidden');
-            document.getElementById('signup-form').classList.toggle('hidden');
+    <div id="signup-section">
+        <h2>Sign Up</h2>
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <input type="text" id="signup-username" placeholder="Username" required>
+        <input type="password" id="signup-password" placeholder="Password" required>
+        <input type="password" id="signup-confirm" placeholder="Confirm Password" required>
+        <div id="signup-message" class="error"></div>
+        <button id="btn-signup">Create Account</button>
+        <div class="toggle-text" id="toggle-to-login">Already have an account? Log In</div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    // REPLACE THIS WITH YOUR FIREBASE CONFIG
+    const firebaseConfig = {
+  	apiKey: "AIzaSyAaRvkBoiZe2_h7tPsRYv3YmS487L09-H4",
+  	authDomain: "nyx-platform1.firebaseapp.com",
+  	projectId: "nyx-platform1",
+  	storageBucket: "nyx-platform1.firebasestorage.app",
+  	messagingSenderId: "55921089818",
+  	appId: "1:55921089818:web:6458294efcf6e6263260a3",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Toggle Forms
+    document.getElementById('toggle-to-signup').onclick = () => {
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('signup-section').style.display = 'block';
+    };
+    document.getElementById('toggle-to-login').onclick = () => {
+        document.getElementById('signup-section').style.display = 'none';
+        document.getElementById('login-section').style.display = 'block';
+    };
+
+    // Sign Up Logic
+    document.getElementById('btn-signup').onclick = async () => {
+        const email = document.getElementById('signup-email').value;
+        const username = document.getElementById('signup-username').value;
+        const password = document.getElementById('signup-password').value;
+        const confirm = document.getElementById('signup-confirm').value;
+        const msgDiv = document.getElementById('signup-message');
+
+        if (password !== confirm) {
+            msgDiv.innerText = "Passwords do not match."; msgDiv.style.display = "block"; return;
         }
-    </script>
+
+        try {
+            // 1. Create the user in Firebase Auth
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // 2. Send verification email
+            await sendEmailVerification(user);
+
+            // 3. Save username and Free tier to Firestore Database
+            await setDoc(doc(db, "users", user.uid), {
+                email: email,
+                username: username,
+                tier: 'Free'
+            });
+
+            // Log them out and tell them to verify
+            await signOut(auth);
+            msgDiv.style.color = '#a275ff';
+            msgDiv.innerText = "Account created! Please check your email to verify before logging in.";
+            msgDiv.style.display = "block";
+
+        } catch (error) {
+            msgDiv.style.color = '#ff5c5c';
+            msgDiv.innerText = error.message;
+            msgDiv.style.display = "block";
+        }
+    };
+
+    // Login Logic
+    document.getElementById('btn-login').onclick = async () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const msgDiv = document.getElementById('login-message');
+
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            
+            // Require email verification
+            if (!userCredential.user.emailVerified) {
+                await signOut(auth);
+                msgDiv.innerText = "Please verify your email before logging in.";
+                msgDiv.style.display = "block";
+                return;
+            }
+
+            // Success! Go to home.
+            window.location.href = 'home.html';
+        } catch (error) {
+            msgDiv.innerText = "Invalid credentials or email not found.";
+            msgDiv.style.display = "block";
+        }
+    };
+</script>
 </body>
 </html>
