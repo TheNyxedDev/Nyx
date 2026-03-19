@@ -26,59 +26,36 @@
             --success:     #a78bfa;
         }
         *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+        body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        /* ── Ambient ── */
-        .bg-orb {
-            position:fixed; border-radius:50%;
-            filter:blur(130px); pointer-events:none; z-index:0;
-        }
+        .bg-orb { position:fixed; border-radius:50%; filter:blur(130px); pointer-events:none; z-index:0; }
         .orb1 { width:600px;height:600px;background:rgba(124,58,237,0.12);top:-200px;left:-200px; }
         .orb2 { width:400px;height:400px;background:rgba(79,26,191,0.1);bottom:-150px;right:-150px; }
         body::before {
             content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-            background-image:
-                linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),
+                              linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px);
             background-size:48px 48px;
         }
 
-        /* ════════════════════════
-           SIDEBAR
-        ════════════════════════ */
+        /* ════ SIDEBAR ════ */
         .sidebar {
             position:fixed; left:0;top:0;bottom:0; width:220px;
-            background:rgba(14,13,28,0.92);
-            backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+            background:rgba(14,13,28,0.92); backdrop-filter:blur(20px);
             border-right:1px solid var(--border);
-            display:flex; flex-direction:column;
-            padding:28px 20px; z-index:10;
+            display:flex; flex-direction:column; padding:28px 20px; z-index:10;
         }
         .sidebar-logo {
-            font-family:'Unbounded',sans-serif;
-            font-size:1.4rem; font-weight:900; letter-spacing:-0.03em;
+            font-family:'Unbounded',sans-serif; font-size:1.4rem; font-weight:900; letter-spacing:-0.03em;
             background:linear-gradient(135deg,#fff 30%,var(--violet-lt));
             -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
             margin-bottom:40px;
         }
-        .nav-label {
-            font-size:0.65rem; letter-spacing:0.14em;
-            text-transform:uppercase; color:var(--muted);
-            font-family:'DM Mono',monospace; margin-bottom:8px; padding-left:4px;
-        }
+        .nav-label { font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;padding-left:4px; }
         .nav-item {
-            display:flex; align-items:center; gap:10px;
-            padding:9px 12px; border-radius:9px;
-            color:var(--muted); font-size:0.86rem; font-weight:500;
-            cursor:pointer; margin-bottom:3px;
-            transition:background 0.2s,color 0.2s;
-            text-decoration:none;
+            display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:9px;
+            color:var(--muted); font-size:0.86rem; font-weight:500; cursor:pointer; margin-bottom:3px;
+            transition:background 0.2s,color 0.2s; text-decoration:none;
         }
         .nav-item:hover  { background:rgba(124,58,237,0.1); color:var(--text); }
         .nav-item.active { background:rgba(124,58,237,0.18); color:var(--violet-lt); }
@@ -86,414 +63,310 @@
 
         .sidebar-footer { margin-top:auto; }
         .user-pill {
-            display:flex; align-items:center; gap:10px;
-            padding:10px 12px;
-            background:var(--surface2); border-radius:10px;
-            border:1px solid var(--border); margin-bottom:10px;
+            display:flex; align-items:center; gap:10px; padding:10px 12px;
+            background:var(--surface2); border-radius:10px; border:1px solid var(--border); margin-bottom:8px;
         }
         .avatar {
-            width:32px;height:32px;border-radius:50%;
-            background:var(--violet);
-            display:flex;align-items:center;justify-content:center;
-            font-size:0.78rem;font-weight:700;flex-shrink:0;
+            width:32px;height:32px;border-radius:50%;background:var(--violet);
+            display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0;
         }
         .user-info { overflow:hidden; }
         .user-name  { font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
         .user-email { font-size:0.68rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
 
-        .btn-logout {
-            width:100%; padding:9px;
-            background:transparent; border:1px solid var(--border);
-            border-radius:9px; color:var(--muted);
+        .btn-settings {
+            width:100%; padding:9px; background:transparent;
+            border:1px solid var(--border); border-radius:9px; color:var(--muted);
             font-family:'DM Sans',sans-serif; font-size:0.83rem; cursor:pointer;
-            display:flex;align-items:center;justify-content:center;gap:7px;
+            display:flex; align-items:center; justify-content:center; gap:7px; margin-bottom:7px;
+            transition:background 0.2s,color 0.2s,border-color 0.2s;
+        }
+        .btn-settings:hover { background:rgba(124,58,237,0.1);color:var(--text);border-color:var(--violet); }
+
+        .btn-logout {
+            width:100%; padding:9px; background:transparent;
+            border:1px solid var(--border); border-radius:9px; color:var(--muted);
+            font-family:'DM Sans',sans-serif; font-size:0.83rem; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; gap:7px;
             transition:background 0.2s,color 0.2s,border-color 0.2s;
         }
         .btn-logout:hover { background:rgba(248,113,113,0.08);color:#f87171;border-color:rgba(248,113,113,0.3); }
 
-        /* ════════════════════════
-           MAIN CONTENT
-        ════════════════════════ */
-        .main {
-            margin-left:220px;
-            padding:40px 40px 60px;
-            position:relative; z-index:1; min-height:100vh;
-        }
+        /* ════ MAIN ════ */
+        .main { margin-left:220px; padding:40px 40px 60px; position:relative; z-index:1; min-height:100vh; }
 
-        @keyframes fadeUp {
-            from { opacity:0; transform:translateY(14px); }
-            to   { opacity:1; transform:translateY(0); }
-        }
-        .fade { animation:fadeUp 0.45s ease both; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+        .fade    { animation:fadeUp 0.45s ease both; }
         .fade-d1 { animation-delay:0.06s; }
         .fade-d2 { animation-delay:0.12s; }
         .fade-d3 { animation-delay:0.18s; }
         .fade-d4 { animation-delay:0.24s; }
 
         .page-header { margin-bottom:28px; }
-        .page-title { font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px; }
-        .page-subtitle { font-size:0.86rem;color:var(--muted); }
+        .page-title   { font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px; }
+        .page-subtitle{ font-size:0.86rem;color:var(--muted); }
 
-        /* ── Stat Cards ── */
-        .stat-grid {
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-            gap:16px; margin-bottom:28px;
-        }
-        .stat-card {
-            background:rgba(14,13,28,0.8);
-            backdrop-filter:blur(12px);
-            border:1px solid var(--border);
-            border-radius:13px; padding:20px;
-        }
-        .stat-label {
-            font-size:0.68rem;text-transform:uppercase;
-            letter-spacing:0.12em;color:var(--muted);
-            font-family:'DM Mono',monospace;margin-bottom:12px;
-        }
+        /* stat grid */
+        .stat-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px; }
+        .stat-card { background:rgba(14,13,28,0.8);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:13px;padding:20px; }
+        .stat-label { font-size:0.68rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:12px; }
         .stat-value { font-size:0.9rem;font-weight:600; }
 
-        /* ── Tier badge ── */
-        .tier-badge {
-            display:inline-flex;align-items:center;gap:6px;
-            padding:5px 13px;border-radius:30px;
-            font-size:0.8rem;font-weight:600;letter-spacing:0.04em;
-        }
+        /* tier badge */
+        .tier-badge { display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:30px;font-size:0.8rem;font-weight:600;letter-spacing:0.04em; }
         .tier-badge.Free    { background:var(--free-bg);   color:var(--muted);   border:1px solid rgba(126,122,158,0.3); }
         .tier-badge.Gold    { background:var(--gold-bg);   color:var(--gold);    border:1px solid rgba(245,200,67,0.35); }
         .tier-badge.Diamond { background:var(--diamond-bg);color:var(--diamond); border:1px solid rgba(125,211,252,0.35); }
 
-        /* ── Section heading ── */
-        .section-heading {
-            display:flex;align-items:center;justify-content:space-between;
-            margin-bottom:14px;
-        }
-        .section-title {
-            font-size:0.95rem;font-weight:700;
-            display:flex;align-items:center;gap:8px;
-        }
-        .section-link {
-            font-size:0.75rem;color:var(--violet-lt);
-            text-decoration:none;font-weight:500;
-            transition:color 0.2s;
-        }
+        /* section row */
+        .section-heading { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
+        .section-title   { font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:8px; }
+        .section-link    { font-size:0.75rem;color:var(--violet-lt);text-decoration:none;font-weight:500;transition:color 0.2s; }
         .section-link:hover { color:#fff; }
 
-        /* ── Horizontal scroll row ── */
-        .game-row {
-            display:flex; gap:14px;
-            overflow-x:auto; padding-bottom:10px;
-            scrollbar-width:thin; scrollbar-color:rgba(124,58,237,0.3) transparent;
-        }
+        /* horizontal game rows */
+        .game-row { display:flex;gap:14px;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,0.3) transparent; }
         .game-row::-webkit-scrollbar { height:4px; }
-        .game-row::-webkit-scrollbar-track { background:transparent; }
         .game-row::-webkit-scrollbar-thumb { background:rgba(124,58,237,0.3);border-radius:2px; }
 
         .row-card {
-            flex-shrink:0; width:150px;
-            background:rgba(14,13,28,0.8);
-            border:1px solid var(--border);
-            border-radius:10px; overflow:hidden;
-            cursor:pointer;
-            transition:transform 0.22s ease,box-shadow 0.22s ease,border-color 0.22s ease;
-            position:relative;
+            flex-shrink:0; width:150px; background:rgba(14,13,28,0.8);
+            border:1px solid var(--border); border-radius:10px; overflow:hidden; cursor:pointer;
+            transition:transform 0.22s,box-shadow 0.22s,border-color 0.22s; position:relative;
         }
-        .row-card:hover {
-            transform:translateY(-5px);
-            box-shadow:0 14px 36px rgba(124,58,237,0.28);
-            border-color:var(--violet);
-        }
-        .row-thumb {
-            position:relative; aspect-ratio:4/3; overflow:hidden;
-            background:var(--surface2);
-        }
-        .row-thumb img {
-            width:100%;height:100%;object-fit:cover;
-            transition:transform 0.3s;
-        }
+        .row-card:hover { transform:translateY(-5px);box-shadow:0 14px 36px rgba(124,58,237,0.28);border-color:var(--violet); }
+        .row-thumb { position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface2); }
+        .row-thumb img { width:100%;height:100%;object-fit:cover;transition:transform 0.3s; }
         .row-card:hover .row-thumb img { transform:scale(1.07); }
-        .row-thumb-placeholder {
-            width:100%;height:100%;
-            background:linear-gradient(135deg,#2d1470,#15132b);
+        .row-thumb-ph {
+            width:100%;height:100%;background:linear-gradient(135deg,#2d1470,#15132b);
             display:flex;align-items:center;justify-content:center;
-            font-family:'Unbounded',sans-serif;
-            font-size:2rem;font-weight:900;color:rgba(167,139,250,0.45);
+            font-family:'Unbounded',sans-serif;font-size:2rem;font-weight:900;color:rgba(167,139,250,0.45);
         }
-        .row-play-overlay {
-            position:absolute;inset:0;
-            background:rgba(124,58,237,0.6);
-            display:flex;align-items:center;justify-content:center;
-            opacity:0;transition:opacity 0.22s;backdrop-filter:blur(2px);
-        }
-        .row-card:hover .row-play-overlay { opacity:1; }
-        .row-play-circle {
-            width:38px;height:38px;border-radius:50%;
-            background:rgba(255,255,255,0.95);
-            display:flex;align-items:center;justify-content:center;
-        }
+        .row-play-ov { position:absolute;inset:0;background:rgba(124,58,237,0.6);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.22s;backdrop-filter:blur(2px); }
+        .row-card:hover .row-play-ov { opacity:1; }
+        .row-play-circle { width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center; }
         .row-card-info { padding:9px 10px 10px; }
         .row-card-title { font-size:0.76rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
         .row-card-sub   { font-size:0.65rem;color:var(--muted);margin-top:2px; }
-
-        /* ── Rank badge (top played) ── */
         .rank-badge {
-            position:absolute;top:7px;left:7px;
-            width:22px;height:22px;border-radius:50%;
-            background:var(--violet);
-            display:flex;align-items:center;justify-content:center;
-            font-size:0.6rem;font-weight:700;font-family:'DM Mono',monospace;
-            z-index:2;box-shadow:0 2px 8px rgba(0,0,0,0.5);
+            position:absolute;top:7px;left:7px;width:22px;height:22px;border-radius:50%;
+            background:var(--violet);display:flex;align-items:center;justify-content:center;
+            font-size:0.6rem;font-weight:700;font-family:'DM Mono',monospace;z-index:2;box-shadow:0 2px 8px rgba(0,0,0,0.5);
         }
-        .rank-badge.gold    { background:var(--gold);color:#000; }
-        .rank-badge.silver  { background:#b0b8c8;color:#000; }
-        .rank-badge.bronze  { background:#c8956b;color:#000; }
-
-        /* ── Favorite heart button ── */
+        .rank-badge.gold   { background:var(--gold);color:#000; }
+        .rank-badge.silver { background:#b0b8c8;color:#000; }
+        .rank-badge.bronze { background:#c8956b;color:#000; }
         .fav-btn {
-            position:absolute;top:7px;right:7px; z-index:3;
-            width:26px;height:26px;border-radius:50%;
-            background:rgba(7,7,14,0.75);border:none;
-            display:flex;align-items:center;justify-content:center;
-            cursor:pointer;transition:background 0.2s,transform 0.15s;
-            font-size:0.85rem;line-height:1;
-            backdrop-filter:blur(4px);
+            position:absolute;top:7px;right:7px;z-index:3;width:26px;height:26px;border-radius:50%;
+            background:rgba(7,7,14,0.75);border:none;display:flex;align-items:center;justify-content:center;
+            cursor:pointer;transition:background 0.2s,transform 0.15s;font-size:0.85rem;line-height:1;backdrop-filter:blur(4px);
         }
         .fav-btn:hover { background:rgba(248,113,113,0.25);transform:scale(1.15); }
         .fav-btn.active { background:rgba(248,113,113,0.2); }
+        .row-empty { width:100%;padding:28px 16px;text-align:center;color:var(--muted);font-size:0.8rem;line-height:1.6;background:rgba(14,13,28,0.5);border:1px dashed rgba(124,58,237,0.2);border-radius:10px; }
 
-        /* Empty row state */
-        .row-empty {
-            width:100%;padding:28px 16px;
-            text-align:center;color:var(--muted);
-            font-size:0.8rem;line-height:1.6;
-            background:rgba(14,13,28,0.5);
-            border:1px dashed rgba(124,58,237,0.2);
-            border-radius:10px;
-        }
-
-        /* ── Section card (password etc.) ── */
-        .section-card {
-            background:rgba(14,13,28,0.8);
-            backdrop-filter:blur(12px);
-            border:1px solid var(--border);
-            border-radius:13px;padding:24px;
-            margin-bottom:20px;
-        }
-        .sec-title {
-            font-size:0.92rem;font-weight:700;
-            margin-bottom:16px;
-            display:flex;align-items:center;gap:8px;
-        }
-
-        .field { margin-bottom:13px; }
-        .field label {
-            display:block;font-size:0.68rem;font-weight:500;
-            color:var(--muted);letter-spacing:0.08em;
-            text-transform:uppercase;margin-bottom:6px;
-        }
-        .field input {
-            width:100%;max-width:360px;padding:9px 12px;
-            background:var(--surface2);border:1px solid rgba(124,58,237,0.2);
-            border-radius:8px;color:var(--text);
-            font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none;
-            transition:border-color 0.2s,box-shadow 0.2s;
-        }
-        .field input:focus { border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,58,237,0.12); }
-        .field input::placeholder { color:#3d3a5a; }
-
-        .btn-sm {
-            padding:8px 18px;background:var(--violet);border:none;
-            border-radius:8px;color:#fff;
-            font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:600;
-            cursor:pointer;transition:background 0.2s,transform 0.1s;
-        }
-        .btn-sm:hover  { background:#6d28d9;transform:translateY(-1px); }
-        .btn-sm:active { transform:translateY(0); }
-
-        .msg-inline { font-size:0.76rem;margin-top:10px;display:none; }
-        .msg-inline.error   { color:var(--error); }
-        .msg-inline.success { color:var(--violet-lt); }
-
-        /* ════════════════════════
-           ADMIN — upload form, table etc.
-        ════════════════════════ */
-        .admin-grid {
-            display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-            gap:16px;margin-bottom:28px;
-        }
-        .stat-pill {
-            display:inline-flex;align-items:center;gap:6px;
-            padding:5px 12px;border-radius:20px;
-            font-size:0.75rem;font-family:'DM Mono',monospace;
-        }
+        /* admin stuff */
+        .stat-pill { display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:0.75rem;font-family:'DM Mono',monospace; }
         .stat-pill.violet { background:rgba(124,58,237,0.15);color:var(--violet-lt);border:1px solid rgba(124,58,237,0.3); }
         .stat-pill.gold   { background:var(--gold-bg);color:var(--gold);border:1px solid rgba(245,200,67,0.25); }
         .stat-pill.sky    { background:var(--diamond-bg);color:var(--diamond);border:1px solid rgba(125,211,252,0.25); }
         .stats-row { display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px; }
 
+        .section-card { background:rgba(14,13,28,0.8);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:13px;padding:24px;margin-bottom:20px; }
+        .sec-title { font-size:0.92rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px; }
+
         .table-wrap { overflow-x:auto;border-radius:11px;border:1px solid var(--border); }
         table { width:100%;border-collapse:collapse;background:rgba(14,13,28,0.6);font-size:0.86rem; }
-        thead th {
-            background:var(--surface2);color:var(--muted);
-            font-size:0.68rem;font-family:'DM Mono',monospace;
-            letter-spacing:0.1em;text-transform:uppercase;
-            padding:12px 15px;text-align:left;font-weight:500;
-        }
+        thead th { background:var(--surface2);color:var(--muted);font-size:0.68rem;font-family:'DM Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;padding:12px 15px;text-align:left;font-weight:500; }
         tbody td { padding:12px 15px;border-top:1px solid var(--border);vertical-align:middle; }
         tbody tr:hover { background:rgba(124,58,237,0.04); }
         .uid-cell { font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted); }
-
-        select.tier-select {
-            background:var(--surface2);color:var(--text);
-            border:1px solid var(--border);padding:5px 9px;
-            border-radius:7px;font-family:'DM Sans',sans-serif;
-            font-size:0.82rem;cursor:pointer;
-            transition:border-color 0.2s;width:auto;
-        }
+        select.tier-select { background:var(--surface2);color:var(--text);border:1px solid var(--border);padding:5px 9px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;transition:border-color 0.2s;width:auto; }
         select.tier-select:focus { border-color:var(--violet);outline:none; }
 
-        /* Upload zone */
+        /* upload */
         .upload-zone { display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;margin-bottom:18px; }
-
         .thumb-drop {
-            width:154px;height:115px;flex-shrink:0;
-            border:2px dashed rgba(124,58,237,0.3);
-            border-radius:10px;background:var(--surface2);
-            display:flex;flex-direction:column;
-            align-items:center;justify-content:center;
-            cursor:pointer;transition:border-color 0.2s,background 0.2s;
-            overflow:hidden;position:relative;
+            width:154px;height:115px;flex-shrink:0;border:2px dashed rgba(124,58,237,0.3);
+            border-radius:10px;background:var(--surface2);display:flex;flex-direction:column;
+            align-items:center;justify-content:center;cursor:pointer;
+            transition:border-color 0.2s,background 0.2s;overflow:hidden;position:relative;
         }
         .thumb-drop:hover { border-color:var(--violet);background:rgba(124,58,237,0.06); }
         .thumb-drop input { position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%; }
         .thumb-drop img   { width:100%;height:100%;object-fit:cover;display:none; }
         .thumb-drop .drop-hint { font-size:0.62rem;color:var(--muted);text-align:center;padding:8px;pointer-events:none; }
         .thumb-drop .drop-icon { font-size:1.4rem;margin-bottom:5px; }
-
         .upload-fields { flex:1;min-width:220px; }
-        .field-upload input { width:100%;max-width:100%;padding:9px 12px;
-            background:var(--surface2);border:1px solid rgba(124,58,237,0.2);
-            border-radius:8px;color:var(--text);
-            font-family:'DM Sans',sans-serif;font-size:0.84rem;outline:none;
+
+        .f-label { display:block;font-size:0.66rem;font-weight:500;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px; }
+        .f-input {
+            width:100%;padding:9px 12px;background:var(--surface2);border:1px solid rgba(124,58,237,0.2);
+            border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.84rem;outline:none;
             transition:border-color 0.2s,box-shadow 0.2s;margin-bottom:12px;
         }
-        .field-upload input[type="file"] { cursor:pointer;padding:7px 10px; }
-        .field-upload input:focus { border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,58,237,0.12); }
-        .field-upload input::placeholder { color:#3d3a5a; }
-        .field-upload label {
-            display:block;font-size:0.66rem;font-weight:500;
-            color:var(--muted);letter-spacing:0.08em;
-            text-transform:uppercase;margin-bottom:6px;
-        }
+        .f-input[type="file"] { cursor:pointer;padding:7px 10px; }
+        .f-input:focus { border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,58,237,0.12); }
+        .f-input::placeholder { color:#3d3a5a; }
 
         .progress-wrap { height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:10px;display:none; }
         .progress-bar  { height:100%;background:var(--violet);border-radius:2px;width:0%;transition:width 0.3s; }
 
-        .game-admin-item {
-            display:flex;align-items:center;gap:13px;
-            padding:10px 13px;border:1px solid var(--border);
-            border-radius:10px;margin-bottom:8px;
-            background:rgba(21,19,43,0.5);
-        }
+        .game-admin-item { display:flex;align-items:center;gap:13px;padding:10px 13px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:rgba(21,19,43,0.5); }
         .game-admin-thumb { width:68px;height:51px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--surface2); }
-        .game-admin-placeholder {
-            width:68px;height:51px;border-radius:6px;flex-shrink:0;
-            background:linear-gradient(135deg,#2d1470,#15132b);
-            display:flex;align-items:center;justify-content:center;
-            font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:900;
-            color:rgba(167,139,250,0.45);
-        }
-        .game-admin-info { flex:1;min-width:0; }
+        .game-admin-ph    { width:68px;height:51px;border-radius:6px;flex-shrink:0;background:linear-gradient(135deg,#2d1470,#15132b);display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:900;color:rgba(167,139,250,0.45); }
+        .game-admin-info  { flex:1;min-width:0; }
         .game-admin-title { font-weight:600;font-size:0.86rem; }
         .game-admin-date  { font-size:0.68rem;color:var(--muted);margin-top:2px; }
         .game-admin-plays { font-size:0.68rem;color:var(--violet-lt);margin-top:2px; }
 
-        .btn-danger {
-            padding:7px 14px;background:rgba(248,113,113,0.1);
-            border:1px solid rgba(248,113,113,0.25);
-            border-radius:7px;color:#f87171;
-            font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:600;
-            cursor:pointer;transition:background 0.2s;flex-shrink:0;
-        }
-        .btn-danger:hover { background:rgba(248,113,113,0.2); }
-        .btn-secondary {
-            padding:8px 14px;background:transparent;
-            border:1px solid var(--border);
-            border-radius:8px;color:var(--muted);
-            font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:500;
-            cursor:pointer;transition:background 0.2s,color 0.2s;margin-left:8px;
-        }
-        .btn-secondary:hover { background:rgba(124,58,237,0.1);color:var(--text);border-color:var(--violet); }
+        .btn-sm { padding:8px 18px;background:var(--violet);border:none;border-radius:8px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:600;cursor:pointer;transition:background 0.2s,transform 0.1s; }
+        .btn-sm:hover  { background:#6d28d9;transform:translateY(-1px); }
+        .btn-sm:active { transform:translateY(0); }
+        .btn-sec { padding:8px 14px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:500;cursor:pointer;transition:background 0.2s,color 0.2s;margin-left:8px; }
+        .btn-sec:hover { background:rgba(124,58,237,0.1);color:var(--text);border-color:var(--violet); }
+        .btn-danger-sm { padding:7px 14px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);border-radius:7px;color:#f87171;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;transition:background 0.2s;flex-shrink:0; }
+        .btn-danger-sm:hover { background:rgba(248,113,113,0.2); }
 
-        /* ── Loading screen ── */
-        #loading-screen {
-            position:fixed;inset:0;background:var(--bg);
-            display:flex;align-items:center;justify-content:center;
-            z-index:9999;flex-direction:column;gap:16px;
-        }
-        .loader-logo {
-            font-family:'Unbounded',sans-serif;font-size:2rem;font-weight:900;
-            background:linear-gradient(135deg,#fff 30%,var(--violet-lt));
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-        }
-        .loader-bar { width:100px;height:2px;background:var(--surface2);border-radius:2px;overflow:hidden; }
-        .loader-bar::after {
-            content:'';display:block;width:50%;height:100%;background:var(--violet);
-            border-radius:2px;animation:slide 0.9s ease-in-out infinite alternate;
-        }
-        @keyframes slide {
-            from { transform:translateX(-100%); }
-            to   { transform:translateX(200%); }
-        }
+        .msg-inline { font-size:0.76rem;margin-top:10px;display:none; }
+        .msg-inline.error   { color:var(--error); }
+        .msg-inline.success { color:var(--success); }
 
-        /* ── Game viewer modal (same as games.html) ── */
-        .game-modal {
-            position:fixed;inset:0;z-index:500;
+        /* ════ SETTINGS PANEL (slide-in from right) ════ */
+        .settings-overlay {
+            position:fixed;inset:0;z-index:200;
+            background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);
+            opacity:0;pointer-events:none;transition:opacity 0.3s;
+        }
+        .settings-overlay.open { opacity:1;pointer-events:all; }
+
+        .settings-panel {
+            position:fixed;top:0;right:0;bottom:0;width:420px;z-index:201;
+            background:rgba(11,10,22,0.98);
+            border-left:1px solid var(--border);
+            box-shadow:-20px 0 60px rgba(0,0,0,0.6);
             display:flex;flex-direction:column;
-            opacity:0;pointer-events:none;
-            transition:opacity 0.3s ease;
-            background:#000;
+            transform:translateX(100%);
+            transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
+            overflow-y:auto;
         }
-        .game-modal.open { opacity:1;pointer-events:all; }
-        .modal-header {
-            height:52px;flex-shrink:0;
-            background:rgba(7,7,14,0.98);
-            border-bottom:1px solid var(--border);
+        .settings-panel.open { transform:translateX(0); }
+
+        .settings-header {
             display:flex;align-items:center;justify-content:space-between;
-            padding:0 18px;position:relative;z-index:1;
+            padding:24px 28px 20px;
+            border-bottom:1px solid var(--border);
+            flex-shrink:0;
         }
+        .settings-title {
+            font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:700;
+            display:flex;align-items:center;gap:10px;
+        }
+        .settings-close {
+            width:32px;height:32px;border-radius:8px;
+            background:rgba(255,255,255,0.04);border:1px solid var(--border);
+            display:flex;align-items:center;justify-content:center;
+            cursor:pointer;color:var(--muted);font-size:1rem;
+            transition:background 0.2s,color 0.2s;
+        }
+        .settings-close:hover { background:rgba(248,113,113,0.1);color:#f87171;border-color:rgba(248,113,113,0.3); }
+
+        .settings-body { padding:24px 28px; flex:1; }
+
+        .settings-section { margin-bottom:28px; }
+        .settings-section-title {
+            font-size:0.65rem;text-transform:uppercase;letter-spacing:0.14em;
+            color:var(--muted);font-family:'DM Mono',monospace;
+            margin-bottom:12px;padding-bottom:8px;
+            border-bottom:1px solid var(--border);
+        }
+
+        .info-row {
+            display:flex;align-items:center;justify-content:space-between;
+            padding:11px 14px;background:var(--surface2);
+            border:1px solid var(--border);border-radius:9px;margin-bottom:8px;
+        }
+        .info-row-label { font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace; }
+        .info-row-value { font-size:0.86rem;font-weight:500;color:var(--text); }
+
+        .s-field { margin-bottom:12px; }
+        .s-field label { display:block;font-size:0.66rem;font-weight:500;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px; }
+        .s-field input {
+            width:100%;padding:10px 13px;background:var(--surface2);border:1px solid rgba(124,58,237,0.2);
+            border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none;
+            transition:border-color 0.2s,box-shadow 0.2s;
+        }
+        .s-field input:focus { border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,58,237,0.12); }
+        .s-field input::placeholder { color:#3d3a5a; }
+
+        .danger-zone {
+            border:1px solid rgba(248,113,113,0.2);
+            border-radius:10px;padding:16px;
+            background:rgba(248,113,113,0.04);
+        }
+        .danger-zone-title {
+            font-size:0.75rem;font-weight:700;color:#f87171;
+            margin-bottom:8px;display:flex;align-items:center;gap:6px;
+        }
+        .danger-zone-desc { font-size:0.75rem;color:var(--muted);line-height:1.5;margin-bottom:14px; }
+        .btn-delete-account {
+            width:100%;padding:10px;
+            background:rgba(248,113,113,0.1);
+            border:1px solid rgba(248,113,113,0.35);
+            border-radius:8px;color:#f87171;
+            font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;
+            cursor:pointer;transition:background 0.2s;
+        }
+        .btn-delete-account:hover { background:rgba(248,113,113,0.2); }
+
+        /* Confirm delete modal */
+        .confirm-overlay {
+            position:fixed;inset:0;z-index:300;
+            background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);
+            display:flex;align-items:center;justify-content:center;
+            opacity:0;pointer-events:none;transition:opacity 0.25s;
+        }
+        .confirm-overlay.open { opacity:1;pointer-events:all; }
+        .confirm-box {
+            background:rgba(14,13,28,0.98);border:1px solid var(--border);
+            border-radius:16px;padding:32px 28px;width:360px;
+            box-shadow:0 30px 60px rgba(0,0,0,0.7);
+            transform:scale(0.95);transition:transform 0.25s;
+        }
+        .confirm-overlay.open .confirm-box { transform:scale(1); }
+        .confirm-title { font-family:'Unbounded',sans-serif;font-size:0.95rem;font-weight:700;margin-bottom:8px;color:#f87171; }
+        .confirm-sub   { font-size:0.78rem;color:var(--muted);line-height:1.6;margin-bottom:20px; }
+
+        /* ════ GAME MODAL ════ */
+        .game-modal { position:fixed;inset:0;z-index:500;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.3s;background:#000; }
+        .game-modal.open { opacity:1;pointer-events:all; }
+        .modal-header { height:52px;flex-shrink:0;background:rgba(7,7,14,0.98);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:relative;z-index:1; }
         .modal-left { display:flex;align-items:center;gap:12px; }
-        .modal-nyx  { font-family:'Unbounded',sans-serif;font-size:0.85rem;font-weight:900;
-            background:linear-gradient(135deg,#fff 30%,var(--violet-lt));
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+        .modal-nyx  { font-family:'Unbounded',sans-serif;font-size:0.85rem;font-weight:900;background:linear-gradient(135deg,#fff 30%,var(--violet-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
         .modal-game-name { font-size:0.85rem;font-weight:600;color:var(--text); }
         .modal-controls { display:flex;gap:7px; }
-        .mc-btn {
-            display:flex;align-items:center;gap:5px;padding:6px 11px;
-            background:transparent;border:1px solid var(--border);border-radius:6px;
-            color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.73rem;font-weight:500;
-            cursor:pointer;transition:background 0.2s,border-color 0.2s;
-        }
+        .mc-btn { display:flex;align-items:center;gap:5px;padding:6px 11px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.73rem;font-weight:500;cursor:pointer;transition:background 0.2s,border-color 0.2s; }
         .mc-btn:hover { background:rgba(124,58,237,0.12);border-color:var(--violet); }
         .mc-btn.mc-close { background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.25);color:#f87171; }
         .mc-btn.mc-close:hover { background:rgba(248,113,113,0.18); }
         .mc-btn svg { width:13px;height:13px;flex-shrink:0; }
         .game-iframe-wrap { flex:1;position:relative; }
-        .iframe-loader {
-            position:absolute;inset:0;background:#07070e;
-            display:flex;flex-direction:column;align-items:center;justify-content:center;
-            gap:14px;z-index:5;transition:opacity 0.35s;
-        }
+        .iframe-loader { position:absolute;inset:0;background:#07070e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:5;transition:opacity 0.35s; }
         .iframe-loader.hidden { opacity:0;pointer-events:none; }
         .dots { display:flex;gap:7px; }
         .dot { width:7px;height:7px;border-radius:50%;background:var(--violet);animation:bounce 1s ease infinite; }
         .dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}
-        @keyframes bounce {
-            0%,100%{transform:translateY(0);opacity:0.4}
-            50%{transform:translateY(-7px);opacity:1}
-        }
+        @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4} 50%{transform:translateY(-7px);opacity:1} }
         .loader-text-sm { font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted); }
         #game-iframe { width:100%;height:100%;border:none;position:absolute;inset:0; }
+
+        /* ════ LOADER ════ */
+        #loading-screen { position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px; }
+        .loader-logo { font-family:'Unbounded',sans-serif;font-size:2rem;font-weight:900;background:linear-gradient(135deg,#fff 30%,var(--violet-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+        .loader-bar { width:100px;height:2px;background:var(--surface2);border-radius:2px;overflow:hidden; }
+        .loader-bar::after { content:'';display:block;width:50%;height:100%;background:var(--violet);border-radius:2px;animation:slide 0.9s ease-in-out infinite alternate; }
+        @keyframes slide { from{transform:translateX(-100%)} to{transform:translateX(200%)} }
     </style>
 </head>
 <body>
@@ -501,22 +374,17 @@
 <div class="bg-orb orb1"></div>
 <div class="bg-orb orb2"></div>
 
-<!-- Loading Screen -->
 <div id="loading-screen">
     <div class="loader-logo">Nyx</div>
     <div class="loader-bar"></div>
 </div>
 
-<!-- Sidebar -->
+<!-- ══ SIDEBAR ══ -->
 <nav class="sidebar">
     <div class="sidebar-logo">Nyx</div>
     <div class="nav-label">Menu</div>
-    <a class="nav-item active" href="home.html">
-        <span class="nav-icon">⬡</span> Dashboard
-    </a>
-    <a class="nav-item" href="games.html">
-        <span class="nav-icon">🎮</span> Game Library
-    </a>
+    <a class="nav-item active" href="home.html"><span class="nav-icon">⬡</span> Dashboard</a>
+    <a class="nav-item" href="games.html"><span class="nav-icon">🎮</span> Game Library</a>
     <div class="sidebar-footer">
         <div class="user-pill">
             <div class="avatar" id="sb-avatar">?</div>
@@ -525,14 +393,85 @@
                 <div class="user-email" id="sb-email">…</div>
             </div>
         </div>
-        <button class="btn-logout" id="btn-logout">↩ Sign Out</button>
+        <button class="btn-settings" id="btn-open-settings">⚙ Settings</button>
+        <button class="btn-logout"   id="btn-logout">↩ Sign Out</button>
     </div>
 </nav>
 
-<!-- Main -->
+<!-- ══ MAIN ══ -->
 <main class="main" id="app-content"></main>
 
-<!-- Game Viewer Modal (shared) -->
+<!-- ══ SETTINGS PANEL ══ -->
+<div class="settings-overlay" id="settings-overlay"></div>
+<div class="settings-panel" id="settings-panel">
+    <div class="settings-header">
+        <div class="settings-title">⚙ Settings</div>
+        <div class="settings-close" id="settings-close">✕</div>
+    </div>
+    <div class="settings-body">
+
+        <!-- Profile info -->
+        <div class="settings-section">
+            <div class="settings-section-title">Profile</div>
+            <div class="info-row">
+                <span class="info-row-label">Username</span>
+                <span class="info-row-value" id="settings-username">—</span>
+            </div>
+            <div class="info-row">
+                <span class="info-row-label">Email</span>
+                <span class="info-row-value" id="settings-email" style="font-size:0.8rem">—</span>
+            </div>
+            <div class="info-row">
+                <span class="info-row-label">Plan</span>
+                <span class="info-row-value" id="settings-tier">—</span>
+            </div>
+        </div>
+
+        <!-- Change password -->
+        <div class="settings-section">
+            <div class="settings-section-title">Change Password</div>
+            <div class="s-field">
+                <label>Current Password</label>
+                <input type="password" id="s-cur-pw" placeholder="••••••••">
+            </div>
+            <div class="s-field">
+                <label>New Password</label>
+                <input type="password" id="s-new-pw" placeholder="••••••••">
+            </div>
+            <div class="s-field">
+                <label>Confirm New Password</label>
+                <input type="password" id="s-conf-pw" placeholder="••••••••">
+            </div>
+            <button class="btn-sm" id="s-btn-pw" style="width:100%;margin-top:4px">Update Password</button>
+            <div id="s-pw-msg" class="msg-inline"></div>
+        </div>
+
+        <!-- Danger zone -->
+        <div class="settings-section">
+            <div class="settings-section-title">Danger Zone</div>
+            <div class="danger-zone">
+                <div class="danger-zone-title">⚠ Delete Account</div>
+                <div class="danger-zone-desc">
+                    Permanently deletes your account and all data. This action cannot be undone.
+                    Enter your password twice to confirm.
+                </div>
+                <div class="s-field">
+                    <label>Password</label>
+                    <input type="password" id="del-pw1" placeholder="Enter password">
+                </div>
+                <div class="s-field">
+                    <label>Confirm Password</label>
+                    <input type="password" id="del-pw2" placeholder="Enter password again">
+                </div>
+                <button class="btn-delete-account" id="btn-delete-account">Delete My Account</button>
+                <div id="del-msg" class="msg-inline"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ══ GAME VIEWER MODAL ══ -->
 <div class="game-modal" id="game-modal">
     <div class="modal-header">
         <div class="modal-left">
@@ -569,16 +508,20 @@
 </div>
 
 <script type="module">
-    /* ─── Firebase imports (NO Storage here — avoids load failures) ─── */
-    import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import {
         getAuth, onAuthStateChanged, signOut,
-        EmailAuthProvider, reauthenticateWithCredential, updatePassword
+        EmailAuthProvider, reauthenticateWithCredential,
+        updatePassword, deleteUser
     } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import {
         getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc,
-        collection, getDocs, query, orderBy, increment
+        collection, getDocs
     } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import {
+        getStorage, ref as sRef,
+        uploadBytes, getDownloadURL, deleteObject
+    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
     const firebaseConfig = {
         apiKey:            "AIzaSyAaRvkBoiZe2_h7tPsRYv3YmS487L09-H4",
@@ -589,27 +532,26 @@
         appId:             "1:55921089818:web:6458294efcf6e6263260a3",
     };
 
-    const app  = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db   = getFirestore(app);
+    const app     = initializeApp(firebaseConfig);
+    const auth    = getAuth(app);
+    const db      = getFirestore(app);
+    const storage = getStorage(app);
 
     const ADMIN = 'charanthegoatt@gmail.com';
 
-    /* ── shared game state ── */
-    let currentGame = null;
-    let allGames    = [];
+    let currentGame    = null;
+    let allGames       = [];
+    let currentUser    = null;
+    let currentUserDoc = null;
 
     /* ════════════════════════
-       AUTH GATE — fires quickly, hides loader on completion
+       AUTH GATE
     ════════════════════════ */
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        unsubscribe(); // only run once
-        if (!user) {
-            window.location.href = 'login.html';
-            return;
-        }
+    const unsub = onAuthStateChanged(auth, async (user) => {
+        unsub();
+        if (!user) { window.location.href = 'login.html'; return; }
 
-        // Sidebar
+        currentUser = user;
         document.getElementById('sb-email').textContent = user.email;
 
         try {
@@ -619,64 +561,151 @@
                 await renderUser(user);
             }
         } catch(err) {
-            console.error('Render error:', err);
+            console.error(err);
             document.getElementById('app-content').innerHTML =
                 `<div style="padding:60px;color:var(--error);font-size:0.9rem">
-                    Failed to load dashboard: ${err.message}
+                    Failed to load: ${escHtml(err.message)}
                  </div>`;
         }
 
-        /* Always hide loader */
         document.getElementById('loading-screen').style.display = 'none';
     });
 
-    /* ── Logout ── */
     document.getElementById('btn-logout').onclick = async () => {
-        await signOut(auth);
-        window.location.href = 'login.html';
+        await signOut(auth); window.location.href = 'login.html';
     };
 
-    /* ════════════════════════════════════════════════════════
+    /* ════════════════════════
+       SETTINGS PANEL
+    ════════════════════════ */
+    function openSettings() {
+        if (!currentUser) return;
+
+        // Populate profile info
+        document.getElementById('settings-email').textContent    = currentUser.email;
+        const uname = currentUserDoc?.username || currentUser.displayName || '—';
+        const tier  = currentUserDoc?.tier || 'Free';
+        document.getElementById('settings-username').textContent = uname;
+        document.getElementById('settings-tier').textContent     = tier;
+
+        // Clear fields
+        ['s-cur-pw','s-new-pw','s-conf-pw','del-pw1','del-pw2'].forEach(id => {
+            const el = document.getElementById(id); if(el) el.value='';
+        });
+        ['s-pw-msg','del-msg'].forEach(id => {
+            const el = document.getElementById(id); if(el) el.style.display='none';
+        });
+
+        document.getElementById('settings-overlay').classList.add('open');
+        document.getElementById('settings-panel').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSettings() {
+        document.getElementById('settings-overlay').classList.remove('open');
+        document.getElementById('settings-panel').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    document.getElementById('btn-open-settings').onclick = openSettings;
+    document.getElementById('settings-close').onclick    = closeSettings;
+    document.getElementById('settings-overlay').onclick  = closeSettings;
+
+    /* ── Change password (settings) ── */
+    document.getElementById('s-btn-pw').onclick = async () => {
+        const user   = auth.currentUser;
+        const curPw  = document.getElementById('s-cur-pw').value;
+        const newPw  = document.getElementById('s-new-pw').value;
+        const confPw = document.getElementById('s-conf-pw').value;
+        const msg    = document.getElementById('s-pw-msg');
+        const show   = (t,ty) => { msg.textContent=t;msg.className=`msg-inline ${ty}`;msg.style.display='block'; };
+
+        if (!curPw||!newPw||!confPw) return show('Please fill in all fields.','error');
+        if (newPw !== confPw)        return show('New passwords do not match.','error');
+        if (newPw.length < 6)       return show('Password must be at least 6 characters.','error');
+
+        try {
+            const cred = EmailAuthProvider.credential(user.email, curPw);
+            await reauthenticateWithCredential(user, cred);
+            await updatePassword(user, newPw);
+            show('✓ Password updated successfully!', 'success');
+            ['s-cur-pw','s-new-pw','s-conf-pw'].forEach(id => document.getElementById(id).value='');
+        } catch(err) {
+            show(err.code === 'auth/wrong-password' ? 'Current password is incorrect.' : err.message, 'error');
+        }
+    };
+
+    /* ── Delete account ── */
+    document.getElementById('btn-delete-account').onclick = async () => {
+        const user = auth.currentUser;
+        const pw1  = document.getElementById('del-pw1').value;
+        const pw2  = document.getElementById('del-pw2').value;
+        const msg  = document.getElementById('del-msg');
+        const show = (t,ty) => { msg.textContent=t;msg.className=`msg-inline ${ty}`;msg.style.display='block'; };
+
+        if (!pw1 || !pw2)  return show('Enter your password twice to confirm.','error');
+        if (pw1 !== pw2)   return show('Passwords do not match.','error');
+
+        const confirmed = confirm(
+            'Are you absolutely sure? This will permanently delete your account and all your data.'
+        );
+        if (!confirmed) return;
+
+        try {
+            // Re-authenticate first
+            const cred = EmailAuthProvider.credential(user.email, pw1);
+            await reauthenticateWithCredential(user, cred);
+
+            // Delete Firestore user doc
+            await deleteDoc(doc(db, 'users', user.uid));
+
+            // Delete Firebase Auth account
+            await deleteUser(user);
+
+            window.location.href = 'login.html';
+        } catch(err) {
+            show(
+                err.code === 'auth/wrong-password'
+                    ? 'Incorrect password.'
+                    : err.message,
+                'error'
+            );
+        }
+    };
+
+    /* ════════════════════════════════════════
        USER DASHBOARD
-    ════════════════════════════════════════════════════════ */
+    ════════════════════════════════════════ */
     async function renderUser(user) {
-        /* Load user doc + all games + play history + favorites in parallel */
         const [userSnap, gamesSnap] = await Promise.all([
             getDoc(doc(db, 'users', user.uid)),
-            getDocs(query(collection(db, 'games'), orderBy('uploadedAt', 'desc')))
+            getDocs(collection(db, 'games'))
         ]);
 
-        const userData = userSnap.exists()
-            ? userSnap.data()
-            : { username: user.displayName || 'User', tier: 'Free' };
+        currentUserDoc = userSnap.exists() ? userSnap.data() : { username: user.displayName||'User', tier:'Free' };
 
         allGames = [];
-        gamesSnap.forEach(d => allGames.push({ id: d.id, ...d.data() }));
+        gamesSnap.forEach(d => allGames.push({ id:d.id, ...d.data() }));
+        allGames.sort((a,b) => (b.uploadedAt||'').localeCompare(a.uploadedAt||''));
 
-        const username = userData.username || user.displayName || 'User';
-        const tier     = userData.tier || 'Free';
-        const playHist = userData.playHistory || {};   // { gameId: count }
-        const favIds   = new Set(userData.favorites || []);
+        const username = currentUserDoc.username || user.displayName || 'User';
+        const tier     = currentUserDoc.tier || 'Free';
+        const playHist = currentUserDoc.playHistory || {};
+        const favIds   = new Set(currentUserDoc.favorites || []);
 
-        /* Sidebar */
         document.getElementById('sb-avatar').textContent = username.slice(0,2).toUpperCase();
         document.getElementById('sb-name').textContent   = username;
 
-        /* ── Top 5 played games ── */
         const sortedByPlay = allGames
             .filter(g => playHist[g.id] > 0)
             .sort((a,b) => (playHist[b.id]||0) - (playHist[a.id]||0))
             .slice(0, 5);
 
-        /* ── Favorites ── */
-        const favGames = allGames.filter(g => favIds.has(g.id));
-
-        /* ── Popular (global play count) ── */
+        const favGames     = allGames.filter(g => favIds.has(g.id));
         const popularGames = [...allGames]
             .sort((a,b) => (b.playCount||0) - (a.playCount||0))
             .slice(0, 10);
 
-        /* Tier display */
         const tierEmoji = { Free:'·', Gold:'✦', Diamond:'◈' };
 
         document.getElementById('app-content').innerHTML = `
@@ -685,58 +714,54 @@
                 <div class="page-subtitle">Your personal game dashboard</div>
             </div>
 
-            <!-- Stat cards -->
             <div class="stat-grid">
                 <div class="stat-card fade">
                     <div class="stat-label">Current Plan</div>
                     <span class="tier-badge ${tier}">${tierEmoji[tier]||'·'} ${tier}</span>
                 </div>
                 <div class="stat-card fade fade-d1">
-                    <div class="stat-label">Games Played</div>
+                    <div class="stat-label">Total Plays</div>
                     <div class="stat-value" style="font-size:1.3rem;font-weight:700;font-family:'Unbounded',sans-serif">
                         ${Object.values(playHist).reduce((s,v)=>s+v,0)}
                     </div>
                 </div>
                 <div class="stat-card fade fade-d2">
                     <div class="stat-label">Favourites</div>
-                    <div class="stat-value" style="font-size:1.3rem;font-weight:700;font-family:'Unbounded',sans-serif">
+                    <div class="stat-value" style="font-size:1.3rem;font-weight:700;font-family:'Unbounded',sans-serif" id="fav-count">
                         ${favIds.size}
                     </div>
                 </div>
                 <div class="stat-card fade fade-d3">
-                    <div class="stat-label">Games in Library</div>
+                    <div class="stat-label">Library Size</div>
                     <div class="stat-value" style="font-size:1.3rem;font-weight:700;font-family:'Unbounded',sans-serif">
                         ${allGames.length}
                     </div>
                 </div>
             </div>
 
-            <!-- ── Top Played ── -->
             <div style="margin-bottom:28px" class="fade fade-d1">
                 <div class="section-heading">
                     <div class="section-title">🏆 Your Top Played</div>
                     <a class="section-link" href="games.html">Browse all →</a>
                 </div>
                 ${sortedByPlay.length === 0
-                    ? `<div class="row-empty">You haven't played any games yet.<br>Head to the <a href="games.html" style="color:var(--violet-lt)">Game Library</a> to get started!</div>`
-                    : `<div class="game-row" id="top-row">${sortedByPlay.map((g,i)=>buildRowCard(g,i,playHist,favIds,true)).join('')}</div>`
+                    ? `<div class="row-empty">You haven't played any games yet — head to the <a href="games.html" style="color:var(--violet-lt)">Game Library</a>!</div>`
+                    : `<div class="game-row" id="top-row">${sortedByPlay.map((g,i)=>rowCard(g,i,playHist,favIds,true)).join('')}</div>`
                 }
             </div>
 
-            <!-- ── Favourites ── -->
             <div style="margin-bottom:28px" class="fade fade-d2">
                 <div class="section-heading">
                     <div class="section-title">❤️ Favourites</div>
                 </div>
                 <div class="game-row" id="fav-row">
-                ${favGames.length === 0
-                    ? `<div class="row-empty" style="width:100%">No favourites yet — click the ❤ on any game to save it here.</div>`
-                    : favGames.map(g=>buildRowCard(g,null,playHist,favIds,false)).join('')
-                }
+                    ${favGames.length === 0
+                        ? `<div class="row-empty" style="width:100%">No favourites yet — click ❤ on any game card.</div>`
+                        : favGames.map(g=>rowCard(g,null,playHist,favIds,false)).join('')
+                    }
                 </div>
             </div>
 
-            <!-- ── Popular ── -->
             <div style="margin-bottom:32px" class="fade fade-d3">
                 <div class="section-heading">
                     <div class="section-title">🔥 Most Popular</div>
@@ -744,70 +769,34 @@
                 </div>
                 ${popularGames.length === 0
                     ? `<div class="row-empty">No games in the library yet.</div>`
-                    : `<div class="game-row" id="pop-row">${popularGames.map(g=>buildRowCard(g,null,playHist,favIds,false)).join('')}</div>`
+                    : `<div class="game-row" id="pop-row">${popularGames.map(g=>rowCard(g,null,playHist,favIds,false)).join('')}</div>`
                 }
-            </div>
-
-            <!-- ── Change Password ── -->
-            <div class="section-card fade fade-d4">
-                <div class="sec-title">🔐 Change Password</div>
-                <div class="field"><label>Current Password</label><input type="password" id="cur-pw" placeholder="••••••••"></div>
-                <div class="field"><label>New Password</label><input type="password" id="new-pw" placeholder="••••••••"></div>
-                <div class="field"><label>Confirm New</label><input type="password" id="conf-pw" placeholder="••••••••"></div>
-                <button class="btn-sm" id="btn-change-pw">Update Password</button>
-                <div id="pw-msg" class="msg-inline"></div>
             </div>
         `;
 
-        /* ── Change password logic ── */
-        document.getElementById('btn-change-pw').onclick = async () => {
-            const curPw  = document.getElementById('cur-pw').value;
-            const newPw  = document.getElementById('new-pw').value;
-            const confPw = document.getElementById('conf-pw').value;
-            const msg    = document.getElementById('pw-msg');
-            const show   = (t,ty)=>{ msg.textContent=t;msg.className=`msg-inline ${ty}`;msg.style.display='block'; };
-            if (!curPw||!newPw||!confPw) return show('Fill in all fields.','error');
-            if (newPw!==confPw)          return show('Passwords do not match.','error');
-            if (newPw.length<6)         return show('Min 6 characters.','error');
-            try {
-                await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, curPw));
-                await updatePassword(user, newPw);
-                show('✓ Password updated!','success');
-                ['cur-pw','new-pw','conf-pw'].forEach(id=>document.getElementById(id).value='');
-            } catch(err) {
-                show(err.code==='auth/wrong-password'?'Incorrect current password.':err.message,'error');
-            }
-        };
-
-        /* ── Attach card interactions after render ── */
         attachCardHandlers(user, favIds, playHist);
     }
 
-    /* ── Build a horizontal row card ── */
-    function buildRowCard(game, rankIdx, playHist, favIds, showRank) {
-        const hasThumb = game.thumbnailURL && game.thumbnailURL.trim();
+    function rowCard(game, rankIdx, playHist, favIds, showRank) {
+        const hasThumb  = game.thumbnailURL && game.thumbnailURL.trim();
         const thumbHTML = hasThumb
-            ? `<img src="${game.thumbnailURL}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+            ? `<img src="${escHtml(game.thumbnailURL)}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
             : '';
-        const placeholderStyle = hasThumb ? 'display:none' : '';
-        const isFav = favIds.has(game.id);
-
+        const phStyle   = hasThumb ? 'display:none' : '';
+        const isFav     = favIds.has(game.id);
         const rankClass = rankIdx === 0 ? 'gold' : rankIdx === 1 ? 'silver' : rankIdx === 2 ? 'bronze' : '';
-        const rankBadge = showRank && rankIdx !== null
+        const rankBadge = (showRank && rankIdx !== null)
             ? `<div class="rank-badge ${rankClass}">#${rankIdx+1}</div>` : '';
-
         const playCount = playHist[game.id] || 0;
 
         return `
             <div class="row-card" data-id="${game.id}" data-url="${escHtml(game.gameFileURL)}" data-title="${escHtml(game.title)}">
                 <div class="row-thumb">
                     ${thumbHTML}
-                    <div class="row-thumb-placeholder" style="${placeholderStyle}">${(game.title||'?')[0]}</div>
+                    <div class="row-thumb-ph" style="${phStyle}">${(game.title||'?')[0]}</div>
                     ${rankBadge}
-                    <button class="fav-btn ${isFav?'active':''}" data-fav="${game.id}" title="${isFav?'Remove from favourites':'Add to favourites'}">
-                        ${isFav?'❤️':'🤍'}
-                    </button>
-                    <div class="row-play-overlay">
+                    <button class="fav-btn ${isFav?'active':''}" data-fav="${game.id}">${isFav?'❤️':'🤍'}</button>
+                    <div class="row-play-ov">
                         <div class="row-play-circle">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="#7c3aed"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                         </div>
@@ -815,70 +804,54 @@
                 </div>
                 <div class="row-card-info">
                     <div class="row-card-title">${escHtml(game.title)}</div>
-                    ${showRank ? `<div class="row-card-sub">Played ${playCount}×</div>` : `<div class="row-card-sub">${(game.playCount||0).toLocaleString()} plays</div>`}
+                    <div class="row-card-sub">${showRank ? `Played ${playCount}×` : `${(game.playCount||0).toLocaleString()} plays`}</div>
                 </div>
-            </div>
-        `;
+            </div>`;
     }
 
-    /* ── Attach click handlers to row cards ── */
     function attachCardHandlers(user, favIds, playHist) {
-        /* Game open */
         document.querySelectorAll('.row-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                if (e.target.closest('.fav-btn')) return; // handled separately
-                const gameId  = card.dataset.id;
-                const url     = card.dataset.url;
-                const title   = card.dataset.title;
-                const game    = allGames.find(g => g.id === gameId);
+            card.addEventListener('click', e => {
+                if (e.target.closest('.fav-btn')) return;
+                const game = allGames.find(g => g.id === card.dataset.id);
                 if (game) openGame(game, user, playHist);
             });
         });
 
-        /* Favourite toggle */
         document.querySelectorAll('.fav-btn').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
+            btn.addEventListener('click', async e => {
                 e.stopPropagation();
-                const gameId = btn.dataset.fav;
-                const isNowFav = !favIds.has(gameId);
+                const gameId  = btn.dataset.fav;
+                const isNow   = !favIds.has(gameId);
+                if (isNow) favIds.add(gameId); else favIds.delete(gameId);
 
-                // Optimistic UI
-                btn.textContent = isNowFav ? '❤️' : '🤍';
-                btn.classList.toggle('active', isNowFav);
-                if (isNowFav) { favIds.add(gameId); } else { favIds.delete(gameId); }
-
-                // Update all heart buttons for this game
                 document.querySelectorAll(`[data-fav="${gameId}"]`).forEach(b => {
-                    b.textContent = isNowFav ? '❤️' : '🤍';
-                    b.classList.toggle('active', isNowFav);
+                    b.textContent = isNow ? '❤️' : '🤍';
+                    b.classList.toggle('active', isNow);
                 });
 
-                // Refresh favourites row
                 const favRow = document.getElementById('fav-row');
                 if (favRow) {
                     const favGames = allGames.filter(g => favIds.has(g.id));
                     favRow.innerHTML = favGames.length === 0
-                        ? `<div class="row-empty" style="width:100%">No favourites yet — click the ❤ on any game.</div>`
-                        : favGames.map(g => buildRowCard(g,null,playHist,favIds,false)).join('');
-                    // Re-attach handlers for new fav row cards
+                        ? `<div class="row-empty" style="width:100%">No favourites yet — click ❤ on any game card.</div>`
+                        : favGames.map(g => rowCard(g,null,playHist,favIds,false)).join('');
                     attachCardHandlers(user, favIds, playHist);
                 }
 
-                // Update stat card count
-                const favCountEl = document.querySelector('.stat-card:nth-child(3) .stat-value');
-                if (favCountEl) favCountEl.textContent = favIds.size;
+                const fc = document.getElementById('fav-count');
+                if (fc) fc.textContent = favIds.size;
 
-                // Persist
                 try {
-                    await updateDoc(doc(db,'users',user.uid), { favorites: [...favIds] });
-                } catch(err) { console.error('Fav save error', err); }
+                    await updateDoc(doc(db,'users',user.uid), { favorites:[...favIds] });
+                } catch {}
             });
         });
     }
 
-    /* ════════════════════════════════════════════════════════
-       GAME MODAL (shared between user dashboard & admin)
-    ════════════════════════════════════════════════════════ */
+    /* ════════════════════════
+       GAME MODAL
+    ════════════════════════ */
     async function openGame(game, user, playHist) {
         currentGame = game;
         const modal  = document.getElementById('game-modal');
@@ -890,25 +863,18 @@
         iframe.src = '';
         modal.classList.add('open');
         document.body.style.overflow = 'hidden';
-
         setTimeout(() => { iframe.src = game.gameFileURL; }, 50);
         iframe.onload = () => setTimeout(() => loader.classList.add('hidden'), 300);
 
-        /* Track play — update Firestore play counters */
         if (user) {
             try {
                 const newCount = (playHist[game.id] || 0) + 1;
                 playHist[game.id] = newCount;
-
+                const gameSnap = await getDoc(doc(db,'games',game.id));
+                const gpc      = gameSnap.exists() ? (gameSnap.data().playCount||0) : 0;
                 await Promise.all([
-                    // User's personal play history
-                    updateDoc(doc(db,'users',user.uid), {
-                        [`playHistory.${game.id}`]: newCount
-                    }),
-                    // Global game play count
-                    updateDoc(doc(db,'games',game.id), {
-                        playCount: increment(1)
-                    })
+                    updateDoc(doc(db,'users',user.uid), { [`playHistory.${game.id}`]: newCount }),
+                    updateDoc(doc(db,'games',game.id),  { playCount: gpc + 1 })
                 ]);
             } catch {}
         }
@@ -927,39 +893,40 @@
     document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
 
     document.getElementById('mc-fs').onclick = () => {
-        const iframe = document.getElementById('game-iframe');
-        (iframe.requestFullscreen||iframe.webkitRequestFullscreen||iframe.mozRequestFullScreen).call(iframe);
+        const f = document.getElementById('game-iframe');
+        (f.requestFullscreen||f.webkitRequestFullscreen||f.mozRequestFullScreen||function(){}).call(f);
     };
     document.getElementById('mc-tab').onclick = () => {
         if (currentGame) window.open(currentGame.gameFileURL, '_blank');
     };
     document.getElementById('mc-dl').onclick = async () => {
         if (!currentGame) return;
-        const btn = document.getElementById('mc-dl');
+        const btn  = document.getElementById('mc-dl');
         const orig = btn.innerHTML;
         btn.innerHTML = '<span>…</span>';
         try {
             const res  = await fetch(currentGame.gameFileURL);
             const blob = await res.blob();
             const a    = Object.assign(document.createElement('a'), {
-                href: URL.createObjectURL(blob),
+                href:     URL.createObjectURL(blob),
                 download: currentGame.title.replace(/\s+/g,'_')+'.html'
             });
             document.body.appendChild(a); a.click(); document.body.removeChild(a);
         } catch { window.open(currentGame.gameFileURL,'_blank'); }
-        finally { btn.innerHTML = orig; }
+        finally  { btn.innerHTML = orig; }
     };
 
-    /* ════════════════════════════════════════════════════════
+    /* ════════════════════════════════════════
        ADMIN DASHBOARD
-    ════════════════════════════════════════════════════════ */
+    ════════════════════════════════════════ */
     async function renderAdmin(user) {
         document.getElementById('sb-avatar').textContent = 'AD';
         document.getElementById('sb-name').textContent   = 'Admin';
+        currentUserDoc = { username:'Admin', tier:'Admin' };
 
         const [userSnap, gameSnap] = await Promise.all([
             getDocs(collection(db,'users')),
-            getDocs(query(collection(db,'games'), orderBy('uploadedAt','desc')))
+            getDocs(collection(db,'games'))
         ]);
 
         const users = [];
@@ -969,6 +936,7 @@
 
         const games = [];
         gameSnap.forEach(d => games.push({ id:d.id, ...d.data() }));
+        games.sort((a,b) => (b.uploadedAt||'').localeCompare(a.uploadedAt||''));
 
         const userRows = users.map(u => `
             <tr>
@@ -989,12 +957,11 @@
                         <option value="Diamond" ${u.tier==='Diamond'?'selected':''}>Diamond</option>
                     </select>
                 </td>
-            </tr>
-        `).join('');
+            </tr>`).join('');
 
         const gameListHTML = games.length === 0
             ? `<div style="text-align:center;padding:28px;color:var(--muted);font-size:0.83rem">No games uploaded yet.</div>`
-            : games.map(g => buildAdminGameItem(g)).join('');
+            : games.map(g => adminGameItem(g)).join('');
 
         document.getElementById('app-content').innerHTML = `
             <div class="page-header fade">
@@ -1007,18 +974,6 @@
                 <span class="stat-pill gold">✦ ${cnt.Gold} Gold</span>
                 <span class="stat-pill sky">◈ ${cnt.Diamond} Diamond</span>
                 <span class="stat-pill violet">🎮 ${games.length} Games</span>
-            </div>
-
-            <!-- Change Password -->
-            <div class="section-card fade">
-                <div class="sec-title">🔐 Change Admin Password</div>
-                <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
-                    <div class="field" style="margin:0"><label>Current</label><input type="password" id="a-cur-pw" placeholder="••••••••" style="max-width:180px"></div>
-                    <div class="field" style="margin:0"><label>New</label><input type="password" id="a-new-pw" placeholder="••••••••" style="max-width:180px"></div>
-                    <div class="field" style="margin:0"><label>Confirm</label><input type="password" id="a-conf-pw" placeholder="••••••••" style="max-width:180px"></div>
-                    <button class="btn-sm" id="btn-admin-pw" style="margin-bottom:1px">Update</button>
-                </div>
-                <div id="a-pw-msg" class="msg-inline"></div>
             </div>
 
             <!-- User Table -->
@@ -1047,19 +1002,15 @@
                         </div>
                     </div>
                     <div class="upload-fields">
-                        <div class="field-upload">
-                            <label>Game Title</label>
-                            <input type="text" id="game-title" placeholder="e.g. Brotato">
-                        </div>
-                        <div class="field-upload">
-                            <label>Game HTML File</label>
-                            <input type="file" id="game-file" accept=".html">
-                        </div>
+                        <label class="f-label">Game Title</label>
+                        <input class="f-input" type="text"  id="game-title" placeholder="e.g. Brotato">
+                        <label class="f-label">Game HTML File</label>
+                        <input class="f-input" type="file" id="game-file" accept=".html">
                         <div id="prog-wrap" class="progress-wrap"><div class="progress-bar" id="prog-bar"></div></div>
                         <div id="upload-msg" class="msg-inline"></div>
                         <div style="display:flex;align-items:center;margin-top:12px">
                             <button class="btn-sm" id="btn-upload">⬆ Upload Game</button>
-                            <button class="btn-secondary" id="btn-clear">Clear</button>
+                            <button class="btn-sec" id="btn-clear">Clear</button>
                         </div>
                     </div>
                 </div>
@@ -1069,56 +1020,35 @@
             <div class="section-card fade fade-d3">
                 <div class="sec-title">
                     📋 Uploaded Games
-                    <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);font-weight:400" id="game-count-badge">(${games.length})</span>
+                    <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);font-weight:400" id="gcb">(${games.length})</span>
                 </div>
                 <div id="games-admin-list">${gameListHTML}</div>
             </div>
         `;
 
-        /* Admin pw */
-        document.getElementById('btn-admin-pw').onclick = async () => {
-            const curPw  = document.getElementById('a-cur-pw').value;
-            const newPw  = document.getElementById('a-new-pw').value;
-            const confPw = document.getElementById('a-conf-pw').value;
-            const msg    = document.getElementById('a-pw-msg');
-            const show   = (t,ty)=>{ msg.textContent=t;msg.className=`msg-inline ${ty}`;msg.style.display='block'; };
-            if (!curPw||!newPw||!confPw) return show('Fill in all fields.','error');
-            if (newPw!==confPw)          return show('Passwords do not match.','error');
-            if (newPw.length<6)         return show('Min 6 characters.','error');
-            try {
-                await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email,curPw));
-                await updatePassword(user, newPw);
-                show('✓ Updated!','success');
-                ['a-cur-pw','a-new-pw','a-conf-pw'].forEach(id=>document.getElementById(id).value='');
-            } catch(err) {
-                show(err.code==='auth/wrong-password'?'Incorrect current password.':err.message,'error');
-            }
-        };
-
         /* Thumbnail preview */
         document.getElementById('thumb-file').onchange = e => {
-            const f = e.target.files[0]; if (!f) return;
+            const f = e.target.files[0]; if(!f) return;
             const r = new FileReader();
             r.onload = ev => {
-                document.getElementById('thumb-preview').src = ev.target.result;
+                document.getElementById('thumb-preview').src           = ev.target.result;
                 document.getElementById('thumb-preview').style.display = 'block';
-                document.getElementById('drop-hint').style.display = 'none';
+                document.getElementById('drop-hint').style.display     = 'none';
             };
             r.readAsDataURL(f);
         };
 
-        document.getElementById('btn-clear').onclick   = clearForm;
-        document.getElementById('btn-upload').onclick  = () => doUpload(user);
+        document.getElementById('btn-clear').onclick  = clearForm;
+        document.getElementById('btn-upload').onclick = () => doUpload(user);
     }
 
-    /* ── Build admin game list item ── */
-    function buildAdminGameItem(game) {
+    function adminGameItem(game) {
         const date  = game.uploadedAt
             ? new Date(game.uploadedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
             : '—';
         const thumb = game.thumbnailURL
-            ? `<img class="game-admin-thumb" src="${game.thumbnailURL}" alt="">`
-            : `<div class="game-admin-placeholder">${(game.title||'?')[0]}</div>`;
+            ? `<img class="game-admin-thumb" src="${escHtml(game.thumbnailURL)}" alt="">`
+            : `<div class="game-admin-ph">${(game.title||'?')[0]}</div>`;
         return `
             <div class="game-admin-item" id="gai-${game.id}">
                 ${thumb}
@@ -1127,138 +1057,120 @@
                     <div class="game-admin-date">Uploaded ${date}</div>
                     <div class="game-admin-plays">🎮 ${(game.playCount||0).toLocaleString()} plays</div>
                 </div>
-                <button class="btn-danger" onclick="window.deleteGame('${game.id}','${escHtml(game.thumbnailPath||'')}','${escHtml(game.gameFilePath||'')}')">Delete</button>
-            </div>
-        `;
+                <button class="btn-danger-sm" onclick="window.deleteGame('${game.id}','${escHtml(game.thumbnailPath||'')}','${escHtml(game.gameFilePath||'')}')">Delete</button>
+            </div>`;
     }
 
-    /* ── Upload game using Firebase Storage via fetch (avoids Storage SDK import issues) ── */
+    /* ── Upload using Storage SDK (fixes "Failed to fetch") ── */
     async function doUpload(user) {
-        const title     = (document.getElementById('game-title').value||'').trim();
+        const title     = (document.getElementById('game-title').value || '').trim();
         const thumbFile = document.getElementById('thumb-file').files[0];
         const gameFile  = document.getElementById('game-file').files[0];
         const msgEl     = document.getElementById('upload-msg');
         const progWrap  = document.getElementById('prog-wrap');
         const progBar   = document.getElementById('prog-bar');
+        const show      = (t,ty) => { msgEl.textContent=t;msgEl.className=`msg-inline ${ty}`;msgEl.style.display='block'; };
 
-        const show = (t,ty)=>{ msgEl.textContent=t;msgEl.className=`msg-inline ${ty}`;msgEl.style.display='block'; };
-
-        if (!title)    return show('Please enter a game title.','error');
-        if (!gameFile) return show('Please select an HTML file.','error');
+        if (!title)    return show('Please enter a game title.', 'error');
+        if (!gameFile) return show('Please select an HTML file.', 'error');
 
         const gameId = `game_${Date.now()}`;
-        progWrap.style.display='block'; progBar.style.width='0%';
-        show('Uploading…','success');
-
-        /* Get upload token for Firebase Storage via REST API */
-        const token = await user.getIdToken();
-        const bucket = 'nyx-platform1.firebasestorage.app';
-
-        async function uploadToStorage(file, path) {
-            const url = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o?uploadType=media&name=${encodeURIComponent(path)}`;
-            const res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Authorization':'Bearer '+token, 'Content-Type': file.type||'application/octet-stream' },
-                body: file
-            });
-            if (!res.ok) throw new Error('Storage upload failed: ' + await res.text());
-            const json = await res.json();
-            return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(json.name)}?alt=media&token=${json.downloadTokens}`;
-        }
+        progWrap.style.display = 'block';
+        progBar.style.width    = '0%';
+        show('Uploading…', 'success');
 
         try {
-            let thumbURL='', thumbPath='';
+            let thumbURL = '', thumbPath = '';
+
             if (thumbFile) {
                 thumbPath = `games/${gameId}/thumbnail.${thumbFile.name.split('.').pop()}`;
-                show('Uploading thumbnail…','success');
-                progBar.style.width='30%';
-                thumbURL = await uploadToStorage(thumbFile, thumbPath);
-                progBar.style.width='50%';
+                show('Uploading thumbnail…', 'success');
+                progBar.style.width = '25%';
+                const tRef = sRef(storage, thumbPath);
+                await uploadBytes(tRef, thumbFile);
+                thumbURL = await getDownloadURL(tRef);
+                progBar.style.width = '50%';
             }
 
             const gamePath = `games/${gameId}/game.html`;
-            show('Uploading game file…','success');
-            progBar.style.width='60%';
-            const gameFileURL = await uploadToStorage(gameFile, gamePath);
-            progBar.style.width='90%';
+            show('Uploading game file…', 'success');
+            progBar.style.width = '60%';
+            const gRef = sRef(storage, gamePath);
+            await uploadBytes(gRef, gameFile);
+            const gameFileURL = await getDownloadURL(gRef);
+            progBar.style.width = '85%';
 
-            await setDoc(doc(db,'games',gameId), {
-                title, thumbnailURL:thumbURL, thumbnailPath:thumbPath,
-                gameFileURL, gameFilePath:gamePath,
-                playCount:0, uploadedAt:new Date().toISOString()
+            await setDoc(doc(db, 'games', gameId), {
+                title, thumbnailURL: thumbURL, thumbnailPath: thumbPath,
+                gameFileURL, gameFilePath: gamePath,
+                playCount: 0, uploadedAt: new Date().toISOString()
             });
-            progBar.style.width='100%';
-            show('✓ Game uploaded!','success');
+
+            progBar.style.width = '100%';
+            show('✓ Game uploaded successfully!', 'success');
             clearForm();
 
-            /* Refresh list */
-            const snap = await getDocs(query(collection(db,'games'),orderBy('uploadedAt','desc')));
-            const gs=[]; snap.forEach(d=>gs.push({id:d.id,...d.data()}));
+            // Refresh list
+            const snap = await getDocs(collection(db, 'games'));
+            const gs   = [];
+            snap.forEach(d => gs.push({ id:d.id, ...d.data() }));
+            gs.sort((a,b) => (b.uploadedAt||'').localeCompare(a.uploadedAt||''));
             document.getElementById('games-admin-list').innerHTML =
-                gs.length===0
+                gs.length === 0
                     ? `<div style="text-align:center;padding:28px;color:var(--muted);font-size:0.83rem">No games yet.</div>`
-                    : gs.map(g=>buildAdminGameItem(g)).join('');
-            document.getElementById('game-count-badge').textContent = `(${gs.length})`;
+                    : gs.map(g => adminGameItem(g)).join('');
+            const gcb = document.getElementById('gcb');
+            if (gcb) gcb.textContent = `(${gs.length})`;
 
         } catch(err) {
-            show('Upload failed: '+err.message,'error');
-            progWrap.style.display='none';
+            console.error('Upload error:', err);
+            show('Upload failed: ' + err.message, 'error');
+            progWrap.style.display = 'none';
         }
     }
 
     function clearForm() {
-        ['game-title'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-        ['thumb-file','game-file'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-        const prev=document.getElementById('thumb-preview');
-        if(prev){ prev.src='';prev.style.display='none'; }
-        const hint=document.getElementById('drop-hint');
-        if(hint) hint.style.display='flex';
-        const pw=document.getElementById('prog-wrap');
-        if(pw) pw.style.display='none';
-        const pb=document.getElementById('prog-bar');
-        if(pb) pb.style.width='0%';
-        const um=document.getElementById('upload-msg');
-        if(um) um.style.display='none';
+        ['game-title'].forEach(id => { const e=document.getElementById(id);if(e)e.value=''; });
+        ['thumb-file','game-file'].forEach(id => { const e=document.getElementById(id);if(e)e.value=''; });
+        const prev = document.getElementById('thumb-preview');
+        if (prev) { prev.src=''; prev.style.display='none'; }
+        const hint = document.getElementById('drop-hint');
+        if (hint) hint.style.display = 'flex';
+        const pw   = document.getElementById('prog-wrap');
+        if (pw) pw.style.display = 'none';
+        const pb   = document.getElementById('prog-bar');
+        if (pb) pb.style.width = '0%';
+        const um   = document.getElementById('upload-msg');
+        if (um) um.style.display = 'none';
     }
 
     /* ── Delete game ── */
     window.deleteGame = async (gameId, thumbPath, gamePath) => {
         if (!confirm('Delete this game permanently?')) return;
-        const user = auth.currentUser;
-        const token = await user.getIdToken();
-        const bucket = 'nyx-platform1.firebasestorage.app';
-
-        async function deleteFromStorage(path) {
-            if (!path) return;
-            await fetch(
-                `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(path)}`,
-                { method:'DELETE', headers:{'Authorization':'Bearer '+token} }
-            ).catch(()=>{});
-        }
-
         try {
-            await Promise.all([
-                deleteFromStorage(thumbPath),
-                deleteFromStorage(gamePath),
-                deleteDoc(doc(db,'games',gameId))
-            ]);
+            if (thumbPath) {
+                try { await deleteObject(sRef(storage, thumbPath)); } catch {}
+            }
+            if (gamePath) {
+                try { await deleteObject(sRef(storage, gamePath)); } catch {}
+            }
+            await deleteDoc(doc(db, 'games', gameId));
             const el = document.getElementById(`gai-${gameId}`);
             if (el) el.remove();
-        } catch(err) { alert('Delete failed: '+err.message); }
+        } catch(err) { alert('Delete failed: ' + err.message); }
     };
 
     /* ── Tier update ── */
     window.updateTier = async (uid, newTier, sel) => {
         try {
-            await updateDoc(doc(db,'users',uid),{tier:newTier});
-            sel.style.borderColor='#a78bfa';
-            setTimeout(()=>{ sel.style.borderColor=''; }, 1200);
+            await updateDoc(doc(db,'users',uid), { tier:newTier });
+            sel.style.borderColor = '#a78bfa';
+            setTimeout(() => { sel.style.borderColor=''; }, 1200);
         } catch(err) { alert('Error: '+err.message); }
     };
 
-    /* ── Utility ── */
-    function escHtml(str) {
-        return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    function escHtml(s) {
+        return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 </script>
 </body>
