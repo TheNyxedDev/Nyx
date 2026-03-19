@@ -8,25 +8,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg:         #07070e;
-            --surface:    #0e0d1c;
-            --surface2:   #15132b;
-            --border:     rgba(124,58,237,0.18);
-            --violet:     #7c3aed;
-            --violet-lt:  #a78bfa;
-            --violet-glow: rgba(124,58,237,0.3);
-            --text:       #f0eeff;
-            --muted:      #7e7a9e;
-            --gold:       #f5c843;
-            --gold-bg:    rgba(245,200,67,0.12);
-            --diamond:    #7dd3fc;
-            --diamond-bg: rgba(125,211,252,0.12);
-            --free-bg:    rgba(126,122,158,0.15);
-            --error:      #f87171;
-            --success:    #a78bfa;
+            --bg:          #07070e;
+            --surface:     #0e0d1c;
+            --surface2:    #15132b;
+            --border:      rgba(124,58,237,0.18);
+            --violet:      #7c3aed;
+            --violet-lt:   #a78bfa;
+            --violet-glow: rgba(124,58,237,0.28);
+            --text:        #f0eeff;
+            --muted:       #7e7a9e;
+            --gold:        #f5c843;
+            --gold-bg:     rgba(245,200,67,0.12);
+            --diamond:     #7dd3fc;
+            --diamond-bg:  rgba(125,211,252,0.12);
+            --free-bg:     rgba(126,122,158,0.15);
+            --error:       #f87171;
+            --success:     #a78bfa;
         }
-
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
         body {
             font-family: 'DM Sans', sans-serif;
@@ -35,307 +34,466 @@
             min-height: 100vh;
         }
 
+        /* ── Ambient ── */
         .bg-orb {
-            position: fixed; border-radius: 50%;
-            filter: blur(130px); pointer-events: none; z-index: 0;
+            position:fixed; border-radius:50%;
+            filter:blur(130px); pointer-events:none; z-index:0;
         }
         .orb1 { width:600px;height:600px;background:rgba(124,58,237,0.12);top:-200px;left:-200px; }
         .orb2 { width:400px;height:400px;background:rgba(79,26,191,0.1);bottom:-150px;right:-150px; }
-
         body::before {
-            content:''; position:fixed; inset:0;
+            content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
             background-image:
                 linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px);
-            background-size: 48px 48px;
-            pointer-events:none; z-index:0;
+            background-size:48px 48px;
         }
 
-        /* ── Sidebar ── */
+        /* ════════════════════════
+           SIDEBAR
+        ════════════════════════ */
         .sidebar {
-            position: fixed; left:0;top:0;bottom:0; width:220px;
-            background: rgba(14,13,28,0.9);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid var(--border);
-            display: flex; flex-direction: column;
-            padding: 28px 20px;
-            z-index: 10;
+            position:fixed; left:0;top:0;bottom:0; width:220px;
+            background:rgba(14,13,28,0.92);
+            backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+            border-right:1px solid var(--border);
+            display:flex; flex-direction:column;
+            padding:28px 20px; z-index:10;
         }
-
         .sidebar-logo {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 1.4rem; font-weight: 900; letter-spacing: -0.03em;
-            background: linear-gradient(135deg,#fff 30%,var(--violet-lt));
+            font-family:'Unbounded',sans-serif;
+            font-size:1.4rem; font-weight:900; letter-spacing:-0.03em;
+            background:linear-gradient(135deg,#fff 30%,var(--violet-lt));
             -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-            margin-bottom: 40px;
+            margin-bottom:40px;
         }
-
         .nav-label {
-            font-size: 0.68rem; letter-spacing: 0.14em;
-            text-transform: uppercase; color: var(--muted);
-            font-family: 'DM Mono', monospace; margin-bottom: 10px;
+            font-size:0.65rem; letter-spacing:0.14em;
+            text-transform:uppercase; color:var(--muted);
+            font-family:'DM Mono',monospace; margin-bottom:8px; padding-left:4px;
         }
-
         .nav-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 12px; border-radius: 9px;
-            color: var(--muted); font-size: 0.88rem; font-weight: 500;
-            cursor: pointer; margin-bottom: 4px;
-            transition: background 0.2s, color 0.2s;
-            text-decoration: none;
+            display:flex; align-items:center; gap:10px;
+            padding:9px 12px; border-radius:9px;
+            color:var(--muted); font-size:0.86rem; font-weight:500;
+            cursor:pointer; margin-bottom:3px;
+            transition:background 0.2s,color 0.2s;
+            text-decoration:none;
         }
-        .nav-item:hover  { background: rgba(124,58,237,0.1); color: var(--text); }
-        .nav-item.active { background: rgba(124,58,237,0.18); color: var(--violet-lt); }
-        .nav-icon { font-size:1rem; width:20px; text-align:center; }
+        .nav-item:hover  { background:rgba(124,58,237,0.1); color:var(--text); }
+        .nav-item.active { background:rgba(124,58,237,0.18); color:var(--violet-lt); }
+        .nav-icon { font-size:0.95rem; width:20px; text-align:center; }
 
-        .sidebar-footer { margin-top: auto; }
+        .sidebar-footer { margin-top:auto; }
         .user-pill {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 12px;
-            background: var(--surface2); border-radius: 10px;
-            border: 1px solid var(--border); margin-bottom: 10px;
+            display:flex; align-items:center; gap:10px;
+            padding:10px 12px;
+            background:var(--surface2); border-radius:10px;
+            border:1px solid var(--border); margin-bottom:10px;
         }
         .avatar {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: var(--violet);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+            width:32px;height:32px;border-radius:50%;
+            background:var(--violet);
+            display:flex;align-items:center;justify-content:center;
+            font-size:0.78rem;font-weight:700;flex-shrink:0;
         }
-        .user-info { overflow: hidden; }
+        .user-info { overflow:hidden; }
         .user-name  { font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-        .user-email { font-size:0.7rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+        .user-email { font-size:0.68rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
 
         .btn-logout {
-            width: 100%; padding: 9px;
-            background: transparent; border: 1px solid var(--border);
-            border-radius: 9px; color: var(--muted);
-            font-family: 'DM Sans', sans-serif; font-size: 0.83rem;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 7px;
-            transition: background 0.2s, color 0.2s, border-color 0.2s;
+            width:100%; padding:9px;
+            background:transparent; border:1px solid var(--border);
+            border-radius:9px; color:var(--muted);
+            font-family:'DM Sans',sans-serif; font-size:0.83rem; cursor:pointer;
+            display:flex;align-items:center;justify-content:center;gap:7px;
+            transition:background 0.2s,color 0.2s,border-color 0.2s;
         }
         .btn-logout:hover { background:rgba(248,113,113,0.08);color:#f87171;border-color:rgba(248,113,113,0.3); }
 
-        /* ── Main ── */
+        /* ════════════════════════
+           MAIN CONTENT
+        ════════════════════════ */
         .main {
-            margin-left: 220px;
-            padding: 40px 40px 60px;
-            position: relative; z-index: 1; min-height: 100vh;
+            margin-left:220px;
+            padding:40px 40px 60px;
+            position:relative; z-index:1; min-height:100vh;
         }
-
-        .page-header { margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-        .page-title { font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px; }
-        .page-subtitle { font-size:0.88rem;color:var(--muted); }
 
         @keyframes fadeUp {
-            from { opacity:0; transform:translateY(12px); }
+            from { opacity:0; transform:translateY(14px); }
             to   { opacity:1; transform:translateY(0); }
         }
+        .fade { animation:fadeUp 0.45s ease both; }
+        .fade-d1 { animation-delay:0.06s; }
+        .fade-d2 { animation-delay:0.12s; }
+        .fade-d3 { animation-delay:0.18s; }
+        .fade-d4 { animation-delay:0.24s; }
 
-        /* ── Cards grid ── */
-        .grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-bottom:32px; }
+        .page-header { margin-bottom:28px; }
+        .page-title { font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px; }
+        .page-subtitle { font-size:0.86rem;color:var(--muted); }
 
-        .card {
-            background: rgba(14,13,28,0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            border-radius: 14px; padding: 24px;
-            animation: fadeUp 0.5s ease both;
+        /* ── Stat Cards ── */
+        .stat-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+            gap:16px; margin-bottom:28px;
         }
-        .card:nth-child(2) { animation-delay:0.07s; }
-        .card:nth-child(3) { animation-delay:0.14s; }
-
-        .card-label {
-            font-size:0.72rem; text-transform:uppercase;
-            letter-spacing:0.12em; color:var(--muted);
-            font-family:'DM Mono',monospace; margin-bottom:14px;
+        .stat-card {
+            background:rgba(14,13,28,0.8);
+            backdrop-filter:blur(12px);
+            border:1px solid var(--border);
+            border-radius:13px; padding:20px;
         }
+        .stat-label {
+            font-size:0.68rem;text-transform:uppercase;
+            letter-spacing:0.12em;color:var(--muted);
+            font-family:'DM Mono',monospace;margin-bottom:12px;
+        }
+        .stat-value { font-size:0.9rem;font-weight:600; }
 
-        /* ── Tier badges ── */
+        /* ── Tier badge ── */
         .tier-badge {
             display:inline-flex;align-items:center;gap:6px;
-            padding:6px 14px; border-radius:30px;
-            font-size:0.82rem;font-weight:600;letter-spacing:0.05em;
+            padding:5px 13px;border-radius:30px;
+            font-size:0.8rem;font-weight:600;letter-spacing:0.04em;
         }
         .tier-badge.Free    { background:var(--free-bg);   color:var(--muted);   border:1px solid rgba(126,122,158,0.3); }
         .tier-badge.Gold    { background:var(--gold-bg);   color:var(--gold);    border:1px solid rgba(245,200,67,0.35); }
         .tier-badge.Diamond { background:var(--diamond-bg);color:var(--diamond); border:1px solid rgba(125,211,252,0.35); }
 
-        /* ── Section cards ── */
-        .section-card {
-            background: rgba(14,13,28,0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            border-radius: 14px; padding: 28px;
-            margin-bottom: 20px;
-            animation: fadeUp 0.5s ease 0.2s both;
+        /* ── Section heading ── */
+        .section-heading {
+            display:flex;align-items:center;justify-content:space-between;
+            margin-bottom:14px;
         }
         .section-title {
-            font-size:1rem; font-weight:600; margin-bottom:18px;
-            display:flex; align-items:center; gap:8px;
+            font-size:0.95rem;font-weight:700;
+            display:flex;align-items:center;gap:8px;
+        }
+        .section-link {
+            font-size:0.75rem;color:var(--violet-lt);
+            text-decoration:none;font-weight:500;
+            transition:color 0.2s;
+        }
+        .section-link:hover { color:#fff; }
+
+        /* ── Horizontal scroll row ── */
+        .game-row {
+            display:flex; gap:14px;
+            overflow-x:auto; padding-bottom:10px;
+            scrollbar-width:thin; scrollbar-color:rgba(124,58,237,0.3) transparent;
+        }
+        .game-row::-webkit-scrollbar { height:4px; }
+        .game-row::-webkit-scrollbar-track { background:transparent; }
+        .game-row::-webkit-scrollbar-thumb { background:rgba(124,58,237,0.3);border-radius:2px; }
+
+        .row-card {
+            flex-shrink:0; width:150px;
+            background:rgba(14,13,28,0.8);
+            border:1px solid var(--border);
+            border-radius:10px; overflow:hidden;
+            cursor:pointer;
+            transition:transform 0.22s ease,box-shadow 0.22s ease,border-color 0.22s ease;
+            position:relative;
+        }
+        .row-card:hover {
+            transform:translateY(-5px);
+            box-shadow:0 14px 36px rgba(124,58,237,0.28);
+            border-color:var(--violet);
+        }
+        .row-thumb {
+            position:relative; aspect-ratio:4/3; overflow:hidden;
+            background:var(--surface2);
+        }
+        .row-thumb img {
+            width:100%;height:100%;object-fit:cover;
+            transition:transform 0.3s;
+        }
+        .row-card:hover .row-thumb img { transform:scale(1.07); }
+        .row-thumb-placeholder {
+            width:100%;height:100%;
+            background:linear-gradient(135deg,#2d1470,#15132b);
+            display:flex;align-items:center;justify-content:center;
+            font-family:'Unbounded',sans-serif;
+            font-size:2rem;font-weight:900;color:rgba(167,139,250,0.45);
+        }
+        .row-play-overlay {
+            position:absolute;inset:0;
+            background:rgba(124,58,237,0.6);
+            display:flex;align-items:center;justify-content:center;
+            opacity:0;transition:opacity 0.22s;backdrop-filter:blur(2px);
+        }
+        .row-card:hover .row-play-overlay { opacity:1; }
+        .row-play-circle {
+            width:38px;height:38px;border-radius:50%;
+            background:rgba(255,255,255,0.95);
+            display:flex;align-items:center;justify-content:center;
+        }
+        .row-card-info { padding:9px 10px 10px; }
+        .row-card-title { font-size:0.76rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+        .row-card-sub   { font-size:0.65rem;color:var(--muted);margin-top:2px; }
+
+        /* ── Rank badge (top played) ── */
+        .rank-badge {
+            position:absolute;top:7px;left:7px;
+            width:22px;height:22px;border-radius:50%;
+            background:var(--violet);
+            display:flex;align-items:center;justify-content:center;
+            font-size:0.6rem;font-weight:700;font-family:'DM Mono',monospace;
+            z-index:2;box-shadow:0 2px 8px rgba(0,0,0,0.5);
+        }
+        .rank-badge.gold    { background:var(--gold);color:#000; }
+        .rank-badge.silver  { background:#b0b8c8;color:#000; }
+        .rank-badge.bronze  { background:#c8956b;color:#000; }
+
+        /* ── Favorite heart button ── */
+        .fav-btn {
+            position:absolute;top:7px;right:7px; z-index:3;
+            width:26px;height:26px;border-radius:50%;
+            background:rgba(7,7,14,0.75);border:none;
+            display:flex;align-items:center;justify-content:center;
+            cursor:pointer;transition:background 0.2s,transform 0.15s;
+            font-size:0.85rem;line-height:1;
+            backdrop-filter:blur(4px);
+        }
+        .fav-btn:hover { background:rgba(248,113,113,0.25);transform:scale(1.15); }
+        .fav-btn.active { background:rgba(248,113,113,0.2); }
+
+        /* Empty row state */
+        .row-empty {
+            width:100%;padding:28px 16px;
+            text-align:center;color:var(--muted);
+            font-size:0.8rem;line-height:1.6;
+            background:rgba(14,13,28,0.5);
+            border:1px dashed rgba(124,58,237,0.2);
+            border-radius:10px;
         }
 
-        /* ── Form fields ── */
-        .field { margin-bottom: 14px; }
-        .field label {
-            display:block; font-size:0.75rem; font-weight:500; color:var(--muted);
-            letter-spacing:0.08em; text-transform:uppercase; margin-bottom:7px;
+        /* ── Section card (password etc.) ── */
+        .section-card {
+            background:rgba(14,13,28,0.8);
+            backdrop-filter:blur(12px);
+            border:1px solid var(--border);
+            border-radius:13px;padding:24px;
+            margin-bottom:20px;
         }
-        .field input, .field select {
-            width:100%; max-width:380px; padding:10px 13px;
-            background:var(--surface2); border:1px solid rgba(124,58,237,0.2);
-            border-radius:8px; color:var(--text);
-            font-family:'DM Sans',sans-serif; font-size:0.88rem; outline:none;
+        .sec-title {
+            font-size:0.92rem;font-weight:700;
+            margin-bottom:16px;
+            display:flex;align-items:center;gap:8px;
+        }
+
+        .field { margin-bottom:13px; }
+        .field label {
+            display:block;font-size:0.68rem;font-weight:500;
+            color:var(--muted);letter-spacing:0.08em;
+            text-transform:uppercase;margin-bottom:6px;
+        }
+        .field input {
+            width:100%;max-width:360px;padding:9px 12px;
+            background:var(--surface2);border:1px solid rgba(124,58,237,0.2);
+            border-radius:8px;color:var(--text);
+            font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none;
             transition:border-color 0.2s,box-shadow 0.2s;
         }
-        .field input:focus, .field select:focus {
-            border-color:var(--violet); box-shadow:0 0 0 3px rgba(124,58,237,0.12);
-        }
+        .field input:focus { border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,58,237,0.12); }
         .field input::placeholder { color:#3d3a5a; }
 
-        /* Full-width field variant */
-        .field.full input, .field.full select { max-width:100%; }
-
         .btn-sm {
-            padding:9px 20px; background:var(--violet); border:none;
-            border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif;
-            font-size:0.85rem; font-weight:600; cursor:pointer;
-            transition:background 0.2s,transform 0.1s;
+            padding:8px 18px;background:var(--violet);border:none;
+            border-radius:8px;color:#fff;
+            font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:600;
+            cursor:pointer;transition:background 0.2s,transform 0.1s;
         }
-        .btn-sm:hover  { background:#6d28d9; transform:translateY(-1px); }
+        .btn-sm:hover  { background:#6d28d9;transform:translateY(-1px); }
         .btn-sm:active { transform:translateY(0); }
-        .btn-sm.secondary {
-            background:transparent; border:1px solid var(--border); color:var(--muted);
-        }
-        .btn-sm.secondary:hover { background:rgba(124,58,237,0.1);color:var(--text);border-color:var(--violet); }
-        .btn-sm.danger {
-            background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.25); color:#f87171;
-        }
-        .btn-sm.danger:hover { background:rgba(248,113,113,0.2); }
 
-        .msg-inline {
-            font-size:0.78rem; margin-top:10px; display:none;
-        }
+        .msg-inline { font-size:0.76rem;margin-top:10px;display:none; }
         .msg-inline.error   { color:var(--error); }
         .msg-inline.success { color:var(--violet-lt); }
 
-        /* ── Admin table ── */
-        .table-wrap { overflow-x:auto; border-radius:12px; border:1px solid var(--border); }
-        table { width:100%;border-collapse:collapse;background:rgba(14,13,28,0.6);font-size:0.88rem; }
-        thead th {
-            background:var(--surface2); color:var(--muted);
-            font-size:0.72rem; font-family:'DM Mono',monospace;
-            letter-spacing:0.1em; text-transform:uppercase;
-            padding:13px 16px; text-align:left; font-weight:500;
+        /* ════════════════════════
+           ADMIN — upload form, table etc.
+        ════════════════════════ */
+        .admin-grid {
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+            gap:16px;margin-bottom:28px;
         }
-        tbody td { padding:13px 16px; border-top:1px solid var(--border); vertical-align:middle; }
-        tbody tr:hover { background:rgba(124,58,237,0.04); }
-        .uid-cell { font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--muted); }
-
-        select.tier-select {
-            background:var(--surface2); color:var(--text);
-            border:1px solid var(--border); padding:5px 10px;
-            border-radius:7px; font-family:'DM Sans',sans-serif;
-            font-size:0.83rem; cursor:pointer;
-            transition:border-color 0.2s; width:auto; max-width:none;
-        }
-        select.tier-select:focus { border-color:var(--violet); outline:none; }
-
-        /* ── Stat pills ── */
         .stat-pill {
             display:inline-flex;align-items:center;gap:6px;
-            padding:5px 12px; border-radius:20px;
-            font-size:0.78rem; font-family:'DM Mono',monospace;
+            padding:5px 12px;border-radius:20px;
+            font-size:0.75rem;font-family:'DM Mono',monospace;
         }
         .stat-pill.violet { background:rgba(124,58,237,0.15);color:var(--violet-lt);border:1px solid rgba(124,58,237,0.3); }
-        .stat-pill.gold   { background:var(--gold-bg);   color:var(--gold);    border:1px solid rgba(245,200,67,0.25); }
-        .stat-pill.sky    { background:var(--diamond-bg);color:var(--diamond); border:1px solid rgba(125,211,252,0.25); }
-        .stats-row { display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px; }
+        .stat-pill.gold   { background:var(--gold-bg);color:var(--gold);border:1px solid rgba(245,200,67,0.25); }
+        .stat-pill.sky    { background:var(--diamond-bg);color:var(--diamond);border:1px solid rgba(125,211,252,0.25); }
+        .stats-row { display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px; }
 
-        /* ── Game upload section ── */
-        .upload-zone {
-            display: flex; gap: 16px; flex-wrap: wrap;
-            align-items: flex-start; margin-bottom: 20px;
+        .table-wrap { overflow-x:auto;border-radius:11px;border:1px solid var(--border); }
+        table { width:100%;border-collapse:collapse;background:rgba(14,13,28,0.6);font-size:0.86rem; }
+        thead th {
+            background:var(--surface2);color:var(--muted);
+            font-size:0.68rem;font-family:'DM Mono',monospace;
+            letter-spacing:0.1em;text-transform:uppercase;
+            padding:12px 15px;text-align:left;font-weight:500;
         }
+        tbody td { padding:12px 15px;border-top:1px solid var(--border);vertical-align:middle; }
+        tbody tr:hover { background:rgba(124,58,237,0.04); }
+        .uid-cell { font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted); }
 
-        /* Thumbnail drop zone */
+        select.tier-select {
+            background:var(--surface2);color:var(--text);
+            border:1px solid var(--border);padding:5px 9px;
+            border-radius:7px;font-family:'DM Sans',sans-serif;
+            font-size:0.82rem;cursor:pointer;
+            transition:border-color 0.2s;width:auto;
+        }
+        select.tier-select:focus { border-color:var(--violet);outline:none; }
+
+        /* Upload zone */
+        .upload-zone { display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;margin-bottom:18px; }
+
         .thumb-drop {
-            width: 160px; height: 120px; flex-shrink: 0;
-            border: 2px dashed rgba(124,58,237,0.3);
-            border-radius: 10px; background: var(--surface2);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            cursor: pointer; transition: border-color 0.2s, background 0.2s;
-            overflow: hidden; position: relative;
+            width:154px;height:115px;flex-shrink:0;
+            border:2px dashed rgba(124,58,237,0.3);
+            border-radius:10px;background:var(--surface2);
+            display:flex;flex-direction:column;
+            align-items:center;justify-content:center;
+            cursor:pointer;transition:border-color 0.2s,background 0.2s;
+            overflow:hidden;position:relative;
         }
-        .thumb-drop:hover { border-color: var(--violet); background: rgba(124,58,237,0.06); }
+        .thumb-drop:hover { border-color:var(--violet);background:rgba(124,58,237,0.06); }
         .thumb-drop input { position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%; }
-        .thumb-drop img { width:100%;height:100%;object-fit:cover;display:none; }
-        .thumb-drop .drop-hint { font-size:0.65rem;color:var(--muted);text-align:center;padding:8px; }
-        .thumb-drop .drop-icon { font-size:1.5rem;margin-bottom:6px; }
+        .thumb-drop img   { width:100%;height:100%;object-fit:cover;display:none; }
+        .thumb-drop .drop-hint { font-size:0.62rem;color:var(--muted);text-align:center;padding:8px;pointer-events:none; }
+        .thumb-drop .drop-icon { font-size:1.4rem;margin-bottom:5px; }
 
-        .upload-fields { flex: 1; min-width: 220px; }
-
-        /* Progress bar */
-        .progress-wrap {
-            height: 4px; background: var(--surface2);
-            border-radius: 2px; overflow: hidden; margin-top: 12px;
-            display: none;
+        .upload-fields { flex:1;min-width:220px; }
+        .field-upload input { width:100%;max-width:100%;padding:9px 12px;
+            background:var(--surface2);border:1px solid rgba(124,58,237,0.2);
+            border-radius:8px;color:var(--text);
+            font-family:'DM Sans',sans-serif;font-size:0.84rem;outline:none;
+            transition:border-color 0.2s,box-shadow 0.2s;margin-bottom:12px;
         }
-        .progress-bar {
-            height: 100%; background: var(--violet);
-            border-radius: 2px; width: 0%;
-            transition: width 0.3s;
+        .field-upload input[type="file"] { cursor:pointer;padding:7px 10px; }
+        .field-upload input:focus { border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,58,237,0.12); }
+        .field-upload input::placeholder { color:#3d3a5a; }
+        .field-upload label {
+            display:block;font-size:0.66rem;font-weight:500;
+            color:var(--muted);letter-spacing:0.08em;
+            text-transform:uppercase;margin-bottom:6px;
         }
 
-        /* Games admin list */
+        .progress-wrap { height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:10px;display:none; }
+        .progress-bar  { height:100%;background:var(--violet);border-radius:2px;width:0%;transition:width 0.3s; }
+
         .game-admin-item {
-            display: flex; align-items: center; gap: 14px;
-            padding: 10px 14px;
-            border: 1px solid var(--border);
-            border-radius: 10px; margin-bottom: 8px;
-            background: rgba(21,19,43,0.5);
-            animation: fadeUp 0.3s ease;
+            display:flex;align-items:center;gap:13px;
+            padding:10px 13px;border:1px solid var(--border);
+            border-radius:10px;margin-bottom:8px;
+            background:rgba(21,19,43,0.5);
         }
-        .game-admin-thumb {
-            width: 72px; height: 54px; border-radius: 6px;
-            object-fit: cover; flex-shrink: 0;
-            background: var(--surface2);
+        .game-admin-thumb { width:68px;height:51px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--surface2); }
+        .game-admin-placeholder {
+            width:68px;height:51px;border-radius:6px;flex-shrink:0;
+            background:linear-gradient(135deg,#2d1470,#15132b);
+            display:flex;align-items:center;justify-content:center;
+            font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:900;
+            color:rgba(167,139,250,0.45);
         }
-        .game-admin-thumb-placeholder {
-            width: 72px; height: 54px; border-radius: 6px;
-            background: linear-gradient(135deg, #2d1470, #15132b);
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Unbounded', sans-serif;
-            font-size: 1.1rem; font-weight: 900;
-            color: rgba(167,139,250,0.5); flex-shrink: 0;
+        .game-admin-info { flex:1;min-width:0; }
+        .game-admin-title { font-weight:600;font-size:0.86rem; }
+        .game-admin-date  { font-size:0.68rem;color:var(--muted);margin-top:2px; }
+        .game-admin-plays { font-size:0.68rem;color:var(--violet-lt);margin-top:2px; }
+
+        .btn-danger {
+            padding:7px 14px;background:rgba(248,113,113,0.1);
+            border:1px solid rgba(248,113,113,0.25);
+            border-radius:7px;color:#f87171;
+            font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:600;
+            cursor:pointer;transition:background 0.2s;flex-shrink:0;
         }
-        .game-admin-info { flex: 1; min-width: 0; }
-        .game-admin-title { font-weight:600; font-size:0.88rem; }
-        .game-admin-date  { font-size:0.7rem;color:var(--muted);margin-top:2px; }
+        .btn-danger:hover { background:rgba(248,113,113,0.2); }
+        .btn-secondary {
+            padding:8px 14px;background:transparent;
+            border:1px solid var(--border);
+            border-radius:8px;color:var(--muted);
+            font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:500;
+            cursor:pointer;transition:background 0.2s,color 0.2s;margin-left:8px;
+        }
+        .btn-secondary:hover { background:rgba(124,58,237,0.1);color:var(--text);border-color:var(--violet); }
 
         /* ── Loading screen ── */
         #loading-screen {
             position:fixed;inset:0;background:var(--bg);
             display:flex;align-items:center;justify-content:center;
-            z-index:100;flex-direction:column;gap:16px;
+            z-index:9999;flex-direction:column;gap:16px;
         }
         .loader-logo {
             font-family:'Unbounded',sans-serif;font-size:2rem;font-weight:900;
             background:linear-gradient(135deg,#fff 30%,var(--violet-lt));
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
         }
-        .loader-bar {
-            width:120px;height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;
-        }
+        .loader-bar { width:100px;height:2px;background:var(--surface2);border-radius:2px;overflow:hidden; }
         .loader-bar::after {
             content:'';display:block;width:50%;height:100%;background:var(--violet);
-            border-radius:2px;animation:slide 1s ease-in-out infinite alternate;
+            border-radius:2px;animation:slide 0.9s ease-in-out infinite alternate;
         }
         @keyframes slide {
             from { transform:translateX(-100%); }
             to   { transform:translateX(200%); }
         }
+
+        /* ── Game viewer modal (same as games.html) ── */
+        .game-modal {
+            position:fixed;inset:0;z-index:500;
+            display:flex;flex-direction:column;
+            opacity:0;pointer-events:none;
+            transition:opacity 0.3s ease;
+            background:#000;
+        }
+        .game-modal.open { opacity:1;pointer-events:all; }
+        .modal-header {
+            height:52px;flex-shrink:0;
+            background:rgba(7,7,14,0.98);
+            border-bottom:1px solid var(--border);
+            display:flex;align-items:center;justify-content:space-between;
+            padding:0 18px;position:relative;z-index:1;
+        }
+        .modal-left { display:flex;align-items:center;gap:12px; }
+        .modal-nyx  { font-family:'Unbounded',sans-serif;font-size:0.85rem;font-weight:900;
+            background:linear-gradient(135deg,#fff 30%,var(--violet-lt));
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+        .modal-game-name { font-size:0.85rem;font-weight:600;color:var(--text); }
+        .modal-controls { display:flex;gap:7px; }
+        .mc-btn {
+            display:flex;align-items:center;gap:5px;padding:6px 11px;
+            background:transparent;border:1px solid var(--border);border-radius:6px;
+            color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.73rem;font-weight:500;
+            cursor:pointer;transition:background 0.2s,border-color 0.2s;
+        }
+        .mc-btn:hover { background:rgba(124,58,237,0.12);border-color:var(--violet); }
+        .mc-btn.mc-close { background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.25);color:#f87171; }
+        .mc-btn.mc-close:hover { background:rgba(248,113,113,0.18); }
+        .mc-btn svg { width:13px;height:13px;flex-shrink:0; }
+        .game-iframe-wrap { flex:1;position:relative; }
+        .iframe-loader {
+            position:absolute;inset:0;background:#07070e;
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            gap:14px;z-index:5;transition:opacity 0.35s;
+        }
+        .iframe-loader.hidden { opacity:0;pointer-events:none; }
+        .dots { display:flex;gap:7px; }
+        .dot { width:7px;height:7px;border-radius:50%;background:var(--violet);animation:bounce 1s ease infinite; }
+        .dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}
+        @keyframes bounce {
+            0%,100%{transform:translateY(0);opacity:0.4}
+            50%{transform:translateY(-7px);opacity:1}
+        }
+        .loader-text-sm { font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted); }
+        #game-iframe { width:100%;height:100%;border:none;position:absolute;inset:0; }
     </style>
 </head>
 <body>
@@ -343,12 +501,13 @@
 <div class="bg-orb orb1"></div>
 <div class="bg-orb orb2"></div>
 
+<!-- Loading Screen -->
 <div id="loading-screen">
     <div class="loader-logo">Nyx</div>
     <div class="loader-bar"></div>
 </div>
 
-<!-- ══ SIDEBAR ══ -->
+<!-- Sidebar -->
 <nav class="sidebar">
     <div class="sidebar-logo">Nyx</div>
     <div class="nav-label">Menu</div>
@@ -359,36 +518,68 @@
         <span class="nav-icon">🎮</span> Game Library
     </a>
     <div class="sidebar-footer">
-        <div class="user-pill" id="sidebar-user">
-            <div class="avatar" id="sidebar-avatar">?</div>
+        <div class="user-pill">
+            <div class="avatar" id="sb-avatar">?</div>
             <div class="user-info">
-                <div class="user-name"  id="sidebar-name">...</div>
-                <div class="user-email" id="sidebar-email">...</div>
+                <div class="user-name"  id="sb-name">…</div>
+                <div class="user-email" id="sb-email">…</div>
             </div>
         </div>
         <button class="btn-logout" id="btn-logout">↩ Sign Out</button>
     </div>
 </nav>
 
-<!-- ══ MAIN ══ -->
-<main class="main" id="app-content"><!-- populated by JS --></main>
+<!-- Main -->
+<main class="main" id="app-content"></main>
+
+<!-- Game Viewer Modal (shared) -->
+<div class="game-modal" id="game-modal">
+    <div class="modal-header">
+        <div class="modal-left">
+            <span class="modal-nyx">Nyx</span>
+            <span style="color:var(--border)">—</span>
+            <span class="modal-game-name" id="modal-title">Game</span>
+        </div>
+        <div class="modal-controls">
+            <button class="mc-btn" id="mc-fs">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                <span>Fullscreen</span>
+            </button>
+            <button class="mc-btn" id="mc-tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                <span>New Tab</span>
+            </button>
+            <button class="mc-btn" id="mc-dl">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download</span>
+            </button>
+            <button class="mc-btn mc-close" id="mc-close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span>Close</span>
+            </button>
+        </div>
+    </div>
+    <div class="game-iframe-wrap">
+        <div class="iframe-loader" id="iframe-loader">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div class="loader-text-sm">Loading game…</div>
+        </div>
+        <iframe id="game-iframe" allowfullscreen allow="fullscreen"></iframe>
+    </div>
+</div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    /* ─── Firebase imports (NO Storage here — avoids load failures) ─── */
+    import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import {
         getAuth, onAuthStateChanged, signOut,
         EmailAuthProvider, reauthenticateWithCredential, updatePassword
     } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import {
-        getFirestore, doc, getDoc, collection, getDocs,
-        updateDoc, setDoc, deleteDoc, query, orderBy
+        getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc,
+        collection, getDocs, query, orderBy, increment
     } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-    import {
-        getStorage, ref, uploadBytesResumable,
-        getDownloadURL, deleteObject
-    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
-    /* ── Firebase config ── */
     const firebaseConfig = {
         apiKey:            "AIzaSyAaRvkBoiZe2_h7tPsRYv3YmS487L09-H4",
         authDomain:        "nyx-platform1.firebaseapp.com",
@@ -397,64 +588,169 @@
         messagingSenderId: "55921089818",
         appId:             "1:55921089818:web:6458294efcf6e6263260a3",
     };
-    const app     = initializeApp(firebaseConfig);
-    const auth    = getAuth(app);
-    const db      = getFirestore(app);
-    const storage = getStorage(app);
 
-    const ADMIN_EMAIL = 'charanthegoatt@gmail.com';
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
 
-    /* ── Auth state ── */
-    onAuthStateChanged(auth, async (user) => {
-        if (!user) { window.location.href = 'login.html'; return; }
+    const ADMIN = 'charanthegoatt@gmail.com';
 
-        const initials = (user.displayName || user.email).slice(0,2).toUpperCase();
-        document.getElementById('sidebar-avatar').textContent = initials;
-        document.getElementById('sidebar-name').textContent   = user.displayName || 'User';
-        document.getElementById('sidebar-email').textContent  = user.email;
+    /* ── shared game state ── */
+    let currentGame = null;
+    let allGames    = [];
 
-        if (user.email === ADMIN_EMAIL) {
-            await renderAdmin(user);
-        } else {
-            await renderUser(user);
+    /* ════════════════════════
+       AUTH GATE — fires quickly, hides loader on completion
+    ════════════════════════ */
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        unsubscribe(); // only run once
+        if (!user) {
+            window.location.href = 'login.html';
+            return;
         }
+
+        // Sidebar
+        document.getElementById('sb-email').textContent = user.email;
+
+        try {
+            if (user.email === ADMIN) {
+                await renderAdmin(user);
+            } else {
+                await renderUser(user);
+            }
+        } catch(err) {
+            console.error('Render error:', err);
+            document.getElementById('app-content').innerHTML =
+                `<div style="padding:60px;color:var(--error);font-size:0.9rem">
+                    Failed to load dashboard: ${err.message}
+                 </div>`;
+        }
+
+        /* Always hide loader */
         document.getElementById('loading-screen').style.display = 'none';
     });
 
-    /* ════════════════════════
-       USER DASHBOARD
-    ════════════════════════ */
-    async function renderUser(user) {
-        const snap = await getDoc(doc(db, 'users', user.uid));
-        const data = snap.exists() ? snap.data() : { username: user.displayName || 'User', tier: 'Free' };
-        const tierEmoji = { Free:'·', Gold:'✦', Diamond:'◈' };
-        const content = document.getElementById('app-content');
+    /* ── Logout ── */
+    document.getElementById('btn-logout').onclick = async () => {
+        await signOut(auth);
+        window.location.href = 'login.html';
+    };
 
-        content.innerHTML = `
-            <div class="page-header">
-                <div class="page-title">Welcome back, ${escHtml(data.username)} 👋</div>
-                <div class="page-subtitle">Here's your account overview</div>
+    /* ════════════════════════════════════════════════════════
+       USER DASHBOARD
+    ════════════════════════════════════════════════════════ */
+    async function renderUser(user) {
+        /* Load user doc + all games + play history + favorites in parallel */
+        const [userSnap, gamesSnap] = await Promise.all([
+            getDoc(doc(db, 'users', user.uid)),
+            getDocs(query(collection(db, 'games'), orderBy('uploadedAt', 'desc')))
+        ]);
+
+        const userData = userSnap.exists()
+            ? userSnap.data()
+            : { username: user.displayName || 'User', tier: 'Free' };
+
+        allGames = [];
+        gamesSnap.forEach(d => allGames.push({ id: d.id, ...d.data() }));
+
+        const username = userData.username || user.displayName || 'User';
+        const tier     = userData.tier || 'Free';
+        const playHist = userData.playHistory || {};   // { gameId: count }
+        const favIds   = new Set(userData.favorites || []);
+
+        /* Sidebar */
+        document.getElementById('sb-avatar').textContent = username.slice(0,2).toUpperCase();
+        document.getElementById('sb-name').textContent   = username;
+
+        /* ── Top 5 played games ── */
+        const sortedByPlay = allGames
+            .filter(g => playHist[g.id] > 0)
+            .sort((a,b) => (playHist[b.id]||0) - (playHist[a.id]||0))
+            .slice(0, 5);
+
+        /* ── Favorites ── */
+        const favGames = allGames.filter(g => favIds.has(g.id));
+
+        /* ── Popular (global play count) ── */
+        const popularGames = [...allGames]
+            .sort((a,b) => (b.playCount||0) - (a.playCount||0))
+            .slice(0, 10);
+
+        /* Tier display */
+        const tierEmoji = { Free:'·', Gold:'✦', Diamond:'◈' };
+
+        document.getElementById('app-content').innerHTML = `
+            <div class="page-header fade">
+                <div class="page-title">Welcome back, ${escHtml(username)} 👋</div>
+                <div class="page-subtitle">Your personal game dashboard</div>
             </div>
 
-            <div class="grid">
-                <div class="card">
-                    <div class="card-label">Current Plan</div>
-                    <span class="tier-badge ${data.tier}">${tierEmoji[data.tier]||'·'} ${data.tier}</span>
+            <!-- Stat cards -->
+            <div class="stat-grid">
+                <div class="stat-card fade">
+                    <div class="stat-label">Current Plan</div>
+                    <span class="tier-badge ${tier}">${tierEmoji[tier]||'·'} ${tier}</span>
                 </div>
-                <div class="card">
-                    <div class="card-label">Account Email</div>
-                    <div style="font-size:0.9rem;font-weight:500;color:var(--violet-lt)">${user.email}</div>
+                <div class="stat-card fade fade-d1">
+                    <div class="stat-label">Games Played</div>
+                    <div class="stat-value" style="font-size:1.3rem;font-weight:700;font-family:'Unbounded',sans-serif">
+                        ${Object.values(playHist).reduce((s,v)=>s+v,0)}
+                    </div>
                 </div>
-                <div class="card">
-                    <div class="card-label">Member Since</div>
-                    <div style="font-size:0.9rem;font-weight:500">
-                        ${new Date(user.metadata.creationTime).toLocaleDateString('en-US',{month:'short',year:'numeric'})}
+                <div class="stat-card fade fade-d2">
+                    <div class="stat-label">Favourites</div>
+                    <div class="stat-value" style="font-size:1.3rem;font-weight:700;font-family:'Unbounded',sans-serif">
+                        ${favIds.size}
+                    </div>
+                </div>
+                <div class="stat-card fade fade-d3">
+                    <div class="stat-label">Games in Library</div>
+                    <div class="stat-value" style="font-size:1.3rem;font-weight:700;font-family:'Unbounded',sans-serif">
+                        ${allGames.length}
                     </div>
                 </div>
             </div>
 
-            <div class="section-card">
-                <div class="section-title">🔐 Change Password</div>
+            <!-- ── Top Played ── -->
+            <div style="margin-bottom:28px" class="fade fade-d1">
+                <div class="section-heading">
+                    <div class="section-title">🏆 Your Top Played</div>
+                    <a class="section-link" href="games.html">Browse all →</a>
+                </div>
+                ${sortedByPlay.length === 0
+                    ? `<div class="row-empty">You haven't played any games yet.<br>Head to the <a href="games.html" style="color:var(--violet-lt)">Game Library</a> to get started!</div>`
+                    : `<div class="game-row" id="top-row">${sortedByPlay.map((g,i)=>buildRowCard(g,i,playHist,favIds,true)).join('')}</div>`
+                }
+            </div>
+
+            <!-- ── Favourites ── -->
+            <div style="margin-bottom:28px" class="fade fade-d2">
+                <div class="section-heading">
+                    <div class="section-title">❤️ Favourites</div>
+                </div>
+                <div class="game-row" id="fav-row">
+                ${favGames.length === 0
+                    ? `<div class="row-empty" style="width:100%">No favourites yet — click the ❤ on any game to save it here.</div>`
+                    : favGames.map(g=>buildRowCard(g,null,playHist,favIds,false)).join('')
+                }
+                </div>
+            </div>
+
+            <!-- ── Popular ── -->
+            <div style="margin-bottom:32px" class="fade fade-d3">
+                <div class="section-heading">
+                    <div class="section-title">🔥 Most Popular</div>
+                    <a class="section-link" href="games.html">See all →</a>
+                </div>
+                ${popularGames.length === 0
+                    ? `<div class="row-empty">No games in the library yet.</div>`
+                    : `<div class="game-row" id="pop-row">${popularGames.map(g=>buildRowCard(g,null,playHist,favIds,false)).join('')}</div>`
+                }
+            </div>
+
+            <!-- ── Change Password ── -->
+            <div class="section-card fade fade-d4">
+                <div class="sec-title">🔐 Change Password</div>
                 <div class="field"><label>Current Password</label><input type="password" id="cur-pw" placeholder="••••••••"></div>
                 <div class="field"><label>New Password</label><input type="password" id="new-pw" placeholder="••••••••"></div>
                 <div class="field"><label>Confirm New</label><input type="password" id="conf-pw" placeholder="••••••••"></div>
@@ -463,51 +759,222 @@
             </div>
         `;
 
+        /* ── Change password logic ── */
         document.getElementById('btn-change-pw').onclick = async () => {
             const curPw  = document.getElementById('cur-pw').value;
             const newPw  = document.getElementById('new-pw').value;
             const confPw = document.getElementById('conf-pw').value;
             const msg    = document.getElementById('pw-msg');
-            const show   = (t,ty) => { msg.textContent=t;msg.className=`msg-inline ${ty}`;msg.style.display='block'; };
+            const show   = (t,ty)=>{ msg.textContent=t;msg.className=`msg-inline ${ty}`;msg.style.display='block'; };
             if (!curPw||!newPw||!confPw) return show('Fill in all fields.','error');
-            if (newPw!==confPw)          return show('New passwords do not match.','error');
-            if (newPw.length<6)         return show('Password must be at least 6 characters.','error');
+            if (newPw!==confPw)          return show('Passwords do not match.','error');
+            if (newPw.length<6)         return show('Min 6 characters.','error');
             try {
                 await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, curPw));
                 await updatePassword(user, newPw);
                 show('✓ Password updated!','success');
                 ['cur-pw','new-pw','conf-pw'].forEach(id=>document.getElementById(id).value='');
             } catch(err) {
-                show(err.code==='auth/wrong-password'?'Current password is incorrect.':err.message,'error');
+                show(err.code==='auth/wrong-password'?'Incorrect current password.':err.message,'error');
             }
         };
+
+        /* ── Attach card interactions after render ── */
+        attachCardHandlers(user, favIds, playHist);
     }
 
-    /* ════════════════════════
+    /* ── Build a horizontal row card ── */
+    function buildRowCard(game, rankIdx, playHist, favIds, showRank) {
+        const hasThumb = game.thumbnailURL && game.thumbnailURL.trim();
+        const thumbHTML = hasThumb
+            ? `<img src="${game.thumbnailURL}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+            : '';
+        const placeholderStyle = hasThumb ? 'display:none' : '';
+        const isFav = favIds.has(game.id);
+
+        const rankClass = rankIdx === 0 ? 'gold' : rankIdx === 1 ? 'silver' : rankIdx === 2 ? 'bronze' : '';
+        const rankBadge = showRank && rankIdx !== null
+            ? `<div class="rank-badge ${rankClass}">#${rankIdx+1}</div>` : '';
+
+        const playCount = playHist[game.id] || 0;
+
+        return `
+            <div class="row-card" data-id="${game.id}" data-url="${escHtml(game.gameFileURL)}" data-title="${escHtml(game.title)}">
+                <div class="row-thumb">
+                    ${thumbHTML}
+                    <div class="row-thumb-placeholder" style="${placeholderStyle}">${(game.title||'?')[0]}</div>
+                    ${rankBadge}
+                    <button class="fav-btn ${isFav?'active':''}" data-fav="${game.id}" title="${isFav?'Remove from favourites':'Add to favourites'}">
+                        ${isFav?'❤️':'🤍'}
+                    </button>
+                    <div class="row-play-overlay">
+                        <div class="row-play-circle">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="#7c3aed"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-card-info">
+                    <div class="row-card-title">${escHtml(game.title)}</div>
+                    ${showRank ? `<div class="row-card-sub">Played ${playCount}×</div>` : `<div class="row-card-sub">${(game.playCount||0).toLocaleString()} plays</div>`}
+                </div>
+            </div>
+        `;
+    }
+
+    /* ── Attach click handlers to row cards ── */
+    function attachCardHandlers(user, favIds, playHist) {
+        /* Game open */
+        document.querySelectorAll('.row-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.fav-btn')) return; // handled separately
+                const gameId  = card.dataset.id;
+                const url     = card.dataset.url;
+                const title   = card.dataset.title;
+                const game    = allGames.find(g => g.id === gameId);
+                if (game) openGame(game, user, playHist);
+            });
+        });
+
+        /* Favourite toggle */
+        document.querySelectorAll('.fav-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const gameId = btn.dataset.fav;
+                const isNowFav = !favIds.has(gameId);
+
+                // Optimistic UI
+                btn.textContent = isNowFav ? '❤️' : '🤍';
+                btn.classList.toggle('active', isNowFav);
+                if (isNowFav) { favIds.add(gameId); } else { favIds.delete(gameId); }
+
+                // Update all heart buttons for this game
+                document.querySelectorAll(`[data-fav="${gameId}"]`).forEach(b => {
+                    b.textContent = isNowFav ? '❤️' : '🤍';
+                    b.classList.toggle('active', isNowFav);
+                });
+
+                // Refresh favourites row
+                const favRow = document.getElementById('fav-row');
+                if (favRow) {
+                    const favGames = allGames.filter(g => favIds.has(g.id));
+                    favRow.innerHTML = favGames.length === 0
+                        ? `<div class="row-empty" style="width:100%">No favourites yet — click the ❤ on any game.</div>`
+                        : favGames.map(g => buildRowCard(g,null,playHist,favIds,false)).join('');
+                    // Re-attach handlers for new fav row cards
+                    attachCardHandlers(user, favIds, playHist);
+                }
+
+                // Update stat card count
+                const favCountEl = document.querySelector('.stat-card:nth-child(3) .stat-value');
+                if (favCountEl) favCountEl.textContent = favIds.size;
+
+                // Persist
+                try {
+                    await updateDoc(doc(db,'users',user.uid), { favorites: [...favIds] });
+                } catch(err) { console.error('Fav save error', err); }
+            });
+        });
+    }
+
+    /* ════════════════════════════════════════════════════════
+       GAME MODAL (shared between user dashboard & admin)
+    ════════════════════════════════════════════════════════ */
+    async function openGame(game, user, playHist) {
+        currentGame = game;
+        const modal  = document.getElementById('game-modal');
+        const iframe = document.getElementById('game-iframe');
+        const loader = document.getElementById('iframe-loader');
+
+        document.getElementById('modal-title').textContent = game.title;
+        loader.classList.remove('hidden');
+        iframe.src = '';
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+
+        setTimeout(() => { iframe.src = game.gameFileURL; }, 50);
+        iframe.onload = () => setTimeout(() => loader.classList.add('hidden'), 300);
+
+        /* Track play — update Firestore play counters */
+        if (user) {
+            try {
+                const newCount = (playHist[game.id] || 0) + 1;
+                playHist[game.id] = newCount;
+
+                await Promise.all([
+                    // User's personal play history
+                    updateDoc(doc(db,'users',user.uid), {
+                        [`playHistory.${game.id}`]: newCount
+                    }),
+                    // Global game play count
+                    updateDoc(doc(db,'games',game.id), {
+                        playCount: increment(1)
+                    })
+                ]);
+            } catch {}
+        }
+    }
+
+    function closeModal() {
+        const modal  = document.getElementById('game-modal');
+        const iframe = document.getElementById('game-iframe');
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+        setTimeout(() => { iframe.src = ''; }, 300);
+        currentGame = null;
+    }
+
+    document.getElementById('mc-close').onclick = closeModal;
+    document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+
+    document.getElementById('mc-fs').onclick = () => {
+        const iframe = document.getElementById('game-iframe');
+        (iframe.requestFullscreen||iframe.webkitRequestFullscreen||iframe.mozRequestFullScreen).call(iframe);
+    };
+    document.getElementById('mc-tab').onclick = () => {
+        if (currentGame) window.open(currentGame.gameFileURL, '_blank');
+    };
+    document.getElementById('mc-dl').onclick = async () => {
+        if (!currentGame) return;
+        const btn = document.getElementById('mc-dl');
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<span>…</span>';
+        try {
+            const res  = await fetch(currentGame.gameFileURL);
+            const blob = await res.blob();
+            const a    = Object.assign(document.createElement('a'), {
+                href: URL.createObjectURL(blob),
+                download: currentGame.title.replace(/\s+/g,'_')+'.html'
+            });
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        } catch { window.open(currentGame.gameFileURL,'_blank'); }
+        finally { btn.innerHTML = orig; }
+    };
+
+    /* ════════════════════════════════════════════════════════
        ADMIN DASHBOARD
-    ════════════════════════ */
+    ════════════════════════════════════════════════════════ */
     async function renderAdmin(user) {
-        document.getElementById('sidebar-name').textContent = 'Admin';
-        const content = document.getElementById('app-content');
+        document.getElementById('sb-avatar').textContent = 'AD';
+        document.getElementById('sb-name').textContent   = 'Admin';
 
         const [userSnap, gameSnap] = await Promise.all([
-            getDocs(collection(db, 'users')),
-            getDocs(query(collection(db, 'games'), orderBy('uploadedAt', 'desc')))
+            getDocs(collection(db,'users')),
+            getDocs(query(collection(db,'games'), orderBy('uploadedAt','desc')))
         ]);
 
         const users = [];
-        userSnap.forEach(d => users.push({ uid: d.id, ...d.data() }));
-        const count = { Free:0, Gold:0, Diamond:0 };
-        users.forEach(u => { count[u.tier]=(count[u.tier]||0)+1; });
+        userSnap.forEach(d => users.push({ uid:d.id, ...d.data() }));
+        const cnt = { Free:0, Gold:0, Diamond:0 };
+        users.forEach(u => { cnt[u.tier]=(cnt[u.tier]||0)+1; });
 
         const games = [];
-        gameSnap.forEach(d => games.push({ id: d.id, ...d.data() }));
+        gameSnap.forEach(d => games.push({ id:d.id, ...d.data() }));
 
-        let userRows = users.map(u => `
+        const userRows = users.map(u => `
             <tr>
                 <td>
                     <div style="display:flex;align-items:center;gap:10px">
-                        <div style="width:30px;height:30px;border-radius:50%;background:var(--violet);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0">
+                        <div style="width:28px;height:28px;border-radius:50%;background:var(--violet);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">
                             ${(u.username||'?').slice(0,2).toUpperCase()}
                         </div>
                         <span style="font-weight:500">${escHtml(u.username||'—')}</span>
@@ -525,58 +992,52 @@
             </tr>
         `).join('');
 
-        let gameListHTML = games.length === 0
-            ? `<div style="text-align:center;padding:32px;color:var(--muted);font-size:0.85rem;">No games uploaded yet.</div>`
-            : games.map(g => buildGameAdminItem(g)).join('');
+        const gameListHTML = games.length === 0
+            ? `<div style="text-align:center;padding:28px;color:var(--muted);font-size:0.83rem">No games uploaded yet.</div>`
+            : games.map(g => buildAdminGameItem(g)).join('');
 
-        content.innerHTML = `
-            <div class="page-header">
+        document.getElementById('app-content').innerHTML = `
+            <div class="page-header fade">
                 <div class="page-title">Admin Dashboard</div>
-                <div class="page-subtitle">Manage users, subscriptions, and the game library</div>
+                <div class="page-subtitle">Manage users, subscriptions and the game library</div>
             </div>
 
-            <div class="stats-row">
+            <div class="stats-row fade">
                 <span class="stat-pill violet">⬡ ${users.length} Users</span>
-                <span class="stat-pill gold">✦ ${count.Gold} Gold</span>
-                <span class="stat-pill sky">◈ ${count.Diamond} Diamond</span>
+                <span class="stat-pill gold">✦ ${cnt.Gold} Gold</span>
+                <span class="stat-pill sky">◈ ${cnt.Diamond} Diamond</span>
                 <span class="stat-pill violet">🎮 ${games.length} Games</span>
             </div>
 
-            <!-- ── Admin Password ── -->
-            <div class="section-card">
-                <div class="section-title">🔐 Change Admin Password</div>
-                <div style="display:flex;gap:12px;flex-wrap:wrap">
-                    <div class="field" style="margin:0"><label>Current</label><input type="password" id="a-cur-pw" placeholder="••••••••"></div>
-                    <div class="field" style="margin:0"><label>New</label><input type="password" id="a-new-pw" placeholder="••••••••"></div>
-                    <div class="field" style="margin:0"><label>Confirm</label><input type="password" id="a-conf-pw" placeholder="••••••••"></div>
+            <!-- Change Password -->
+            <div class="section-card fade">
+                <div class="sec-title">🔐 Change Admin Password</div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+                    <div class="field" style="margin:0"><label>Current</label><input type="password" id="a-cur-pw" placeholder="••••••••" style="max-width:180px"></div>
+                    <div class="field" style="margin:0"><label>New</label><input type="password" id="a-new-pw" placeholder="••••••••" style="max-width:180px"></div>
+                    <div class="field" style="margin:0"><label>Confirm</label><input type="password" id="a-conf-pw" placeholder="••••••••" style="max-width:180px"></div>
+                    <button class="btn-sm" id="btn-admin-pw" style="margin-bottom:1px">Update</button>
                 </div>
-                <button class="btn-sm" style="margin-top:14px" id="btn-admin-pw">Update Password</button>
                 <div id="a-pw-msg" class="msg-inline"></div>
             </div>
 
-            <!-- ── User Management ── -->
-            <div class="section-card" style="padding:0;overflow:hidden">
-                <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border)">
-                    <div class="section-title" style="margin:0">👥 User Management</div>
+            <!-- User Table -->
+            <div class="section-card fade fade-d1" style="padding:0;overflow:hidden">
+                <div style="padding:18px 22px 14px;border-bottom:1px solid var(--border)">
+                    <div class="sec-title" style="margin:0">👥 User Management</div>
                 </div>
                 <div class="table-wrap" style="border:none;border-radius:0">
                     <table>
-                        <thead><tr>
-                            <th>User</th><th>Email</th><th>UID</th><th>Tier</th>
-                        </tr></thead>
+                        <thead><tr><th>User</th><th>Email</th><th>UID</th><th>Tier</th></tr></thead>
                         <tbody>${userRows}</tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- ══════════════════════════════════════
-                 GAME LIBRARY MANAGEMENT
-            ══════════════════════════════════════ -->
-            <div class="section-card">
-                <div class="section-title">🎮 Upload New Game</div>
-
+            <!-- Game Upload -->
+            <div class="section-card fade fade-d2">
+                <div class="sec-title">🎮 Upload New Game</div>
                 <div class="upload-zone">
-                    <!-- Thumbnail drop zone -->
                     <div class="thumb-drop" id="thumb-drop">
                         <input type="file" id="thumb-file" accept="image/*" title="">
                         <img id="thumb-preview" alt="">
@@ -585,228 +1046,214 @@
                             Click to add<br>thumbnail
                         </div>
                     </div>
-
-                    <!-- Upload fields -->
                     <div class="upload-fields">
-                        <div class="field full">
+                        <div class="field-upload">
                             <label>Game Title</label>
                             <input type="text" id="game-title" placeholder="e.g. Brotato">
                         </div>
-                        <div class="field full">
+                        <div class="field-upload">
                             <label>Game HTML File</label>
-                            <input type="file" id="game-file" accept=".html" style="max-width:100%;padding:7px 10px;cursor:pointer;">
+                            <input type="file" id="game-file" accept=".html">
                         </div>
-                        <div id="upload-progress-wrap" class="progress-wrap">
-                            <div class="progress-bar" id="upload-progress-bar"></div>
-                        </div>
-                        <div id="upload-status" class="msg-inline"></div>
-                        <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
-                            <button class="btn-sm" id="btn-upload-game">⬆ Upload Game</button>
-                            <button class="btn-sm secondary" id="btn-clear-form">Clear</button>
+                        <div id="prog-wrap" class="progress-wrap"><div class="progress-bar" id="prog-bar"></div></div>
+                        <div id="upload-msg" class="msg-inline"></div>
+                        <div style="display:flex;align-items:center;margin-top:12px">
+                            <button class="btn-sm" id="btn-upload">⬆ Upload Game</button>
+                            <button class="btn-secondary" id="btn-clear">Clear</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Uploaded games list -->
-            <div class="section-card">
-                <div class="section-title">📋 Uploaded Games <span style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted);font-weight:400">(${games.length})</span></div>
+            <!-- Game List -->
+            <div class="section-card fade fade-d3">
+                <div class="sec-title">
+                    📋 Uploaded Games
+                    <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);font-weight:400" id="game-count-badge">(${games.length})</span>
+                </div>
                 <div id="games-admin-list">${gameListHTML}</div>
             </div>
         `;
 
-        /* ── Admin password change ── */
+        /* Admin pw */
         document.getElementById('btn-admin-pw').onclick = async () => {
             const curPw  = document.getElementById('a-cur-pw').value;
             const newPw  = document.getElementById('a-new-pw').value;
             const confPw = document.getElementById('a-conf-pw').value;
             const msg    = document.getElementById('a-pw-msg');
-            const show   = (t,ty) => { msg.textContent=t;msg.className=`msg-inline ${ty}`;msg.style.display='block'; };
+            const show   = (t,ty)=>{ msg.textContent=t;msg.className=`msg-inline ${ty}`;msg.style.display='block'; };
             if (!curPw||!newPw||!confPw) return show('Fill in all fields.','error');
             if (newPw!==confPw)          return show('Passwords do not match.','error');
-            if (newPw.length<6)         return show('At least 6 characters.','error');
+            if (newPw.length<6)         return show('Min 6 characters.','error');
             try {
                 await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email,curPw));
                 await updatePassword(user, newPw);
-                show('✓ Password updated!','success');
+                show('✓ Updated!','success');
                 ['a-cur-pw','a-new-pw','a-conf-pw'].forEach(id=>document.getElementById(id).value='');
             } catch(err) {
-                show(err.code==='auth/wrong-password'?'Current password incorrect.':err.message,'error');
+                show(err.code==='auth/wrong-password'?'Incorrect current password.':err.message,'error');
             }
         };
 
-        /* ── Thumbnail preview ── */
-        document.getElementById('thumb-file').onchange = (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                const preview = document.getElementById('thumb-preview');
-                preview.src = ev.target.result;
-                preview.style.display = 'block';
+        /* Thumbnail preview */
+        document.getElementById('thumb-file').onchange = e => {
+            const f = e.target.files[0]; if (!f) return;
+            const r = new FileReader();
+            r.onload = ev => {
+                document.getElementById('thumb-preview').src = ev.target.result;
+                document.getElementById('thumb-preview').style.display = 'block';
                 document.getElementById('drop-hint').style.display = 'none';
             };
-            reader.readAsDataURL(file);
+            r.readAsDataURL(f);
         };
 
-        /* ── Clear form ── */
-        document.getElementById('btn-clear-form').onclick = clearUploadForm;
-
-        /* ── Upload game ── */
-        document.getElementById('btn-upload-game').onclick = uploadGame;
-    }
-
-    /* ── Upload game to Firebase Storage + Firestore ── */
-    async function uploadGame() {
-        const title     = (document.getElementById('game-title').value || '').trim();
-        const thumbFile = document.getElementById('thumb-file').files[0];
-        const gameFile  = document.getElementById('game-file').files[0];
-        const statusEl  = document.getElementById('upload-status');
-        const progWrap  = document.getElementById('upload-progress-wrap');
-        const progBar   = document.getElementById('upload-progress-bar');
-
-        const show = (t,ty) => { statusEl.textContent=t;statusEl.className=`msg-inline ${ty}`;statusEl.style.display='block'; };
-
-        if (!title)    return show('Please enter a game title.','error');
-        if (!gameFile) return show('Please select an HTML game file.','error');
-
-        const gameId = `game_${Date.now()}`;
-        progWrap.style.display = 'block';
-        progBar.style.width    = '0%';
-        show('Uploading…','success');
-
-        try {
-            let thumbURL  = '';
-            let thumbPath = '';
-
-            // 1. Upload thumbnail (if provided)
-            if (thumbFile) {
-                const ext  = thumbFile.name.split('.').pop();
-                thumbPath  = `games/${gameId}/thumbnail.${ext}`;
-                const tRef = ref(storage, thumbPath);
-                await new Promise((res, rej) => {
-                    const task = uploadBytesResumable(tRef, thumbFile);
-                    task.on('state_changed',
-                        snap => { progBar.style.width = (snap.bytesTransferred/snap.totalBytes*50)+'%'; },
-                        rej, res
-                    );
-                });
-                thumbURL = await getDownloadURL(tRef);
-                progBar.style.width = '50%';
-            }
-
-            // 2. Upload game HTML file
-            const gamePath = `games/${gameId}/game.html`;
-            const gRef     = ref(storage, gamePath);
-            await new Promise((res, rej) => {
-                const task = uploadBytesResumable(gRef, gameFile);
-                task.on('state_changed',
-                    snap => {
-                        const pct = snap.bytesTransferred/snap.totalBytes * 50;
-                        progBar.style.width = (50 + pct) + '%';
-                    },
-                    rej, res
-                );
-            });
-            const gameFileURL = await getDownloadURL(gRef);
-            progBar.style.width = '100%';
-
-            // 3. Save to Firestore
-            await setDoc(doc(db, 'games', gameId), {
-                title,
-                thumbnailURL:  thumbURL,
-                thumbnailPath: thumbPath,
-                gameFileURL,
-                gameFilePath:  gamePath,
-                uploadedAt:    new Date().toISOString()
-            });
-
-            show('✓ Game uploaded successfully!', 'success');
-            clearUploadForm();
-
-            // Refresh games list
-            const gameSnap = await getDocs(query(collection(db, 'games'), orderBy('uploadedAt', 'desc')));
-            const games = [];
-            gameSnap.forEach(d => games.push({ id: d.id, ...d.data() }));
-            document.getElementById('games-admin-list').innerHTML =
-                games.length === 0
-                    ? `<div style="text-align:center;padding:32px;color:var(--muted);font-size:0.85rem;">No games uploaded yet.</div>`
-                    : games.map(g => buildGameAdminItem(g)).join('');
-
-            // Update counter
-            const countEl = document.querySelector('.section-title span');
-            if (countEl) countEl.textContent = `(${games.length})`;
-
-        } catch(err) {
-            show('Upload failed: ' + err.message, 'error');
-            progWrap.style.display = 'none';
-        }
-    }
-
-    function clearUploadForm() {
-        document.getElementById('game-title').value    = '';
-        document.getElementById('thumb-file').value    = '';
-        document.getElementById('game-file').value     = '';
-        document.getElementById('thumb-preview').src   = '';
-        document.getElementById('thumb-preview').style.display = 'none';
-        document.getElementById('drop-hint').style.display = 'flex';
-        document.getElementById('upload-progress-wrap').style.display = 'none';
-        document.getElementById('upload-status').style.display = 'none';
-        document.getElementById('upload-progress-bar').style.width = '0%';
+        document.getElementById('btn-clear').onclick   = clearForm;
+        document.getElementById('btn-upload').onclick  = () => doUpload(user);
     }
 
     /* ── Build admin game list item ── */
-    function buildGameAdminItem(game) {
-        const date  = game.uploadedAt ? new Date(game.uploadedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+    function buildAdminGameItem(game) {
+        const date  = game.uploadedAt
+            ? new Date(game.uploadedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
+            : '—';
         const thumb = game.thumbnailURL
             ? `<img class="game-admin-thumb" src="${game.thumbnailURL}" alt="">`
-            : `<div class="game-admin-thumb-placeholder">${(game.title||'?')[0]}</div>`;
+            : `<div class="game-admin-placeholder">${(game.title||'?')[0]}</div>`;
         return `
             <div class="game-admin-item" id="gai-${game.id}">
                 ${thumb}
                 <div class="game-admin-info">
                     <div class="game-admin-title">${escHtml(game.title)}</div>
                     <div class="game-admin-date">Uploaded ${date}</div>
+                    <div class="game-admin-plays">🎮 ${(game.playCount||0).toLocaleString()} plays</div>
                 </div>
-                <button class="btn-sm danger" onclick="window.deleteGame('${game.id}','${game.thumbnailPath||''}','${game.gameFilePath||''}')">Delete</button>
+                <button class="btn-danger" onclick="window.deleteGame('${game.id}','${escHtml(game.thumbnailPath||'')}','${escHtml(game.gameFilePath||'')}')">Delete</button>
             </div>
         `;
     }
 
+    /* ── Upload game using Firebase Storage via fetch (avoids Storage SDK import issues) ── */
+    async function doUpload(user) {
+        const title     = (document.getElementById('game-title').value||'').trim();
+        const thumbFile = document.getElementById('thumb-file').files[0];
+        const gameFile  = document.getElementById('game-file').files[0];
+        const msgEl     = document.getElementById('upload-msg');
+        const progWrap  = document.getElementById('prog-wrap');
+        const progBar   = document.getElementById('prog-bar');
+
+        const show = (t,ty)=>{ msgEl.textContent=t;msgEl.className=`msg-inline ${ty}`;msgEl.style.display='block'; };
+
+        if (!title)    return show('Please enter a game title.','error');
+        if (!gameFile) return show('Please select an HTML file.','error');
+
+        const gameId = `game_${Date.now()}`;
+        progWrap.style.display='block'; progBar.style.width='0%';
+        show('Uploading…','success');
+
+        /* Get upload token for Firebase Storage via REST API */
+        const token = await user.getIdToken();
+        const bucket = 'nyx-platform1.firebasestorage.app';
+
+        async function uploadToStorage(file, path) {
+            const url = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o?uploadType=media&name=${encodeURIComponent(path)}`;
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Authorization':'Bearer '+token, 'Content-Type': file.type||'application/octet-stream' },
+                body: file
+            });
+            if (!res.ok) throw new Error('Storage upload failed: ' + await res.text());
+            const json = await res.json();
+            return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(json.name)}?alt=media&token=${json.downloadTokens}`;
+        }
+
+        try {
+            let thumbURL='', thumbPath='';
+            if (thumbFile) {
+                thumbPath = `games/${gameId}/thumbnail.${thumbFile.name.split('.').pop()}`;
+                show('Uploading thumbnail…','success');
+                progBar.style.width='30%';
+                thumbURL = await uploadToStorage(thumbFile, thumbPath);
+                progBar.style.width='50%';
+            }
+
+            const gamePath = `games/${gameId}/game.html`;
+            show('Uploading game file…','success');
+            progBar.style.width='60%';
+            const gameFileURL = await uploadToStorage(gameFile, gamePath);
+            progBar.style.width='90%';
+
+            await setDoc(doc(db,'games',gameId), {
+                title, thumbnailURL:thumbURL, thumbnailPath:thumbPath,
+                gameFileURL, gameFilePath:gamePath,
+                playCount:0, uploadedAt:new Date().toISOString()
+            });
+            progBar.style.width='100%';
+            show('✓ Game uploaded!','success');
+            clearForm();
+
+            /* Refresh list */
+            const snap = await getDocs(query(collection(db,'games'),orderBy('uploadedAt','desc')));
+            const gs=[]; snap.forEach(d=>gs.push({id:d.id,...d.data()}));
+            document.getElementById('games-admin-list').innerHTML =
+                gs.length===0
+                    ? `<div style="text-align:center;padding:28px;color:var(--muted);font-size:0.83rem">No games yet.</div>`
+                    : gs.map(g=>buildAdminGameItem(g)).join('');
+            document.getElementById('game-count-badge').textContent = `(${gs.length})`;
+
+        } catch(err) {
+            show('Upload failed: '+err.message,'error');
+            progWrap.style.display='none';
+        }
+    }
+
+    function clearForm() {
+        ['game-title'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+        ['thumb-file','game-file'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+        const prev=document.getElementById('thumb-preview');
+        if(prev){ prev.src='';prev.style.display='none'; }
+        const hint=document.getElementById('drop-hint');
+        if(hint) hint.style.display='flex';
+        const pw=document.getElementById('prog-wrap');
+        if(pw) pw.style.display='none';
+        const pb=document.getElementById('prog-bar');
+        if(pb) pb.style.width='0%';
+        const um=document.getElementById('upload-msg');
+        if(um) um.style.display='none';
+    }
+
     /* ── Delete game ── */
     window.deleteGame = async (gameId, thumbPath, gamePath) => {
-        if (!confirm('Delete this game? This cannot be undone.')) return;
+        if (!confirm('Delete this game permanently?')) return;
+        const user = auth.currentUser;
+        const token = await user.getIdToken();
+        const bucket = 'nyx-platform1.firebasestorage.app';
+
+        async function deleteFromStorage(path) {
+            if (!path) return;
+            await fetch(
+                `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(path)}`,
+                { method:'DELETE', headers:{'Authorization':'Bearer '+token} }
+            ).catch(()=>{});
+        }
+
         try {
-            // Delete files from Storage
-            if (thumbPath) {
-                try { await deleteObject(ref(storage, thumbPath)); } catch {}
-            }
-            if (gamePath) {
-                try { await deleteObject(ref(storage, gamePath)); } catch {}
-            }
-            // Delete Firestore doc
-            await deleteDoc(doc(db, 'games', gameId));
-            // Remove from UI
+            await Promise.all([
+                deleteFromStorage(thumbPath),
+                deleteFromStorage(gamePath),
+                deleteDoc(doc(db,'games',gameId))
+            ]);
             const el = document.getElementById(`gai-${gameId}`);
             if (el) el.remove();
-        } catch(err) {
-            alert('Failed to delete: ' + err.message);
-        }
+        } catch(err) { alert('Delete failed: '+err.message); }
     };
 
-    /* ── Update user tier ── */
+    /* ── Tier update ── */
     window.updateTier = async (uid, newTier, sel) => {
         try {
-            await updateDoc(doc(db, 'users', uid), { tier: newTier });
-            sel.style.borderColor = '#a78bfa';
-            setTimeout(() => { sel.style.borderColor = ''; }, 1200);
-        } catch(err) { alert('Error: ' + err.message); }
-    };
-
-    /* ── Logout ── */
-    document.getElementById('btn-logout').onclick = async () => {
-        await signOut(auth);
-        window.location.href = 'login.html';
+            await updateDoc(doc(db,'users',uid),{tier:newTier});
+            sel.style.borderColor='#a78bfa';
+            setTimeout(()=>{ sel.style.borderColor=''; }, 1200);
+        } catch(err) { alert('Error: '+err.message); }
     };
 
     /* ── Utility ── */
