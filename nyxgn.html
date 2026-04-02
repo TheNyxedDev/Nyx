@@ -1120,7 +1120,8 @@ function closeProfile(){
 function renderProfilePage(user){
   const recentIds=user.recentlyPlayed||[];
   const recentGames=recentIds.slice(0,8).map(id=>state.games.find(g=>g.id===id)).filter(Boolean);
-  const popular=[...state.games].sort((a,b)=>getScore(b,'year')-getScore(a,'year')).slice(0,8);
+  const favIds=JSON.parse(localStorage.getItem('favorites')||'[]');
+  const favoriteGames=favIds.map(id=>state.games.find(g=>g.id===id)).filter(Boolean);
   const initial=getAvatarInitial(user.displayName||user.username);
   const color=getAvatarColor(user.username);
   const daysOn=Math.max(1,Math.floor((Date.now()-(user.created||Date.now()))/(86400000)));
@@ -1170,18 +1171,22 @@ function renderProfilePage(user){
     </div>
 
     <div>
-      <div class="profile-section-title">Popular Right Now</div>
+      <div class="profile-section-title">My Favorites</div>
+      ${favoriteGames.length>0?`
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.85rem">
-        ${popular.map(g=>`
+        ${favoriteGames.map(g=>`
           <div class="mini-game-card" onclick="closeProfile();openGame(${g.id})">
             <img src="${resolveUrl(g.cover)}" loading="lazy" style="width:100%;aspect-ratio:1;object-fit:cover">
             <div class="mini-card-body">
               <div class="mini-card-title">${g.name}</div>
-              <div class="mini-card-meta">${formatPlays(getScore(g,'year'))} plays</div>
+              <div class="mini-card-meta">${(g.special||[]).slice(0,1).map(toTitleCase).join('')||'Game'}</div>
             </div>
           </div>
         `).join('')}
       </div>
+      `:`<div class="empty-state" style="padding:1.5rem">
+          <p>No favorites yet. Give a game a star to save it here!</p>
+        </div>`}
     </div>
   `;
 }
