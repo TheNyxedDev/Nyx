@@ -973,10 +973,17 @@ function initAuthUI(){
     document.getElementById('guestButtons').style.display='none';
     document.getElementById('userProfile').style.display='block';
     const av=document.getElementById('headerAvatar');
-    av.textContent=getAvatarInitial(user.username);
-    av.style.background=`linear-gradient(135deg,${getAvatarColor(user.username)},#a78bfa)`;
-    document.getElementById('headerUsername').textContent=user.username;
-    document.getElementById('dropdownUsername').textContent=user.username;
+    // Show Google profile photo if available, otherwise show initial
+    if(user.photoURL){
+      av.textContent='';
+      av.innerHTML=`<img src="${user.photoURL}" alt="${user.displayName||user.username}">`;
+    } else {
+      av.innerHTML='';
+      av.textContent=getAvatarInitial(user.displayName||user.username);
+      av.style.background=`linear-gradient(135deg,${getAvatarColor(user.username)},#a78bfa)`;
+    }
+    document.getElementById('headerUsername').textContent=user.displayName||user.username;
+    document.getElementById('dropdownUsername').textContent=user.displayName||user.username;
   } else {
     document.getElementById('guestButtons').style.display='flex';
     document.getElementById('userProfile').style.display='none';
@@ -1120,7 +1127,7 @@ function renderProfilePage(user){
 
   document.getElementById('profilePageContent').innerHTML=`
     <div class="profile-hero">
-      <div class="profile-big-avatar" style="background:linear-gradient(135deg,${color},#a78bfa)">${initial}</div>
+      <div class="profile-big-avatar" style="background:linear-gradient(135deg,${color},#a78bfa)">${user.photoURL?`<img src="${user.photoURL}" alt="${user.displayName||user.username}">`:initial}</div>
       <div class="profile-info">
         <h1>${user.displayName||user.username}</h1>
         <p>@${user.username} · Member for ${daysOn} day${daysOn===1?'':'s'}</p>
@@ -1293,6 +1300,7 @@ fbAuth.onAuthStateChanged(async function(user){
       username:(user.displayName||user.email.split('@')[0]).toLowerCase(),
       displayName:user.displayName||user.email.split('@')[0],
       email:user.email,
+      photoURL:user.photoURL||null,
       created:user.metadata.creationTime?new Date(user.metadata.creationTime).getTime():Date.now(),
       recentlyPlayed:rp,
       totalPlayed:tp,
