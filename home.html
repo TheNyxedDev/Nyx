@@ -1,1177 +1,1656 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nyx — Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg:          #07070e;
-            --surface:     #0e0d1c;
-            --surface2:    #15132b;
-            --border:      rgba(124,58,237,0.18);
-            --violet:      #7c3aed;
-            --violet-lt:   #a78bfa;
-            --violet-glow: rgba(124,58,237,0.28);
-            --text:        #f0eeff;
-            --muted:       #7e7a9e;
-            --gold:        #f5c843;
-            --gold-bg:     rgba(245,200,67,0.12);
-            --diamond:     #7dd3fc;
-            --diamond-bg:  rgba(125,211,252,0.12);
-            --free-bg:     rgba(126,122,158,0.15);
-            --error:       #f87171;
-            --success:     #a78bfa;
-        }
-        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-        body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nyx — Play Unblocked Games</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<style>
+:root {
+  --nyx-bg:        #07070f;
+  --nyx-bg-deep:   #040408;
+  --nyx-header:    #09090f;
+  --nyx-card:      #0f0f1c;
+  --nyx-card-hover:#161628;
+  --nyx-border:    rgba(120,80,255,0.12);
+  --nyx-border-soft: rgba(255,255,255,0.05);
+  --nyx-primary:   #7c3aed;
+  --nyx-primary-glow: rgba(124,58,237,0.35);
+  --nyx-accent:    #a78bfa;
+  --nyx-accent2:   #38bdf8;
+  --nyx-text:      #e2e8f0;
+  --nyx-muted:     #94a3b8;
+  --nyx-dim:       #475569;
+  --nyx-radius:    10px;
+  --nyx-radius-lg: 16px;
+  --nyx-radius-sm: 6px;
+  --nyx-font:      'Outfit', sans-serif;
+  --nyx-font-display: 'Exo 2', sans-serif;
+  --nyx-shadow-neon: 0 0 20px rgba(124,58,237,0.4), 0 0 40px rgba(124,58,237,0.15);
+  --nyx-transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
 
-        .bg-orb { position:fixed; border-radius:50%; filter:blur(130px); pointer-events:none; z-index:0; }
-        .orb1 { width:600px;height:600px;background:rgba(124,58,237,0.12);top:-200px;left:-200px; }
-        .orb2 { width:400px;height:400px;background:rgba(79,26,191,0.1);bottom:-150px;right:-150px; }
-        body::before {
-            content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-            background-image: linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),
-                              linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px);
-            background-size:48px 48px;
-        }
+  /* gn-math compat aliases */
+  --primary: var(--nyx-primary);
+  --primary-hover: #6d28d9;
+  --primary-light: rgba(124,58,237,0.1);
+  --accent: #a78bfa;
+  --bg-darkest: var(--nyx-bg-deep);
+  --bg-dark: var(--nyx-bg);
+  --bg-card: var(--nyx-card);
+  --bg-card-hover: var(--nyx-card-hover);
+  --text-main: var(--nyx-text);
+  --text-muted: var(--nyx-muted);
+  --text-dim: var(--nyx-dim);
+  --border: var(--nyx-border);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.5);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,.6);
+  --shadow-neon: var(--nyx-shadow-neon);
+  --font-main: var(--nyx-font);
+  --radius-sm: var(--nyx-radius-sm);
+  --radius-md: var(--nyx-radius);
+  --radius-lg: var(--nyx-radius-lg);
+  --transition: var(--nyx-transition);
+  --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+}
 
-        /* ════ SIDEBAR ════ */
-        .sidebar {
-            position:fixed; left:0;top:0;bottom:0; width:220px;
-            background:rgba(14,13,28,0.92); backdrop-filter:blur(20px);
-            border-right:1px solid var(--border);
-            display:flex; flex-direction:column; padding:28px 20px; z-index:10;
-        }
-        .sidebar-logo {
-            font-family:'Unbounded',sans-serif; font-size:1.4rem; font-weight:900; letter-spacing:-0.03em;
-            background:linear-gradient(135deg,#fff 30%,var(--violet-lt));
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-            margin-bottom:40px;
-        }
-        .nav-label { font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;padding-left:4px; }
-        .nav-item {
-            display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:9px;
-            color:var(--muted); font-size:0.86rem; font-weight:500; cursor:pointer; margin-bottom:3px;
-            transition:background 0.2s,color 0.2s; text-decoration:none;
-        }
-        .nav-item:hover  { background:rgba(124,58,237,0.1); color:var(--text); }
-        .nav-item.active { background:rgba(124,58,237,0.18); color:var(--violet-lt); }
-        .nav-icon { font-size:0.95rem; width:20px; text-align:center; }
+*{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--nyx-card) var(--nyx-bg-deep)}
+::-webkit-scrollbar{width:6px;height:6px;background:var(--nyx-bg-deep)}
+::-webkit-scrollbar-thumb{background:var(--nyx-card-hover);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--nyx-primary)}
 
-        .sidebar-footer { margin-top:auto; }
-        .user-pill {
-            display:flex; align-items:center; gap:10px; padding:10px 12px;
-            background:var(--surface2); border-radius:10px; border:1px solid var(--border); margin-bottom:8px;
-        }
-        .avatar {
-            width:32px;height:32px;border-radius:50%;background:var(--violet);
-            display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0;
-        }
-        .user-info { overflow:hidden; }
-        .user-name  { font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-        .user-email { font-size:0.68rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+body{
+  background:var(--nyx-bg);
+  color:var(--nyx-text);
+  font-family:var(--nyx-font);
+  margin:0;padding:0;
+  overflow-x:hidden;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+}
 
-        .btn-settings {
-            width:100%; padding:9px; background:transparent;
-            border:1px solid var(--border); border-radius:9px; color:var(--muted);
-            font-family:'DM Sans',sans-serif; font-size:0.83rem; cursor:pointer;
-            display:flex; align-items:center; justify-content:center; gap:7px; margin-bottom:7px;
-            transition:background 0.2s,color 0.2s,border-color 0.2s;
-        }
-        .btn-settings:hover { background:rgba(124,58,237,0.1);color:var(--text);border-color:var(--violet); }
+/* ─── HEADER ─── */
+header{
+  background:var(--nyx-header);
+  border-bottom:1px solid var(--nyx-border-soft);
+  position:sticky;top:0;z-index:1000;
+  backdrop-filter:blur(20px);
+}
+.header-upper{
+  max-width:1400px;margin:0 auto;
+  padding:.85rem 1.5rem;
+  display:flex;align-items:center;
+  justify-content:space-between;gap:1.5rem;
+}
+.logo{
+  font-family:var(--nyx-font-display);
+  font-size:1.8rem;font-weight:800;
+  color:#fff;cursor:pointer;
+  display:flex;align-items:center;gap:.5rem;
+  letter-spacing:.04em;
+  text-decoration:none;
+  user-select:none;
+  flex-shrink:0;
+}
+.logo span.nyx-glyph{
+  display:inline-block;
+  width:30px;height:30px;
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);
+  border-radius:8px;
+  position:relative;
+  box-shadow:0 0 12px rgba(124,58,237,.5);
+}
+.logo span.nyx-glyph::after{
+  content:'✦';
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;color:#fff;
+}
 
-        .btn-logout {
-            width:100%; padding:9px; background:transparent;
-            border:1px solid var(--border); border-radius:9px; color:var(--muted);
-            font-family:'DM Sans',sans-serif; font-size:0.83rem; cursor:pointer;
-            display:flex; align-items:center; justify-content:center; gap:7px;
-            transition:background 0.2s,color 0.2s,border-color 0.2s;
-        }
-        .btn-logout:hover { background:rgba(248,113,113,0.08);color:#f87171;border-color:rgba(248,113,113,0.3); }
+/* Search */
+.search-wrapper{flex:1;max-width:480px;position:relative}
+#searchBar{
+  width:100%;padding:.65rem 1rem .65rem 2.6rem;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--nyx-border-soft);
+  border-radius:var(--nyx-radius);
+  color:var(--nyx-text);font-family:inherit;font-size:.9rem;
+  transition:var(--nyx-transition);outline:none;
+}
+#searchBar::placeholder{color:var(--nyx-dim)}
+#searchBar:focus{
+  background:rgba(124,58,237,0.08);
+  border-color:var(--nyx-primary);
+  box-shadow:0 0 0 3px rgba(124,58,237,.15);
+}
+.search-icon{
+  position:absolute;left:.85rem;top:50%;
+  transform:translateY(-50%);
+  color:var(--nyx-dim);pointer-events:none;
+  transition:var(--nyx-transition);
+}
+#searchBar:focus ~ .search-icon{color:var(--nyx-accent)}
 
-        /* ════ MAIN ════ */
-        .main { margin-left:220px; padding:40px 40px 60px; position:relative; z-index:1; min-height:100vh; }
+/* Header actions */
+.header-actions{display:flex;gap:.65rem;align-items:center}
+.btn-icon{
+  width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+  border-radius:var(--nyx-radius-sm);
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--nyx-border-soft);
+  color:var(--nyx-muted);cursor:pointer;
+  transition:var(--nyx-transition);
+}
+.btn-icon:hover{background:rgba(124,58,237,.15);border-color:var(--nyx-primary);color:var(--nyx-accent)}
 
-        @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-        .fade    { animation:fadeUp 0.45s ease both; }
-        .fade-d1 { animation-delay:0.06s; }
-        .fade-d2 { animation-delay:0.12s; }
-        .fade-d3 { animation-delay:0.18s; }
-        .fade-d4 { animation-delay:0.24s; }
+/* Auth button */
+.auth-btn{
+  padding:.5rem 1.1rem;
+  background:var(--nyx-primary);
+  color:#fff;
+  border:none;border-radius:var(--nyx-radius-sm);
+  font-family:inherit;font-size:.875rem;font-weight:600;
+  cursor:pointer;transition:var(--nyx-transition);
+  white-space:nowrap;
+}
+.auth-btn:hover{background:#6d28d9;box-shadow:var(--nyx-shadow-neon);transform:translateY(-1px)}
+.auth-btn.outline{
+  background:transparent;
+  border:1px solid rgba(124,58,237,.5);
+  color:var(--nyx-accent);
+}
+.auth-btn.outline:hover{background:rgba(124,58,237,.12);border-color:var(--nyx-primary)}
 
-        .page-header { margin-bottom:28px; }
-        .page-title   { font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px; }
-        .page-subtitle{ font-size:0.86rem;color:var(--muted); }
+/* Profile button */
+.profile-btn{
+  display:flex;align-items:center;gap:.5rem;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--nyx-border-soft);
+  border-radius:var(--nyx-radius);
+  padding:.35rem .75rem .35rem .35rem;
+  cursor:pointer;transition:var(--nyx-transition);
+  color:var(--nyx-text);
+}
+.profile-btn:hover{border-color:var(--nyx-primary);background:rgba(124,58,237,.08)}
+.profile-avatar{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--nyx-font-display);font-size:.8rem;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);
+  flex-shrink:0;overflow:hidden;
+}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-name{font-size:.875rem;font-weight:600;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.profile-caret{color:var(--nyx-dim);font-size:.65rem;transition:transform .2s}
 
-        /* stat grid */
-        .stat-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px; }
-        .stat-card { background:rgba(14,13,28,0.8);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:13px;padding:20px; }
-        .stat-label { font-size:0.68rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:12px; }
-        .stat-value { font-size:0.9rem;font-weight:600; }
+/* Profile dropdown */
+.profile-wrapper{position:relative}
+.profile-dropdown{
+  position:absolute;top:calc(100% + 8px);right:0;
+  min-width:220px;
+  background:#0f0f1c;
+  border:1px solid var(--nyx-border);
+  border-radius:var(--nyx-radius-lg);
+  padding:.5rem;
+  box-shadow:0 20px 50px rgba(0,0,0,.7),0 0 30px rgba(124,58,237,.1);
+  z-index:2000;
+  display:none;
+  animation:dropIn .15s ease forwards;
+}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.profile-dropdown.open{display:block}
+.dropdown-header{
+  padding:.5rem .75rem .75rem;
+  border-bottom:1px solid var(--nyx-border-soft);
+  margin-bottom:.35rem;
+}
+.dropdown-greeting{font-size:.75rem;color:var(--nyx-dim);margin-bottom:.15rem}
+.dropdown-username{font-size:.95rem;font-weight:700;color:var(--nyx-text)}
+.dropdown-item{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.55rem .75rem;border-radius:var(--nyx-radius-sm);
+  cursor:pointer;font-size:.875rem;color:var(--nyx-muted);
+  transition:var(--nyx-transition);
+}
+.dropdown-item:hover{background:rgba(124,58,237,.12);color:var(--nyx-text)}
+.dropdown-item svg{flex-shrink:0;width:16px;height:16px}
+.dropdown-sep{height:1px;background:var(--nyx-border-soft);margin:.35rem 0}
+.dropdown-item.danger{color:#f87171}
+.dropdown-item.danger:hover{background:rgba(248,113,113,.1);color:#fca5a5}
 
-        /* tier badge */
-        .tier-badge { display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:30px;font-size:0.8rem;font-weight:600;letter-spacing:0.04em; }
-        .tier-badge.Free    { background:var(--free-bg);   color:var(--muted);   border:1px solid rgba(126,122,158,0.3); }
-        .tier-badge.Gold    { background:var(--gold-bg);   color:var(--gold);    border:1px solid rgba(245,200,67,0.35); }
-        .tier-badge.Diamond { background:var(--diamond-bg);color:var(--diamond); border:1px solid rgba(125,211,252,0.35); }
+/* Nav bar */
+.nav-bar{
+  background:rgba(0,0,0,0.3);
+  border-top:1px solid var(--nyx-border-soft);
+}
+.nav-content{
+  max-width:1400px;margin:0 auto;
+  padding:0 1.5rem;display:flex;gap:1.75rem;
+  overflow-x:auto;scrollbar-width:none;
+}
+.nav-content::-webkit-scrollbar{display:none}
+.nav-link{
+  padding:.8rem 0;
+  color:rgba(255,255,255,.5);
+  font-weight:600;font-size:.82rem;
+  text-transform:uppercase;letter-spacing:.06em;
+  cursor:pointer;position:relative;white-space:nowrap;
+  transition:var(--nyx-transition);
+}
+.nav-link:hover{color:var(--nyx-accent)}
+.nav-link.active{color:#fff}
+.nav-link.active::after{
+  content:'';position:absolute;bottom:0;left:0;width:100%;
+  height:2px;background:linear-gradient(90deg,#7c3aed,#a78bfa);
+  border-radius:2px 2px 0 0;
+}
 
-        /* section row */
-        .section-heading { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
-        .section-title   { font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:8px; }
-        .section-link    { font-size:0.75rem;color:var(--violet-lt);text-decoration:none;font-weight:500;transition:color 0.2s; }
-        .section-link:hover { color:#fff; }
+/* ─── MAIN ─── */
+main{
+  flex:1;width:100%;max-width:1400px;
+  margin:0 auto;padding:2rem 1.5rem;
+}
 
-        /* horizontal game rows */
-        .game-row { display:flex;gap:14px;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,0.3) transparent; }
-        .game-row::-webkit-scrollbar { height:4px; }
-        .game-row::-webkit-scrollbar-thumb { background:rgba(124,58,237,0.3);border-radius:2px; }
+/* Section header */
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.25rem;margin-top:2.5rem;
+}
+.section-title{
+  font-size:1.3rem;font-weight:700;
+  font-family:var(--nyx-font-display);
+  color:var(--nyx-text);
+  display:flex;align-items:center;gap:.6rem;
+}
+.section-title::before{
+  content:'';display:block;
+  width:4px;height:20px;
+  background:linear-gradient(180deg,#7c3aed,#a78bfa);
+  border-radius:2px;
+}
 
-        .row-card {
-            flex-shrink:0; width:150px; background:rgba(14,13,28,0.8);
-            border:1px solid var(--border); border-radius:10px; overflow:hidden; cursor:pointer;
-            transition:transform 0.22s,box-shadow 0.22s,border-color 0.22s; position:relative;
-        }
-        .row-card:hover { transform:translateY(-5px);box-shadow:0 14px 36px rgba(124,58,237,0.28);border-color:var(--violet); }
-        .row-thumb { position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface2); }
-        .row-thumb img { width:100%;height:100%;object-fit:cover;transition:transform 0.3s; }
-        .row-card:hover .row-thumb img { transform:scale(1.07); }
-        .row-thumb-ph {
-            width:100%;height:100%;background:linear-gradient(135deg,#2d1470,#15132b);
-            display:flex;align-items:center;justify-content:center;
-            font-family:'Unbounded',sans-serif;font-size:2rem;font-weight:900;color:rgba(167,139,250,0.45);
-        }
-        .row-play-ov { position:absolute;inset:0;background:rgba(124,58,237,0.6);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.22s;backdrop-filter:blur(2px); }
-        .row-card:hover .row-play-ov { opacity:1; }
-        .row-play-circle { width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center; }
-        .row-card-info { padding:9px 10px 10px; }
-        .row-card-title { font-size:0.76rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-        .row-card-sub   { font-size:0.65rem;color:var(--muted);margin-top:2px; }
-        .rank-badge {
-            position:absolute;top:7px;left:7px;width:22px;height:22px;border-radius:50%;
-            background:var(--violet);display:flex;align-items:center;justify-content:center;
-            font-size:0.6rem;font-weight:700;font-family:'DM Mono',monospace;z-index:2;box-shadow:0 2px 8px rgba(0,0,0,0.5);
-        }
-        .rank-badge.gold   { background:var(--gold);color:#000; }
-        .rank-badge.silver { background:#b0b8c8;color:#000; }
-        .rank-badge.bronze { background:#c8956b;color:#000; }
-        .fav-btn {
-            position:absolute;top:7px;right:7px;z-index:3;width:26px;height:26px;border-radius:50%;
-            background:rgba(7,7,14,0.75);border:none;display:flex;align-items:center;justify-content:center;
-            cursor:pointer;transition:background 0.2s,transform 0.15s;font-size:0.85rem;line-height:1;backdrop-filter:blur(4px);
-        }
-        .fav-btn:hover { background:rgba(248,113,113,0.25);transform:scale(1.15); }
-        .fav-btn.active { background:rgba(248,113,113,0.2); }
-        .row-empty { width:100%;padding:28px 16px;text-align:center;color:var(--muted);font-size:0.8rem;line-height:1.6;background:rgba(14,13,28,0.5);border:1px dashed rgba(124,58,237,0.2);border-radius:10px; }
+/* Sort */
+#sortOptions{
+  padding:.55rem .85rem;
+  background:var(--nyx-card);
+  border:1px solid var(--nyx-border-soft);
+  border-radius:var(--nyx-radius-sm);
+  color:var(--nyx-text);font-family:inherit;font-size:.85rem;
+  cursor:pointer;outline:none;transition:var(--nyx-transition);
+}
+#sortOptions:hover{border-color:var(--nyx-primary)}
 
-        /* admin stuff */
-        .stat-pill { display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:0.75rem;font-family:'DM Mono',monospace; }
-        .stat-pill.violet { background:rgba(124,58,237,0.15);color:var(--violet-lt);border:1px solid rgba(124,58,237,0.3); }
-        .stat-pill.gold   { background:var(--gold-bg);color:var(--gold);border:1px solid rgba(245,200,67,0.25); }
-        .stat-pill.sky    { background:var(--diamond-bg);color:var(--diamond);border:1px solid rgba(125,211,252,0.25); }
-        .stats-row { display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px; }
+/* ─── HERO SLIDER ─── */
+.featured-slider{
+  width:100%;height:380px;
+  border-radius:var(--nyx-radius-lg);overflow:visible;
+  margin-bottom:2.5rem;box-shadow:var(--shadow-lg);position:relative;
+}
+.swiper.featured-slider{overflow:visible}
+.swiper.featured-slider .swiper-wrapper{overflow:visible}
+.swiper-slide{
+  background:var(--nyx-card);display:flex;height:100%;
+  position:relative;overflow:hidden;width:85%;
+  border-radius:var(--nyx-radius-lg);
+  border:1px solid var(--nyx-border-soft);
+}
+.swiper.featured-slider .swiper-slide{transition:all .5s ease}
+.swiper.featured-slider .swiper-slide-prev,
+.swiper.featured-slider .swiper-slide-next{
+  opacity:.35;filter:blur(4px);transform:scale(.88);pointer-events:none;
+}
+.swiper.featured-slider .swiper-slide-active{
+  opacity:1;filter:blur(0);transform:scale(1);z-index:10;
+}
+.slide-bg{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  filter:blur(20px) brightness(.2);z-index:1;
+}
+.slide-content{
+  position:relative;z-index:2;display:flex;width:100%;height:100%;
+  background:linear-gradient(90deg,rgba(7,7,15,.95) 0%,rgba(7,7,15,.8) 50%,rgba(7,7,15,.3) 100%);
+}
+.slide-image-wrapper{
+  width:55%;height:100%;position:relative;
+  clip-path:polygon(0 0,100% 0,88% 100%,0% 100%);
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+.slide-image{
+  width:100%;height:100%;object-fit:contain;
+  transition:transform .5s ease;padding:2rem;
+}
+.swiper-slide:hover .slide-image{transform:scale(1.05)}
+.slide-info{
+  width:45%;padding:2.5rem;
+  display:flex;flex-direction:column;justify-content:center;gap:1.25rem;
+}
+.game-title-hero{
+  font-size:2.2rem;font-weight:800;line-height:1.1;
+  font-family:var(--nyx-font-display);
+  background:linear-gradient(135deg,#fff 0%,#c4b5fd 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.game-meta{display:flex;gap:.75rem;flex-wrap:wrap}
+.tag-badge{
+  padding:.2rem .65rem;
+  background:rgba(124,58,237,.15);
+  border:1px solid rgba(124,58,237,.3);
+  border-radius:4px;font-size:.72rem;font-weight:600;
+  color:var(--nyx-accent);text-transform:uppercase;letter-spacing:.06em;
+}
+.hero-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  padding:.85rem 1.75rem;
+  background:linear-gradient(135deg,#7c3aed,#6d28d9);
+  color:#fff;font-weight:700;border-radius:var(--nyx-radius);
+  transition:var(--nyx-transition);border:none;cursor:pointer;
+  text-transform:uppercase;letter-spacing:.06em;align-self:flex-start;
+  box-shadow:0 4px 20px rgba(124,58,237,.4);
+}
+.hero-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,.6)}
 
-        .section-card { background:rgba(14,13,28,0.8);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:13px;padding:24px;margin-bottom:20px; }
-        .sec-title { font-size:0.92rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px; }
+/* ─── GAME CARDS ─── */
+.game-card{
+  background:var(--nyx-card);border-radius:var(--nyx-radius);
+  position:relative;transition:var(--nyx-transition);
+  border:1px solid var(--nyx-border-soft);cursor:pointer;
+  display:flex;flex-direction:column;
+  opacity:0;animation:fadeInCard .35s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes fadeInCard{
+  from{opacity:0;transform:translateY(12px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.game-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(124,58,237,.5);z-index:10;
+  box-shadow:0 0 0 1px rgba(124,58,237,.2),0 20px 40px rgba(0,0,0,.5),var(--nyx-shadow-neon);
+}
+.card-thumb{
+  width:100%;aspect-ratio:1;object-fit:cover;
+  background:var(--nyx-card-hover);
+  border-radius:var(--nyx-radius) var(--nyx-radius) 0 0;
+}
+.star-icon{
+  position:absolute;top:7px;right:7px;font-size:1.3rem;
+  color:rgba(255,255,255,.25);cursor:pointer;z-index:10;
+  text-shadow:0 1px 3px rgba(0,0,0,.6);transition:all .2s ease;
+}
+.star-icon:hover{color:rgba(255,255,255,.5);transform:scale(1.2)}
+.star-icon.starred{color:#fbbf24}
+.card-body{padding:.85rem;flex:1;display:flex;flex-direction:column}
+.card-title{
+  font-weight:600;font-size:.9rem;margin-bottom:.4rem;
+  color:var(--nyx-text);overflow:hidden;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  line-height:1.3;
+}
+.card-tags{font-size:.72rem;color:var(--nyx-dim);margin-bottom:auto}
+.stat-row{
+  display:flex;align-items:center;gap:.4rem;
+  margin-top:.85rem;font-size:.72rem;color:var(--nyx-muted);
+}
+.stat-dot{width:5px;height:5px;background:var(--nyx-accent);border-radius:50%}
 
-        .table-wrap { overflow-x:auto;border-radius:11px;border:1px solid var(--border); }
-        table { width:100%;border-collapse:collapse;background:rgba(14,13,28,0.6);font-size:0.86rem; }
-        thead th { background:var(--surface2);color:var(--muted);font-size:0.68rem;font-family:'DM Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;padding:12px 15px;text-align:left;font-weight:500; }
-        tbody td { padding:12px 15px;border-top:1px solid var(--border);vertical-align:middle; }
-        tbody tr:hover { background:rgba(124,58,237,0.04); }
-        .uid-cell { font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted); }
-        select.tier-select { background:var(--surface2);color:var(--text);border:1px solid var(--border);padding:5px 9px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;transition:border-color 0.2s;width:auto; }
-        select.tier-select:focus { border-color:var(--violet);outline:none; }
+/* Grid */
+.grid-layout{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(195px,1fr));
+  gap:1.25rem;
+}
 
-        /* upload */
-        .upload-zone { display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;margin-bottom:18px; }
-        .thumb-drop {
-            width:154px;height:115px;flex-shrink:0;border:2px dashed rgba(124,58,237,0.3);
-            border-radius:10px;background:var(--surface2);display:flex;flex-direction:column;
-            align-items:center;justify-content:center;cursor:pointer;
-            transition:border-color 0.2s,background 0.2s;overflow:hidden;position:relative;
-        }
-        .thumb-drop:hover { border-color:var(--violet);background:rgba(124,58,237,0.06); }
-        .thumb-drop input { position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%; }
-        .thumb-drop img   { width:100%;height:100%;object-fit:cover;display:none; }
-        .thumb-drop .drop-hint { font-size:0.62rem;color:var(--muted);text-align:center;padding:8px;pointer-events:none; }
-        .thumb-drop .drop-icon { font-size:1.4rem;margin-bottom:5px; }
-        .upload-fields { flex:1;min-width:220px; }
+/* Classic */
+.classic-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.85rem;
+}
+.classic-card{
+  border-radius:var(--nyx-radius-sm);background:var(--nyx-card);
+  border:1px solid var(--nyx-border-soft);transition:var(--nyx-transition);
+  cursor:pointer;display:flex;flex-direction:column;
+}
+.classic-card:hover{transform:scale(1.04);border-color:rgba(124,58,237,.4);box-shadow:var(--shadow-md)}
+.classic-thumb{width:100%;aspect-ratio:1;object-fit:cover;border-bottom:1px solid var(--nyx-border-soft)}
+.classic-info{padding:.6rem;text-align:center}
+.classic-title{font-size:.82rem;font-weight:600}
 
-        .f-label { display:block;font-size:0.66rem;font-weight:500;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px; }
-        .f-input {
-            width:100%;padding:9px 12px;background:var(--surface2);border:1px solid rgba(124,58,237,0.2);
-            border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.84rem;outline:none;
-            transition:border-color 0.2s,box-shadow 0.2s;margin-bottom:12px;
-        }
-        .f-input[type="file"] { cursor:pointer;padding:7px 10px; }
-        .f-input:focus { border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,58,237,0.12); }
-        .f-input::placeholder { color:#3d3a5a; }
+/* Horizontal list (trending swiper) */
+.horizontal-list{
+  padding:.5rem 1.5rem 2.5rem 1.5rem;overflow:hidden;
+  position:relative;width:100%;max-width:1400px;margin:0 auto;height:auto;
+}
+.horizontal-list::before,.horizontal-list::after{
+  content:'';position:absolute;top:.5rem;height:calc(100% - 2.5rem);
+  width:80px;z-index:15;pointer-events:none;
+}
+.horizontal-list::before{left:0;background:linear-gradient(to right,var(--nyx-bg),transparent)}
+.horizontal-list::after{right:0;background:linear-gradient(to left,var(--nyx-bg),transparent)}
+.horizontal-list .swiper-wrapper{padding:0;height:auto;align-items:stretch}
+.horizontal-list .swiper-slide{width:auto;flex-shrink:0;height:auto;display:flex}
+.horizontal-list .game-card{width:100%;height:100%}
 
-        .progress-wrap { height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:10px;display:none; }
-        .progress-bar  { height:100%;background:var(--violet);border-radius:2px;width:0%;transition:width 0.3s; }
+/* Swiper nav buttons */
+.swiper-button-prev,.swiper-button-next{
+  width:40px !important;height:40px !important;
+  background:var(--nyx-card);border:1px solid var(--nyx-border);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  transition:var(--nyx-transition);
+  box-shadow:0 0 15px rgba(124,58,237,.3);
+}
+.swiper-button-prev::after,.swiper-button-next::after{
+  font-size:14px !important;color:var(--nyx-accent);font-weight:700;
+}
+.swiper-button-prev:hover,.swiper-button-next:hover{
+  background:var(--nyx-primary);border-color:var(--nyx-primary);
+  box-shadow:var(--nyx-shadow-neon);
+}
+.swiper-button-prev:hover::after,.swiper-button-next:hover::after{color:#fff}
 
-        .game-admin-item { display:flex;align-items:center;gap:13px;padding:10px 13px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:rgba(21,19,43,0.5); }
-        .game-admin-thumb { width:68px;height:51px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--surface2); }
-        .game-admin-ph    { width:68px;height:51px;border-radius:6px;flex-shrink:0;background:linear-gradient(135deg,#2d1470,#15132b);display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:900;color:rgba(167,139,250,0.45); }
-        .game-admin-info  { flex:1;min-width:0; }
-        .game-admin-title { font-weight:600;font-size:0.86rem; }
-        .game-admin-date  { font-size:0.68rem;color:var(--muted);margin-top:2px; }
-        .game-admin-plays { font-size:0.68rem;color:var(--violet-lt);margin-top:2px; }
+/* ─── ZONE VIEWER ─── */
+#zoneViewer{
+  position:fixed;inset:0;background:#000;
+  z-index:5000;display:none;flex-direction:column;
+  animation:slideInUp .25s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideInUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.zone-header{
+  background:var(--nyx-header);
+  border-bottom:1px solid var(--nyx-border-soft);
+  color:white;padding:.75rem 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:var(--shadow-lg);flex-shrink:0;width:100%;
+  position:relative;z-index:5001;
+}
+.zone-title{flex:1;min-width:0}
+#zoneName{font-size:1.1rem;font-weight:700;margin:0 0 .2rem;font-family:var(--nyx-font-display);line-height:1.3}
+#zoneId{display:none}
+#zoneAuthor{font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;transition:.2s;font-weight:500}
+#zoneAuthor:hover{color:#fff;text-decoration:underline}
+.zone-controls{display:flex;gap:.5rem}
+.zone-controls button{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  color:white;padding:.5rem .85rem;border-radius:var(--nyx-radius-sm);
+  cursor:pointer;font-size:13px;font-weight:600;transition:var(--nyx-transition);
+  font-family:inherit;
+}
+.zone-controls button:hover{background:rgba(124,58,237,.3);border-color:var(--nyx-primary)}
+.info-button{
+  background:none;border:none;cursor:pointer;padding:0;margin-left:8px;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;transition:.2s;
+  color:rgba(255,255,255,.5);vertical-align:middle;
+}
+.info-button:hover{background:rgba(255,255,255,.1);color:#fff}
+#zoneFrame{flex:1;border:none;width:100%;height:100%;background:#000}
 
-        .btn-sm { padding:8px 18px;background:var(--violet);border:none;border-radius:8px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:600;cursor:pointer;transition:background 0.2s,transform 0.1s; }
-        .btn-sm:hover  { background:#6d28d9;transform:translateY(-1px); }
-        .btn-sm:active { transform:translateY(0); }
-        .btn-sec { padding:8px 14px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:500;cursor:pointer;transition:background 0.2s,color 0.2s;margin-left:8px; }
-        .btn-sec:hover { background:rgba(124,58,237,0.1);color:var(--text);border-color:var(--violet); }
-        .btn-danger-sm { padding:7px 14px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);border-radius:7px;color:#f87171;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;transition:background 0.2s;flex-shrink:0; }
-        .btn-danger-sm:hover { background:rgba(248,113,113,0.2); }
+/* ─── MODAL ─── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.85);
+  backdrop-filter:blur(12px);z-index:6000;
+  display:none;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .25s ease;
+}
+.modal-overlay.open{opacity:1}
+.modal{
+  background:#0f0f1c;border:1px solid var(--nyx-border);
+  border-radius:var(--nyx-radius-lg);width:100%;max-width:520px;
+  box-shadow:0 30px 60px rgba(0,0,0,.8),0 0 40px rgba(124,58,237,.1);
+  transform:scale(.95);transition:transform .25s ease;
+}
+.modal-overlay.open .modal{transform:scale(1)}
+.modal-header{
+  padding:1.25rem 1.5rem;border-bottom:1px solid var(--nyx-border-soft);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.modal-title{font-size:1.1rem;font-weight:700;color:var(--nyx-text);font-family:var(--nyx-font-display)}
+.modal-close{
+  background:transparent;border:none;
+  color:var(--nyx-dim);font-size:1.4rem;cursor:pointer;line-height:1;
+  transition:.2s;
+}
+.modal-close:hover{color:var(--nyx-text)}
+.modal-body{padding:1.5rem;max-height:70vh;overflow-y:auto;color:var(--nyx-muted);line-height:1.6}
+.setting-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.85rem 0;border-bottom:1px solid var(--nyx-border-soft);
+}
+.setting-label{font-weight:500;color:var(--nyx-text);font-size:.9rem}
+.toggle-switch{
+  position:relative;width:46px;height:24px;
+  background:var(--nyx-bg-deep);border-radius:12px;
+  cursor:pointer;transition:var(--nyx-transition);
+  border:1px solid var(--nyx-border-soft);
+}
+.toggle-switch::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:18px;height:18px;background:var(--nyx-dim);
+  border-radius:50%;transition:var(--nyx-transition);
+}
+.toggle-switch.active{background:var(--nyx-primary);border-color:var(--nyx-primary)}
+.toggle-switch.active::after{transform:translateX(22px);background:#fff}
+.settings-button{
+  width:100%;padding:.75rem 1.25rem;
+  background:var(--nyx-primary);color:#fff;
+  border:none;border-radius:var(--nyx-radius-sm);
+  font-size:.875rem;font-weight:600;cursor:pointer;
+  transition:var(--nyx-transition);text-align:center;font-family:inherit;
+}
+.settings-button:hover{background:#6d28d9;box-shadow:0 0 15px rgba(124,58,237,.4)}
 
-        .msg-inline { font-size:0.76rem;margin-top:10px;display:none; }
-        .msg-inline.error   { color:var(--error); }
-        .msg-inline.success { color:var(--success); }
+/* ─── AUTH MODAL ─── */
+.auth-modal-inner{padding:2rem}
+.auth-form{display:flex;flex-direction:column;gap:1rem}
+.auth-form h2{font-family:var(--nyx-font-display);font-size:1.5rem;font-weight:800;margin:0 0 .25rem;color:var(--nyx-text)}
+.auth-form p{color:var(--nyx-dim);font-size:.875rem;margin:0 0 .5rem}
+.auth-form input{
+  width:100%;padding:.75rem 1rem;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--nyx-border-soft);
+  border-radius:var(--nyx-radius-sm);
+  color:var(--nyx-text);font-family:inherit;font-size:.9rem;
+  outline:none;transition:var(--nyx-transition);
+}
+.auth-form input:focus{border-color:var(--nyx-primary);background:rgba(124,58,237,.06);box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.auth-form input::placeholder{color:var(--nyx-dim)}
+.auth-submit{
+  padding:.8rem;background:linear-gradient(135deg,#7c3aed,#6d28d9);
+  color:#fff;border:none;border-radius:var(--nyx-radius-sm);
+  font-weight:700;font-size:.95rem;cursor:pointer;font-family:inherit;
+  transition:var(--nyx-transition);
+}
+.auth-submit:hover{box-shadow:var(--nyx-shadow-neon);transform:translateY(-1px)}
+.auth-switch{font-size:.85rem;color:var(--nyx-dim);text-align:center;margin-top:.25rem}
+.auth-switch a{color:var(--nyx-accent);cursor:pointer;text-decoration:none}
+.auth-switch a:hover{text-decoration:underline}
+.auth-error{
+  background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);
+  color:#fca5a5;border-radius:var(--nyx-radius-sm);
+  padding:.6rem .85rem;font-size:.85rem;display:none;
+}
+.auth-error.show{display:block}
 
-        /* ════ SETTINGS PANEL (slide-in from right) ════ */
-        .settings-overlay {
-            position:fixed;inset:0;z-index:200;
-            background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);
-            opacity:0;pointer-events:none;transition:opacity 0.3s;
-        }
-        .settings-overlay.open { opacity:1;pointer-events:all; }
+/* ─── PROFILE OVERLAY ─── */
+#profileOverlay{
+  position:fixed;inset:0;background:var(--nyx-bg);
+  z-index:4000;display:none;flex-direction:column;
+  overflow-y:auto;
+  animation:slideInUp .25s ease;
+}
+.profile-page-header{
+  background:var(--nyx-header);border-bottom:1px solid var(--nyx-border-soft);
+  padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;
+  position:sticky;top:0;z-index:100;
+}
+.back-btn{
+  background:none;border:none;color:var(--nyx-muted);
+  cursor:pointer;display:flex;align-items:center;gap:.4rem;
+  font-size:.875rem;font-family:inherit;transition:.2s;padding:.4rem .65rem;
+  border-radius:var(--nyx-radius-sm);
+}
+.back-btn:hover{background:rgba(255,255,255,.06);color:var(--nyx-text)}
+.profile-page-content{max-width:1000px;margin:0 auto;padding:2.5rem 1.5rem}
+.profile-hero{
+  display:flex;align-items:flex-start;gap:2rem;
+  padding:2rem;background:var(--nyx-card);
+  border:1px solid var(--nyx-border-soft);border-radius:var(--nyx-radius-lg);
+  margin-bottom:2rem;
+  background:linear-gradient(135deg,rgba(124,58,237,.05),rgba(15,15,28,1));
+}
+.profile-big-avatar{
+  width:96px;height:96px;border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;font-weight:800;color:#fff;
+  font-family:var(--nyx-font-display);flex-shrink:0;
+  border:3px solid rgba(124,58,237,.4);
+  box-shadow:0 0 30px rgba(124,58,237,.3);
+  overflow:hidden;
+}
+.profile-big-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-info h1{
+  font-family:var(--nyx-font-display);font-size:1.8rem;font-weight:800;
+  margin:0 0 .25rem;
+}
+.profile-info p{color:var(--nyx-dim);font-size:.875rem;margin:0 0 1rem}
+.profile-stats{display:flex;gap:2rem;flex-wrap:wrap}
+.pstat{text-align:center}
+.pstat-num{font-size:1.4rem;font-weight:700;font-family:var(--nyx-font-display);color:var(--nyx-accent)}
+.pstat-label{font-size:.75rem;color:var(--nyx-dim);text-transform:uppercase;letter-spacing:.06em}
+.profile-section-title{
+  font-family:var(--nyx-font-display);font-size:1.1rem;font-weight:700;
+  margin:0 0 1rem;display:flex;align-items:center;gap:.5rem;
+  color:var(--nyx-text);
+}
+.profile-section-title::before{
+  content:'';width:3px;height:16px;
+  background:linear-gradient(180deg,#7c3aed,#a78bfa);border-radius:2px;
+}
+.mini-game-card{
+  background:var(--nyx-card);border:1px solid var(--nyx-border-soft);
+  border-radius:var(--nyx-radius);overflow:hidden;cursor:pointer;
+  transition:var(--nyx-transition);
+}
+.mini-game-card:hover{border-color:rgba(124,58,237,.4);transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,0,0,.4)}
+.mini-game-card img{width:100%;aspect-ratio:1;object-fit:cover}
+.mini-card-body{padding:.65rem}
+.mini-card-title{font-size:.82rem;font-weight:600;color:var(--nyx-text);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.mini-card-meta{font-size:.72rem;color:var(--nyx-dim);margin-top:.2rem}
+.view-all-btn{
+  padding:.5rem;border:1px dashed rgba(124,58,237,.3);
+  border-radius:var(--nyx-radius);display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:.3rem;cursor:pointer;color:var(--nyx-dim);
+  font-size:.8rem;transition:var(--nyx-transition);background:transparent;
+  aspect-ratio:1;
+}
+.view-all-btn:hover{border-color:var(--nyx-primary);color:var(--nyx-accent);background:rgba(124,58,237,.06)}
+.empty-state{
+  text-align:center;padding:2.5rem;color:var(--nyx-dim);
+  background:var(--nyx-card);border:1px dashed var(--nyx-border);
+  border-radius:var(--nyx-radius-lg);
+}
+.empty-state svg{width:40px;height:40px;opacity:.4;margin-bottom:.75rem}
 
-        .settings-panel {
-            position:fixed;top:0;right:0;bottom:0;width:420px;z-index:201;
-            background:rgba(11,10,22,0.98);
-            border-left:1px solid var(--border);
-            box-shadow:-20px 0 60px rgba(0,0,0,0.6);
-            display:flex;flex-direction:column;
-            transform:translateX(100%);
-            transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
-            overflow-y:auto;
-        }
-        .settings-panel.open { transform:translateX(0); }
+/* ─── FOOTER ─── */
+footer{
+  background:var(--nyx-card);
+  border-top:1px solid var(--nyx-border-soft);
+  padding:3rem 1.5rem;margin-top:auto;
+}
+.footer-content{
+  max-width:1400px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2.5rem;
+}
+.footer-col h3{color:var(--nyx-text);font-size:1rem;margin-bottom:1.25rem;font-family:var(--nyx-font-display)}
+.footer-links{display:flex;flex-direction:column;gap:.6rem}
+.footer-link{color:var(--nyx-muted);text-decoration:none;font-size:.875rem;transition:var(--nyx-transition);cursor:pointer}
+.footer-link:hover{color:var(--nyx-accent);transform:translateX(4px)}
+.footer-logo{font-family:var(--nyx-font-display);font-size:1.4rem;font-weight:800;color:var(--nyx-accent);margin-bottom:.5rem}
 
-        .settings-header {
-            display:flex;align-items:center;justify-content:space-between;
-            padding:24px 28px 20px;
-            border-bottom:1px solid var(--border);
-            flex-shrink:0;
-        }
-        .settings-title {
-            font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:700;
-            display:flex;align-items:center;gap:10px;
-        }
-        .settings-close {
-            width:32px;height:32px;border-radius:8px;
-            background:rgba(255,255,255,0.04);border:1px solid var(--border);
-            display:flex;align-items:center;justify-content:center;
-            cursor:pointer;color:var(--muted);font-size:1rem;
-            transition:background 0.2s,color 0.2s;
-        }
-        .settings-close:hover { background:rgba(248,113,113,0.1);color:#f87171;border-color:rgba(248,113,113,0.3); }
+/* ─── MISC ─── */
+.hidden{display:none !important}
+@keyframes slideOut{
+  from{opacity:1;transform:translateX(0);max-height:300px;margin-bottom:1.5rem}
+  to{opacity:0;transform:translateX(-100%);max-height:0;margin-bottom:0;padding:0}
+}
+body.performance-mode *{animation:none !important;transition:none !important}
+body.performance-mode .game-card{opacity:1 !important;transform:none !important}
+body.performance-mode .game-card:hover{transform:none !important}
+body.classic-theme main{max-width:none !important}
 
-        .settings-body { padding:24px 28px; flex:1; }
+/* Scroll to games btn */
+.scroll-btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.85rem 1.75rem;
+  background:transparent;
+  border:1px solid rgba(124,58,237,.4);
+  color:var(--nyx-accent);
+  border-radius:var(--nyx-radius);
+  font-size:1rem;font-weight:600;cursor:pointer;
+  transition:var(--nyx-transition);font-family:inherit;
+}
+.scroll-btn:hover{background:rgba(124,58,237,.12);border-color:var(--nyx-primary);box-shadow:var(--nyx-shadow-neon)}
 
-        .settings-section { margin-bottom:28px; }
-        .settings-section-title {
-            font-size:0.65rem;text-transform:uppercase;letter-spacing:0.14em;
-            color:var(--muted);font-family:'DM Mono',monospace;
-            margin-bottom:12px;padding-bottom:8px;
-            border-bottom:1px solid var(--border);
-        }
-
-        .info-row {
-            display:flex;align-items:center;justify-content:space-between;
-            padding:11px 14px;background:var(--surface2);
-            border:1px solid var(--border);border-radius:9px;margin-bottom:8px;
-        }
-        .info-row-label { font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace; }
-        .info-row-value { font-size:0.86rem;font-weight:500;color:var(--text); }
-
-        .s-field { margin-bottom:12px; }
-        .s-field label { display:block;font-size:0.66rem;font-weight:500;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px; }
-        .s-field input {
-            width:100%;padding:10px 13px;background:var(--surface2);border:1px solid rgba(124,58,237,0.2);
-            border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none;
-            transition:border-color 0.2s,box-shadow 0.2s;
-        }
-        .s-field input:focus { border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,58,237,0.12); }
-        .s-field input::placeholder { color:#3d3a5a; }
-
-        .danger-zone {
-            border:1px solid rgba(248,113,113,0.2);
-            border-radius:10px;padding:16px;
-            background:rgba(248,113,113,0.04);
-        }
-        .danger-zone-title {
-            font-size:0.75rem;font-weight:700;color:#f87171;
-            margin-bottom:8px;display:flex;align-items:center;gap:6px;
-        }
-        .danger-zone-desc { font-size:0.75rem;color:var(--muted);line-height:1.5;margin-bottom:14px; }
-        .btn-delete-account {
-            width:100%;padding:10px;
-            background:rgba(248,113,113,0.1);
-            border:1px solid rgba(248,113,113,0.35);
-            border-radius:8px;color:#f87171;
-            font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;
-            cursor:pointer;transition:background 0.2s;
-        }
-        .btn-delete-account:hover { background:rgba(248,113,113,0.2); }
-
-        /* Confirm delete modal */
-        .confirm-overlay {
-            position:fixed;inset:0;z-index:300;
-            background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);
-            display:flex;align-items:center;justify-content:center;
-            opacity:0;pointer-events:none;transition:opacity 0.25s;
-        }
-        .confirm-overlay.open { opacity:1;pointer-events:all; }
-        .confirm-box {
-            background:rgba(14,13,28,0.98);border:1px solid var(--border);
-            border-radius:16px;padding:32px 28px;width:360px;
-            box-shadow:0 30px 60px rgba(0,0,0,0.7);
-            transform:scale(0.95);transition:transform 0.25s;
-        }
-        .confirm-overlay.open .confirm-box { transform:scale(1); }
-        .confirm-title { font-family:'Unbounded',sans-serif;font-size:0.95rem;font-weight:700;margin-bottom:8px;color:#f87171; }
-        .confirm-sub   { font-size:0.78rem;color:var(--muted);line-height:1.6;margin-bottom:20px; }
-
-        /* ════ GAME MODAL ════ */
-        .game-modal { position:fixed;inset:0;z-index:500;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.3s;background:#000; }
-        .game-modal.open { opacity:1;pointer-events:all; }
-        .modal-header { height:52px;flex-shrink:0;background:rgba(7,7,14,0.98);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:relative;z-index:1; }
-        .modal-left { display:flex;align-items:center;gap:12px; }
-        .modal-nyx  { font-family:'Unbounded',sans-serif;font-size:0.85rem;font-weight:900;background:linear-gradient(135deg,#fff 30%,var(--violet-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
-        .modal-game-name { font-size:0.85rem;font-weight:600;color:var(--text); }
-        .modal-controls { display:flex;gap:7px; }
-        .mc-btn { display:flex;align-items:center;gap:5px;padding:6px 11px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.73rem;font-weight:500;cursor:pointer;transition:background 0.2s,border-color 0.2s; }
-        .mc-btn:hover { background:rgba(124,58,237,0.12);border-color:var(--violet); }
-        .mc-btn.mc-close { background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.25);color:#f87171; }
-        .mc-btn.mc-close:hover { background:rgba(248,113,113,0.18); }
-        .mc-btn svg { width:13px;height:13px;flex-shrink:0; }
-        .game-iframe-wrap { flex:1;position:relative; }
-        .iframe-loader { position:absolute;inset:0;background:#07070e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:5;transition:opacity 0.35s; }
-        .iframe-loader.hidden { opacity:0;pointer-events:none; }
-        .dots { display:flex;gap:7px; }
-        .dot { width:7px;height:7px;border-radius:50%;background:var(--violet);animation:bounce 1s ease infinite; }
-        .dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}
-        @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4} 50%{transform:translateY(-7px);opacity:1} }
-        .loader-text-sm { font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted); }
-        #game-iframe { width:100%;height:100%;border:none;position:absolute;inset:0; }
-
-        /* ════ LOADER ════ */
-        #loading-screen { position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px; }
-        .loader-logo { font-family:'Unbounded',sans-serif;font-size:2rem;font-weight:900;background:linear-gradient(135deg,#fff 30%,var(--violet-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
-        .loader-bar { width:100px;height:2px;background:var(--surface2);border-radius:2px;overflow:hidden; }
-        .loader-bar::after { content:'';display:block;width:50%;height:100%;background:var(--violet);border-radius:2px;animation:slide 0.9s ease-in-out infinite alternate; }
-        @keyframes slide { from{transform:translateX(-100%)} to{transform:translateX(200%)} }
-    </style>
+/* Responsive */
+@media (max-width:1024px){
+  .slide-image-wrapper{width:100%;clip-path:none;position:absolute;inset:0;opacity:.35}
+  .slide-info{width:100%;position:relative;z-index:5;background:transparent;text-shadow:0 2px 8px rgba(0,0,0,.9)}
+  .game-title-hero{background:none;-webkit-text-fill-color:#fff}
+}
+@media (max-width:768px){
+  .header-upper{flex-direction:column;align-items:stretch;gap:.75rem;padding:.7rem 1rem}
+  .search-wrapper{max-width:none}
+  .logo{font-size:1.5rem}
+  .featured-slider{height:280px}
+  .game-title-hero{font-size:1.4rem}
+  .grid-layout{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.9rem}
+  .profile-hero{flex-direction:column;gap:1.25rem}
+}
+@media (max-width:480px){
+  .featured-slider{height:240px}
+  .game-title-hero{font-size:1.15rem}
+  .slide-info{padding:1.25rem}
+  .hero-btn{padding:.65rem 1.25rem;font-size:.82rem}
+  .grid-layout{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+  .auth-btn span.auth-text{display:none}
+}
+</style>
 </head>
-<body>
+<body class="performance-mode">
 
-<div class="bg-orb orb1"></div>
-<div class="bg-orb orb2"></div>
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="header-upper">
+    <div class="logo" onclick="location.reload()">
+      <span class="nyx-glyph"></span>Nyx
+    </div>
+    <div class="search-wrapper">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="searchBar" placeholder="Search games…" oninput="handleSearch(this.value)">
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" onclick="location.reload()" title="Refresh">
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+      </button>
+      <!-- Auth area -->
+      <div id="authArea">
+        <div id="guestButtons" style="display:flex;gap:.5rem">
+          <button class="auth-btn outline" onclick="openAuth('login')"><span class="auth-text">Log In</span></button>
+          <button class="auth-btn" onclick="openAuth('signup')"><span class="auth-text">Sign Up</span></button>
+        </div>
+        <div id="userProfile" style="display:none">
+          <div class="profile-wrapper" id="profileWrapper">
+            <div class="profile-btn" onclick="toggleDropdown()" id="profileBtn">
+              <div class="profile-avatar" id="headerAvatar"></div>
+              <span class="profile-name" id="headerUsername">User</span>
+              <span class="profile-caret" id="profileCaret">▼</span>
+            </div>
+            <div class="profile-dropdown" id="profileDropdown">
+              <div class="dropdown-header">
+                <div class="dropdown-greeting">Hello,</div>
+                <div class="dropdown-username" id="dropdownUsername">User</div>
+              </div>
+              <div class="dropdown-item" onclick="openProfile()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                View Profile
+              </div>
+              <div class="dropdown-item" onclick="openSettings();closeDropdown()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                Settings
+              </div>
+              <div class="dropdown-item" onclick="saveData();closeDropdown()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export Save Data
+              </div>
+              <div class="dropdown-sep"></div>
+              <div class="dropdown-item danger" onclick="signOut()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Sign Out
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <div class="nav-content" id="navContent">
+      <div class="nav-link active" onclick="switchView('all')">All Games</div>
+      <div class="nav-link" onclick="filterFavorites()">⭐ Favorites</div>
+    </div>
+  </div>
+</header>
 
-<div id="loading-screen">
-    <div class="loader-logo">Nyx</div>
-    <div class="loader-bar"></div>
+<!-- ─── MAIN ─── -->
+<main id="mainContainer">
+  <div id="modernView">
+    <!-- Hero -->
+    <div class="swiper featured-slider">
+      <div class="swiper-wrapper" id="heroWrapper"></div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+
+    <!-- Scroll to games -->
+    <div style="display:flex;justify-content:center;margin:1.5rem 0 2rem">
+      <button class="scroll-btn" onclick="document.getElementById('sortOptions').scrollIntoView({behavior:'smooth',block:'start'})">
+        View All Games
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+      </button>
+    </div>
+
+    <!-- Trending -->
+    <div class="section-header">
+      <div class="section-title">Trending This Week</div>
+    </div>
+    <div class="swiper horizontal-list" id="trendingSwiper">
+      <div class="swiper-wrapper" id="trendingWrapper"></div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+
+    <!-- Tag sections injected here -->
+    <div id="tagSections"></div>
+
+    <!-- Featured -->
+    <div class="section-header">
+      <div class="section-title" onclick="toggleSection('featuredGrid',this)" style="cursor:pointer;display:flex;align-items:center;gap:.5rem">
+        Featured Games
+        <svg class="collapse-arrow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .3s"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+    </div>
+    <div class="grid-layout" id="featuredGrid"></div>
+
+    <!-- All Games -->
+    <div class="section-header">
+      <div class="section-title" onclick="toggleSection('allGamesGrid',this)" style="cursor:pointer;display:flex;align-items:center;gap:.5rem">
+        All Games
+        <svg class="collapse-arrow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .3s"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <select id="sortOptions" onchange="sortZones()">
+        <option value="name">Name</option>
+        <option value="id">ID (Date)</option>
+        <option value="popular">Popular</option>
+      </select>
+    </div>
+    <div class="grid-layout" id="allGamesGrid"></div>
+  </div>
+
+  <!-- Classic view -->
+  <div id="classicView" class="hidden">
+    <div class="section-header"><div class="section-title">All Games</div></div>
+    <div class="classic-grid" id="classicGrid"></div>
+  </div>
+
+  <!-- Search results -->
+  <div id="searchView" class="hidden">
+    <div class="section-header"><div class="section-title">Search Results</div></div>
+    <div class="grid-layout" id="searchResults"></div>
+  </div>
+</main>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-col">
+      <div class="footer-logo">Nyx</div>
+      <p style="color:var(--nyx-dim);font-size:.875rem;line-height:1.6;margin:0">
+        Your portal to unblocked games.<br>Fast, free, no downloads.
+      </p>
+    </div>
+    <div class="footer-col">
+      <h3>Legal</h3>
+      <div class="footer-links">
+        <a class="footer-link" onclick="openDMCA()">DMCA</a>
+        <a class="footer-link" onclick="openPrivacy()">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h3>Community</h3>
+      <div class="footer-links">
+        <a href="https://discord.gg/NAFw4ykZ7n" target="_blank" class="footer-link">Discord Server</a>
+        <a href="https://github.com/gn-math" target="_blank" class="footer-link">GitHub</a>
+        <a class="footer-link" onclick="showContact()">Contact Support</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h3>Tools</h3>
+      <div class="footer-links">
+        <a class="footer-link" onclick="saveData()">Export Save Data</a>
+        <a class="footer-link" onclick="document.getElementById('importFile').click()">Import Save Data</a>
+        <input type="file" id="importFile" style="display:none" onchange="loadData(event)">
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── ZONE VIEWER ─── -->
+<div id="zoneViewer">
+  <div class="zone-header">
+    <div class="zone-title">
+      <h2 id="zoneName">Game</h2>
+      <button class="info-button" onclick="showZoneInfo()" title="Info">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      </button>
+      <span id="zoneId" style="display:none"></span>
+      <a id="zoneAuthor" href="#" target="_blank">by Author</a>
+    </div>
+    <div class="zone-controls">
+      <button onclick="fullscreenZone()">Fullscreen</button>
+      <button onclick="aboutBlank()">New Tab</button>
+      <button onclick="downloadZone()">Download</button>
+      <button onclick="closeZone()">✕ Close</button>
+    </div>
+  </div>
+  <iframe id="zoneFrame"></iframe>
 </div>
 
-<!-- ══ SIDEBAR ══ -->
-<nav class="sidebar">
-    <div class="sidebar-logo">Nyx</div>
-    <div class="nav-label">Menu</div>
-    <a class="nav-item active" href="home.html"><span class="nav-icon">⬡</span> Dashboard</a>
-    <a class="nav-item" href="games.html"><span class="nav-icon">🎮</span> Game Library</a>
-    <div class="sidebar-footer">
-        <div class="user-pill">
-            <div class="avatar" id="sb-avatar">?</div>
-            <div class="user-info">
-                <div class="user-name"  id="sb-name">…</div>
-                <div class="user-email" id="sb-email">…</div>
-            </div>
-        </div>
-        <button class="btn-settings" id="btn-open-settings">⚙ Settings</button>
-        <button class="btn-logout"   id="btn-logout">↩ Sign Out</button>
-    </div>
-</nav>
-
-<!-- ══ MAIN ══ -->
-<main class="main" id="app-content"></main>
-
-<!-- ══ SETTINGS PANEL ══ -->
-<div class="settings-overlay" id="settings-overlay"></div>
-<div class="settings-panel" id="settings-panel">
-    <div class="settings-header">
-        <div class="settings-title">⚙ Settings</div>
-        <div class="settings-close" id="settings-close">✕</div>
-    </div>
-    <div class="settings-body">
-
-        <!-- Profile info -->
-        <div class="settings-section">
-            <div class="settings-section-title">Profile</div>
-            <div class="info-row">
-                <span class="info-row-label">Username</span>
-                <span class="info-row-value" id="settings-username">—</span>
-            </div>
-            <div class="info-row">
-                <span class="info-row-label">Email</span>
-                <span class="info-row-value" id="settings-email" style="font-size:0.8rem">—</span>
-            </div>
-            <div class="info-row">
-                <span class="info-row-label">Plan</span>
-                <span class="info-row-value" id="settings-tier">—</span>
-            </div>
-        </div>
-
-        <!-- Change password -->
-        <div class="settings-section">
-            <div class="settings-section-title">Change Password</div>
-            <div class="s-field">
-                <label>Current Password</label>
-                <input type="password" id="s-cur-pw" placeholder="••••••••">
-            </div>
-            <div class="s-field">
-                <label>New Password</label>
-                <input type="password" id="s-new-pw" placeholder="••••••••">
-            </div>
-            <div class="s-field">
-                <label>Confirm New Password</label>
-                <input type="password" id="s-conf-pw" placeholder="••••••••">
-            </div>
-            <button class="btn-sm" id="s-btn-pw" style="width:100%;margin-top:4px">Update Password</button>
-            <div id="s-pw-msg" class="msg-inline"></div>
-        </div>
-
-        <!-- Danger zone -->
-        <div class="settings-section">
-            <div class="settings-section-title">Danger Zone</div>
-            <div class="danger-zone">
-                <div class="danger-zone-title">⚠ Delete Account</div>
-                <div class="danger-zone-desc">
-                    Permanently deletes your account and all data. This action cannot be undone.
-                    Enter your password twice to confirm.
-                </div>
-                <div class="s-field">
-                    <label>Password</label>
-                    <input type="password" id="del-pw1" placeholder="Enter password">
-                </div>
-                <div class="s-field">
-                    <label>Confirm Password</label>
-                    <input type="password" id="del-pw2" placeholder="Enter password again">
-                </div>
-                <button class="btn-delete-account" id="btn-delete-account">Delete My Account</button>
-                <div id="del-msg" class="msg-inline"></div>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<!-- ══ GAME VIEWER MODAL ══ -->
-<div class="game-modal" id="game-modal">
+<!-- ─── MODAL OVERLAY ─── -->
+<div id="modalOverlay" class="modal-overlay" style="display:none">
+  <div class="modal">
     <div class="modal-header">
-        <div class="modal-left">
-            <span class="modal-nyx">Nyx</span>
-            <span style="color:var(--border)">—</span>
-            <span class="modal-game-name" id="modal-title">Game</span>
-        </div>
-        <div class="modal-controls">
-            <button class="mc-btn" id="mc-fs">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-                <span>Fullscreen</span>
-            </button>
-            <button class="mc-btn" id="mc-tab">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                <span>New Tab</span>
-            </button>
-            <button class="mc-btn" id="mc-dl">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                <span>Download</span>
-            </button>
-            <button class="mc-btn mc-close" id="mc-close">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                <span>Close</span>
-            </button>
-        </div>
+      <h3 class="modal-title" id="modalTitle">Settings</h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
     </div>
-    <div class="game-iframe-wrap">
-        <div class="iframe-loader" id="iframe-loader">
-            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <div class="loader-text-sm">Loading game…</div>
-        </div>
-        <iframe id="game-iframe" allowfullscreen allow="fullscreen"></iframe>
-    </div>
+    <div class="modal-body" id="modalContent"></div>
+  </div>
 </div>
 
-<script type="module">
-    import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import {
-        getAuth, onAuthStateChanged, signOut,
-        EmailAuthProvider, reauthenticateWithCredential,
-        updatePassword, deleteUser
-    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import {
-        getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc,
-        collection, getDocs
-    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-    import {
-        getStorage, ref as sRef,
-        uploadBytes, getDownloadURL, deleteObject
-    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+<!-- ─── AUTH MODAL ─── -->
+<div id="authOverlay" class="modal-overlay" style="display:none">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <h3 class="modal-title" id="authModalTitle">Sign In</h3>
+      <button class="modal-close" onclick="closeAuth()">×</button>
+    </div>
+    <div class="auth-modal-inner" id="authModalBody"></div>
+  </div>
+</div>
 
-    const firebaseConfig = {
-        apiKey:            "AIzaSyAaRvkBoiZe2_h7tPsRYv3YmS487L09-H4",
-        authDomain:        "nyx-platform1.firebaseapp.com",
-        projectId:         "nyx-platform1",
-        storageBucket:     "nyx-platform1.firebasestorage.app",
-        messagingSenderId: "55921089818",
-        appId:             "1:55921089818:web:6458294efcf6e6263260a3",
-    };
+<!-- ─── PROFILE OVERLAY ─── -->
+<div id="profileOverlay">
+  <div class="profile-page-header">
+    <button class="back-btn" onclick="closeProfile()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Back
+    </button>
+    <span style="font-family:var(--nyx-font-display);font-weight:700;font-size:1rem">My Profile</span>
+  </div>
+  <div class="profile-page-content" id="profilePageContent"></div>
+</div>
 
-    const app     = initializeApp(firebaseConfig);
-    const auth    = getAuth(app);
-    const db      = getFirestore(app);
-    const storage = getStorage(app);
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+// ═══════════════════════════════════════════
+// AUTH SYSTEM
+// ═══════════════════════════════════════════
+function getNyxUsers(){
+  try{return JSON.parse(localStorage.getItem('nyxUsers')||'{}')}catch{return {}}
+}
+function saveNyxUsers(u){localStorage.setItem('nyxUsers',JSON.stringify(u))}
+function getCurrentUser(){
+  try{return JSON.parse(localStorage.getItem('nyxCurrentUser')||'null')}catch{return null}
+}
+function saveCurrentUser(u){localStorage.setItem('nyxCurrentUser',u?JSON.stringify(u):'null')}
 
-    const ADMIN = 'charanthegoatt@gmail.com';
+function getAvatarInitial(name){return name.charAt(0).toUpperCase()}
+function getAvatarColor(name){
+  const colors=['#7c3aed','#6d28d9','#5b21b6','#4c1d95','#a78bfa','#38bdf8','#0284c7'];
+  let h=0;for(let i=0;i<name.length;i++)h=name.charCodeAt(i)+((h<<5)-h);
+  return colors[Math.abs(h)%colors.length];
+}
 
-    let currentGame    = null;
-    let allGames       = [];
-    let currentUser    = null;
-    let currentUserDoc = null;
+function initAuthUI(){
+  const user=getCurrentUser();
+  if(user){
+    document.getElementById('guestButtons').style.display='none';
+    document.getElementById('userProfile').style.display='block';
+    const av=document.getElementById('headerAvatar');
+    av.textContent=getAvatarInitial(user.username);
+    av.style.background=`linear-gradient(135deg,${getAvatarColor(user.username)},#a78bfa)`;
+    document.getElementById('headerUsername').textContent=user.username;
+    document.getElementById('dropdownUsername').textContent=user.username;
+  } else {
+    document.getElementById('guestButtons').style.display='flex';
+    document.getElementById('userProfile').style.display='none';
+  }
+}
 
-    /* ════════════════════════
-       AUTH GATE
-    ════════════════════════ */
-    const unsub = onAuthStateChanged(auth, async (user) => {
-        unsub();
-        if (!user) { window.location.href = 'login.html'; return; }
+function openAuth(mode){
+  document.getElementById('authOverlay').style.display='flex';
+  setTimeout(()=>document.getElementById('authOverlay').classList.add('open'),10);
+  renderAuthForm(mode);
+}
+function closeAuth(){
+  const o=document.getElementById('authOverlay');
+  o.classList.remove('open');
+  setTimeout(()=>o.style.display='none',250);
+}
+function renderAuthForm(mode){
+  const isLogin=mode==='login';
+  document.getElementById('authModalTitle').textContent=isLogin?'Welcome Back':'Create Account';
+  document.getElementById('authModalBody').innerHTML=`
+    <div class="auth-form">
+      <div>
+        <h2>${isLogin?'Sign in to Nyx':'Join Nyx'}</h2>
+        <p>${isLogin?'Play games, track your history.':'Free forever. No credit card needed.'}</p>
+      </div>
+      <div class="auth-error" id="authError"></div>
+      ${!isLogin?`<input type="text" id="authDisplay" placeholder="Display name" maxlength="24">`:''}
+      <input type="text" id="authUsername" placeholder="Username" maxlength="32">
+      <input type="password" id="authPassword" placeholder="Password" minlength="6">
+      ${!isLogin?`<input type="password" id="authConfirm" placeholder="Confirm password">`:''}
+      <button class="auth-submit" onclick="${isLogin?'doLogin()':'doSignup()'}">
+        ${isLogin?'Sign In →':'Create Account →'}
+      </button>
+      <p class="auth-switch">
+        ${isLogin?`Don't have an account? <a onclick="renderAuthForm('signup')">Sign up</a>`
+                 :`Already have an account? <a onclick="renderAuthForm('login')">Sign in</a>`}
+      </p>
+    </div>`;
+}
 
-        currentUser = user;
-        document.getElementById('sb-email').textContent = user.email;
+function authError(msg){
+  const el=document.getElementById('authError');
+  el.textContent=msg;el.classList.add('show');
+}
 
-        try {
-            if (user.email === ADMIN) {
-                await renderAdmin(user);
-            } else {
-                await renderUser(user);
-            }
-        } catch(err) {
-            console.error(err);
-            document.getElementById('app-content').innerHTML =
-                `<div style="padding:60px;color:var(--error);font-size:0.9rem">
-                    Failed to load: ${escHtml(err.message)}
-                 </div>`;
-        }
+function doSignup(){
+  const display=(document.getElementById('authDisplay')?.value||'').trim();
+  const username=(document.getElementById('authUsername')?.value||'').trim().toLowerCase();
+  const pass=document.getElementById('authPassword')?.value||'';
+  const confirm=document.getElementById('authConfirm')?.value||'';
+  if(!username||!pass)return authError('Please fill in all fields.');
+  if(username.length<3)return authError('Username must be at least 3 characters.');
+  if(pass.length<6)return authError('Password must be at least 6 characters.');
+  if(pass!==confirm)return authError('Passwords do not match.');
+  const users=getNyxUsers();
+  if(users[username])return authError('That username is already taken.');
+  const user={username,displayName:display||username,created:Date.now(),recentlyPlayed:[],totalPlayed:0};
+  users[username]={password:btoa(pass),...user};
+  saveNyxUsers(users);
+  saveCurrentUser(user);
+  closeAuth();
+  initAuthUI();
+}
 
-        document.getElementById('loading-screen').style.display = 'none';
-    });
+function doLogin(){
+  const username=(document.getElementById('authUsername')?.value||'').trim().toLowerCase();
+  const pass=document.getElementById('authPassword')?.value||'';
+  if(!username||!pass)return authError('Please fill in all fields.');
+  const users=getNyxUsers();
+  const u=users[username];
+  if(!u)return authError('No account found with that username.');
+  if(u.password!==btoa(pass))return authError('Incorrect password.');
+  const user={username:u.username,displayName:u.displayName||u.username,created:u.created,recentlyPlayed:u.recentlyPlayed||[],totalPlayed:u.totalPlayed||0};
+  saveCurrentUser(user);
+  closeAuth();
+  initAuthUI();
+}
 
-    document.getElementById('btn-logout').onclick = async () => {
-        await signOut(auth); window.location.href = 'login.html';
-    };
+function signOut(){
+  saveCurrentUser(null);
+  closeDropdown();
+  initAuthUI();
+}
 
-    /* ════════════════════════
-       SETTINGS PANEL
-    ════════════════════════ */
-    function openSettings() {
-        if (!currentUser) return;
+// ─── DROPDOWN ───
+function toggleDropdown(){
+  const d=document.getElementById('profileDropdown');
+  const c=document.getElementById('profileCaret');
+  d.classList.toggle('open');
+  c.style.transform=d.classList.contains('open')?'rotate(180deg)':'';
+}
+function closeDropdown(){
+  document.getElementById('profileDropdown').classList.remove('open');
+  document.getElementById('profileCaret').style.transform='';
+}
+document.addEventListener('click',e=>{
+  const pw=document.getElementById('profileWrapper');
+  if(pw&&!pw.contains(e.target))closeDropdown();
+});
 
-        // Populate profile info
-        document.getElementById('settings-email').textContent    = currentUser.email;
-        const uname = currentUserDoc?.username || currentUser.displayName || '—';
-        const tier  = currentUserDoc?.tier || 'Free';
-        document.getElementById('settings-username').textContent = uname;
-        document.getElementById('settings-tier').textContent     = tier;
+// ─── PROFILE PAGE ───
+function openProfile(){
+  closeDropdown();
+  const user=getCurrentUser();
+  if(!user)return;
+  const overlay=document.getElementById('profileOverlay');
+  overlay.style.display='flex';
+  renderProfilePage(user);
+  document.querySelector('header').style.display='none';
+  document.getElementById('mainContainer').style.display='none';
+  document.querySelector('footer').style.display='none';
+}
+function closeProfile(){
+  document.getElementById('profileOverlay').style.display='none';
+  document.querySelector('header').style.display='block';
+  document.getElementById('mainContainer').style.display='block';
+  document.querySelector('footer').style.display='block';
+}
 
-        // Clear fields
-        ['s-cur-pw','s-new-pw','s-conf-pw','del-pw1','del-pw2'].forEach(id => {
-            const el = document.getElementById(id); if(el) el.value='';
-        });
-        ['s-pw-msg','del-msg'].forEach(id => {
-            const el = document.getElementById(id); if(el) el.style.display='none';
-        });
+function renderProfilePage(user){
+  const recentIds=user.recentlyPlayed||[];
+  const recentGames=recentIds.slice(0,8).map(id=>state.games.find(g=>g.id===id)).filter(Boolean);
+  const popular=[...state.games].sort((a,b)=>getScore(b,'year')-getScore(a,'year')).slice(0,8);
+  const initial=getAvatarInitial(user.displayName||user.username);
+  const color=getAvatarColor(user.username);
+  const daysOn=Math.max(1,Math.floor((Date.now()-(user.created||Date.now()))/(86400000)));
 
-        document.getElementById('settings-overlay').classList.add('open');
-        document.getElementById('settings-panel').classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
+  document.getElementById('profilePageContent').innerHTML=`
+    <div class="profile-hero">
+      <div class="profile-big-avatar" style="background:linear-gradient(135deg,${color},#a78bfa)">${initial}</div>
+      <div class="profile-info">
+        <h1>${user.displayName||user.username}</h1>
+        <p>@${user.username} · Member for ${daysOn} day${daysOn===1?'':'s'}</p>
+        <div class="profile-stats">
+          <div class="pstat">
+            <div class="pstat-num">${user.totalPlayed||0}</div>
+            <div class="pstat-label">Games Played</div>
+          </div>
+          <div class="pstat">
+            <div class="pstat-num">${recentIds.length}</div>
+            <div class="pstat-label">Unique Games</div>
+          </div>
+          <div class="pstat">
+            <div class="pstat-num">${(JSON.parse(localStorage.getItem('favorites')||'[]')).length}</div>
+            <div class="pstat-label">Favorites</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    function closeSettings() {
-        document.getElementById('settings-overlay').classList.remove('open');
-        document.getElementById('settings-panel').classList.remove('open');
-        document.body.style.overflow = '';
-    }
-
-    document.getElementById('btn-open-settings').onclick = openSettings;
-    document.getElementById('settings-close').onclick    = closeSettings;
-    document.getElementById('settings-overlay').onclick  = closeSettings;
-
-    /* ── Change password (settings) ── */
-    document.getElementById('s-btn-pw').onclick = async () => {
-        const user   = auth.currentUser;
-        const curPw  = document.getElementById('s-cur-pw').value;
-        const newPw  = document.getElementById('s-new-pw').value;
-        const confPw = document.getElementById('s-conf-pw').value;
-        const msg    = document.getElementById('s-pw-msg');
-        const show   = (t,ty) => { msg.textContent=t;msg.className=`msg-inline ${ty}`;msg.style.display='block'; };
-
-        if (!curPw||!newPw||!confPw) return show('Please fill in all fields.','error');
-        if (newPw !== confPw)        return show('New passwords do not match.','error');
-        if (newPw.length < 6)       return show('Password must be at least 6 characters.','error');
-
-        try {
-            const cred = EmailAuthProvider.credential(user.email, curPw);
-            await reauthenticateWithCredential(user, cred);
-            await updatePassword(user, newPw);
-            show('✓ Password updated successfully!', 'success');
-            ['s-cur-pw','s-new-pw','s-conf-pw'].forEach(id => document.getElementById(id).value='');
-        } catch(err) {
-            show(err.code === 'auth/wrong-password' ? 'Current password is incorrect.' : err.message, 'error');
-        }
-    };
-
-    /* ── Delete account ── */
-    document.getElementById('btn-delete-account').onclick = async () => {
-        const user = auth.currentUser;
-        const pw1  = document.getElementById('del-pw1').value;
-        const pw2  = document.getElementById('del-pw2').value;
-        const msg  = document.getElementById('del-msg');
-        const show = (t,ty) => { msg.textContent=t;msg.className=`msg-inline ${ty}`;msg.style.display='block'; };
-
-        if (!pw1 || !pw2)  return show('Enter your password twice to confirm.','error');
-        if (pw1 !== pw2)   return show('Passwords do not match.','error');
-
-        const confirmed = confirm(
-            'Are you absolutely sure? This will permanently delete your account and all your data.'
-        );
-        if (!confirmed) return;
-
-        try {
-            // Re-authenticate first
-            const cred = EmailAuthProvider.credential(user.email, pw1);
-            await reauthenticateWithCredential(user, cred);
-
-            // Delete Firestore user doc
-            await deleteDoc(doc(db, 'users', user.uid));
-
-            // Delete Firebase Auth account
-            await deleteUser(user);
-
-            window.location.href = 'login.html';
-        } catch(err) {
-            show(
-                err.code === 'auth/wrong-password'
-                    ? 'Incorrect password.'
-                    : err.message,
-                'error'
-            );
-        }
-    };
-
-    /* ════════════════════════════════════════
-       USER DASHBOARD
-    ════════════════════════════════════════ */
-    async function renderUser(user) {
-        const [userSnap, gamesSnap] = await Promise.all([
-            getDoc(doc(db, 'users', user.uid)),
-            getDocs(collection(db, 'games'))
-        ]);
-
-        currentUserDoc = userSnap.exists() ? userSnap.data() : { username: user.displayName||'User', tier:'Free' };
-
-        allGames = [];
-        gamesSnap.forEach(d => allGames.push({ id:d.id, ...d.data() }));
-        allGames.sort((a,b) => (b.uploadedAt||'').localeCompare(a.uploadedAt||''));
-
-        const username = currentUserDoc.username || user.displayName || 'User';
-        const tier     = currentUserDoc.tier || 'Free';
-        const playHist = currentUserDoc.playHistory || {};
-        const favIds   = new Set(currentUserDoc.favorites || []);
-
-        document.getElementById('sb-avatar').textContent = username.slice(0,2).toUpperCase();
-        document.getElementById('sb-name').textContent   = username;
-
-        const sortedByPlay = allGames
-            .filter(g => playHist[g.id] > 0)
-            .sort((a,b) => (playHist[b.id]||0) - (playHist[a.id]||0))
-            .slice(0, 5);
-
-        const favGames     = allGames.filter(g => favIds.has(g.id));
-        const popularGames = [...allGames]
-            .sort((a,b) => (b.playCount||0) - (a.playCount||0))
-            .slice(0, 10);
-
-        const tierEmoji = { Free:'·', Gold:'✦', Diamond:'◈' };
-
-        document.getElementById('app-content').innerHTML = `
-            <div class="page-header fade">
-                <div class="page-title">Welcome back, ${escHtml(username)} 👋</div>
-                <div class="page-subtitle">Your personal game dashboard</div>
+    <div style="margin-bottom:2rem">
+      <div class="profile-section-title">Recently Played</div>
+      ${recentGames.length>0?`
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.85rem">
+          ${recentGames.map(g=>`
+            <div class="mini-game-card" onclick="closeProfile();openGame(${g.id})">
+              <img src="${resolveUrl(g.cover)}" loading="lazy" style="width:100%;aspect-ratio:1;object-fit:cover">
+              <div class="mini-card-body">
+                <div class="mini-card-title">${g.name}</div>
+                <div class="mini-card-meta">${(g.special||[]).slice(0,1).map(toTitleCase).join('')||'Game'}</div>
+              </div>
             </div>
+          `).join('')}
+        </div>
+      `:`<div class="empty-state">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+          <p>No games played yet. Start playing!</p>
+          <button class="auth-btn" style="margin-top:.5rem" onclick="closeProfile()">Explore Games</button>
+        </div>`}
+    </div>
 
-            <div class="stat-grid">
-                <div class="stat-card fade">
-                    <div class="stat-label">Current Plan</div>
-                    <span class="tier-badge ${tier}">${tierEmoji[tier]||'·'} ${tier}</span>
-                </div>
-                <div class="stat-card fade fade-d1">
-                    <div class="stat-label">Total Plays</div>
-                    <div class="stat-value" style="font-size:1.3rem;font-weight:700;font-family:'Unbounded',sans-serif">
-                        ${Object.values(playHist).reduce((s,v)=>s+v,0)}
-                    </div>
-                </div>
-                <div class="stat-card fade fade-d2">
-                    <div class="stat-label">Favourites</div>
-                    <div class="stat-value" style="font-size:1.3rem;font-weight:700;font-family:'Unbounded',sans-serif" id="fav-count">
-                        ${favIds.size}
-                    </div>
-                </div>
-                <div class="stat-card fade fade-d3">
-                    <div class="stat-label">Library Size</div>
-                    <div class="stat-value" style="font-size:1.3rem;font-weight:700;font-family:'Unbounded',sans-serif">
-                        ${allGames.length}
-                    </div>
-                </div>
+    <div>
+      <div class="profile-section-title">Popular Right Now</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.85rem">
+        ${popular.map(g=>`
+          <div class="mini-game-card" onclick="closeProfile();openGame(${g.id})">
+            <img src="${resolveUrl(g.cover)}" loading="lazy" style="width:100%;aspect-ratio:1;object-fit:cover">
+            <div class="mini-card-body">
+              <div class="mini-card-title">${g.name}</div>
+              <div class="mini-card-meta">${formatPlays(getScore(g,'year'))} plays</div>
             </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
 
-            <div style="margin-bottom:28px" class="fade fade-d1">
-                <div class="section-heading">
-                    <div class="section-title">🏆 Your Top Played</div>
-                    <a class="section-link" href="games.html">Browse all →</a>
-                </div>
-                ${sortedByPlay.length === 0
-                    ? `<div class="row-empty">You haven't played any games yet — head to the <a href="games.html" style="color:var(--violet-lt)">Game Library</a>!</div>`
-                    : `<div class="game-row" id="top-row">${sortedByPlay.map((g,i)=>rowCard(g,i,playHist,favIds,true)).join('')}</div>`
-                }
-            </div>
+// ─── track recently played ───
+function trackRecentlyPlayed(id){
+  const user=getCurrentUser();
+  if(!user)return;
+  const arr=user.recentlyPlayed||[];
+  const idx=arr.indexOf(id);
+  if(idx>-1)arr.splice(idx,1);
+  arr.unshift(id);
+  if(arr.length>50)arr.pop();
+  user.recentlyPlayed=arr;
+  user.totalPlayed=(user.totalPlayed||0)+1;
+  saveCurrentUser(user);
+  // also update in users store
+  const users=getNyxUsers();
+  if(users[user.username]){
+    users[user.username].recentlyPlayed=arr;
+    users[user.username].totalPlayed=user.totalPlayed;
+    saveNyxUsers(users);
+  }
+}
 
-            <div style="margin-bottom:28px" class="fade fade-d2">
-                <div class="section-heading">
-                    <div class="section-title">❤️ Favourites</div>
-                </div>
-                <div class="game-row" id="fav-row">
-                    ${favGames.length === 0
-                        ? `<div class="row-empty" style="width:100%">No favourites yet — click ❤ on any game card.</div>`
-                        : favGames.map(g=>rowCard(g,null,playHist,favIds,false)).join('')
-                    }
-                </div>
-            </div>
+// ═══════════════════════════════════════════
+// GN-MATH CORE (adapted for Nyx)
+// ═══════════════════════════════════════════
+const schoolList=["deledao","goguardian","lightspeed","linewize","securly",".edu/"];
+function isBlockedDomain(url){
+  try{const d=new URL(url,location.origin).hostname+"/";return schoolList.some(s=>d.includes(s))}catch{return false}
+}
+const _fetch=window.fetch;
+window.fetch=function(url,opts){if(isBlockedDomain(url))return Promise.reject(new Error("Blocked"));return _fetch.apply(this,arguments)};
+const _open=XMLHttpRequest.prototype.open;
+XMLHttpRequest.prototype.open=function(m,url){if(isBlockedDomain(url))return;return _open.apply(this,arguments)};
+HTMLCanvasElement.prototype.toDataURL=function(){return""};
 
-            <div style="margin-bottom:32px" class="fade fade-d3">
-                <div class="section-heading">
-                    <div class="section-title">🔥 Most Popular</div>
-                    <a class="section-link" href="games.html">See all →</a>
-                </div>
-                ${popularGames.length === 0
-                    ? `<div class="row-empty">No games in the library yet.</div>`
-                    : `<div class="game-row" id="pop-row">${popularGames.map(g=>rowCard(g,null,playHist,favIds,false)).join('')}</div>`
-                }
-            </div>
-        `;
+const CONFIG={
+  zones:"https://cdn.jsdelivr.net/gh/gn-math/assets@latest/zones.json",
+  tagsZones:"https://cdn.jsdelivr.net/gh/sealiee11/gnmathstuff@main/zones.json",
+  covers:"https://cdn.jsdelivr.net/gh/gn-math/covers@main",
+  html:null,
+  stats:"https://data.jsdelivr.com/v1/stats/packages/gh/gn-math/html@main/files?period="
+};
+fetch(location.origin+"/commits").then(r=>r.text()).then(h=>{CONFIG.html=`https://cdn.jsdelivr.net/gh/gn-math/html@${h.trim()}`}).catch(()=>{CONFIG.html="https://cdn.jsdelivr.net/gh/gn-math/html@main"});
 
-        attachCardHandlers(user, favIds, playHist);
+let state={games:[],hits:{},theme:'modern',categories:[],tagGames:[]};
+
+async function init(){
+  let zonesURL=CONFIG.zones;
+  try{
+    const sha=await fetch("https://api.github.com/repos/gn-math/assets/commits?t="+Date.now()).then(r=>r.json()).then(j=>j[0].sha);
+    if(sha)zonesURL=`https://cdn.jsdelivr.net/gh/gn-math/assets@${sha}/zones.json`;
+  }catch{}
+  const zones=await(await fetch(zonesURL+"?t="+Date.now())).json();
+  state.games=zones;
+  try{const t=await(await fetch(CONFIG.tagsZones+"?t="+Date.now())).json();state.tagGames=t}catch{state.tagGames=state.games}
+  state.games[0].featured=true;
+  extractCategories();renderApp();
+  const sp=new URLSearchParams(location.search);const id=sp.get('id');
+  if(id){const g=state.games.find(x=>x.id+''===id+'');if(g)openGame(g.id)}
+  fetchAllStats('day');fetchAllStats('week');fetchAllStats('month');fetchAllStats('quarter');fetchAllStats('year');getAllStats();
+}
+
+async function fetchAllStats(period){
+  if(!state.hits[period])state.hits[period]={};
+  let page=1,hasMore=true;
+  while(hasMore){
+    try{
+      const res=await fetch(`${CONFIG.stats}${period}&page=${page}`);
+      if(res.status===425){hasMore=false;break}
+      const data=await res.json();
+      if(!data||data.length===0){hasMore=false}
+      else{
+        data.forEach(f=>{const m=f.name.match(/\/(\d+)\.html/);if(m){const id=m[1];state.hits[period][id]=(state.hits[period][id]||0)+f.hits.total}});
+        page++;if(page===2)updatePlayCounts();
+        await new Promise(r=>setTimeout(r,500));
+      }
+    }catch{hasMore=false}
+  }
+  updatePlayCounts();
+  if(period==='week'){updateTrendingWeek();updateTagSections()}
+}
+
+function updateTrendingWeek(){
+  const top=[...state.games].sort((a,b)=>getScore(b,'week')-getScore(a,'week')).slice(0,15);
+  const favs=JSON.parse(localStorage.getItem('favorites')||'[]');
+  const el=document.getElementById('trendingWrapper');
+  if(el)el.innerHTML=top.map(g=>`<div class="swiper-slide"><div class="game-card" onclick="event.stopPropagation();openGame(${g.id})"><div class="star-icon ${favs.includes(g.id)?'starred':''}" onclick="event.stopPropagation();toggleFavorite(${g.id})">★</div><img src="${resolveUrl(g.cover)}" class="card-thumb" loading="lazy"><div class="card-body"><div class="card-title">${g.name}</div><div class="card-tags">${(g.special||[]).slice(0,2).map(toTitleCase).join(', ')}</div><div class="stat-row"><span class="stat-dot"></span>${formatPlays(getScore(g,'week'))} Plays</div></div></div></div>`).join('');
+}
+
+function updateTagSections(){
+  for(let i=0;i<(state.tagCount||0);i++){
+    const w=document.getElementById('tagWrapper'+i);
+    if(w&&w.children.length>0){
+      w.querySelectorAll('.swiper-slide').forEach(s=>{
+        const c=s.querySelector('.game-card');if(!c)return;
+        const m=c.getAttribute('onclick')?.match(/openGame\((\d+)\)/);if(!m)return;
+        const g=state.games.find(x=>x.id===parseInt(m[1]));if(!g)return;
+        const sr=s.querySelector('.stat-row');if(sr)sr.innerHTML=`<span class="stat-dot"></span>${formatPlays(getScore(g,'week'))} Plays`;
+      });
     }
+  }
+}
 
-    function rowCard(game, rankIdx, playHist, favIds, showRank) {
-        const hasThumb  = game.thumbnailURL && game.thumbnailURL.trim();
-        const thumbHTML = hasThumb
-            ? `<img src="${escHtml(game.thumbnailURL)}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-            : '';
-        const phStyle   = hasThumb ? 'display:none' : '';
-        const isFav     = favIds.has(game.id);
-        const rankClass = rankIdx === 0 ? 'gold' : rankIdx === 1 ? 'silver' : rankIdx === 2 ? 'bronze' : '';
-        const rankBadge = (showRank && rankIdx !== null)
-            ? `<div class="rank-badge ${rankClass}">#${rankIdx+1}</div>` : '';
-        const playCount = playHist[game.id] || 0;
+function updatePlayCounts(){
+  document.querySelectorAll('.stat-row').forEach(async el=>{
+    const card=el.closest('[onclick^="openGame"]');if(!card)return;
+    const m=card.getAttribute('onclick')?.match(/openGame\((\d+)\)/);if(!m)return;
+    const plays=await getStats(m[1]);
+    el.innerHTML=`<span class="stat-dot"></span>${formatPlays(plays)} Plays`;
+  });
+}
 
-        return `
-            <div class="row-card" data-id="${game.id}" data-url="${escHtml(game.gameFileURL)}" data-title="${escHtml(game.title)}">
-                <div class="row-thumb">
-                    ${thumbHTML}
-                    <div class="row-thumb-ph" style="${phStyle}">${(game.title||'?')[0]}</div>
-                    ${rankBadge}
-                    <button class="fav-btn ${isFav?'active':''}" data-fav="${game.id}">${isFav?'❤️':'🤍'}</button>
-                    <div class="row-play-ov">
-                        <div class="row-play-circle">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="#7c3aed"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="row-card-info">
-                    <div class="row-card-title">${escHtml(game.title)}</div>
-                    <div class="row-card-sub">${showRank ? `Played ${playCount}×` : `${(game.playCount||0).toLocaleString()} plays`}</div>
-                </div>
-            </div>`;
+function extractCategories(){
+  const s=new Set();
+  state.games.forEach(g=>{if(g.special&&Array.isArray(g.special))g.special.forEach(x=>s.add(x))});
+  state.categories=Array.from(s).sort();
+}
+
+function getScore(g,period){return state.hits[period]?.[g.id]||0}
+function formatPlays(n){if(n>=1e6)return(n/1e6).toFixed(1)+'m';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return n+''}
+function resolveUrl(u){return u.replace("{COVER_URL}",CONFIG.covers).replace("{HTML_URL}",CONFIG.html||CONFIG.covers.replace('/covers',''))}
+function toTitleCase(s){return s.replace(/\w\S*/g,t=>t.charAt(0).toUpperCase()+t.substring(1).toLowerCase())}
+
+function renderTagSections(){
+  const allTags=new Set();
+  state.tagGames.forEach(g=>{if(g.tags&&Array.isArray(g.tags))g.tags.forEach(t=>allTags.add(t))});
+  const tags=Array.from(allTags).sort(()=>Math.random()-.5).slice(0,3);
+  const container=document.getElementById('tagSections');
+  if(!container||tags.length===0)return 0;
+  container.innerHTML=tags.map((tag,i)=>`
+    <div class="section-header"><div class="section-title">${tag}</div></div>
+    <div class="swiper horizontal-list" id="tagSwiper${i}">
+      <div class="swiper-wrapper" id="tagWrapper${i}"></div>
+      <div class="swiper-button-next"></div><div class="swiper-button-prev"></div>
+    </div>`).join('');
+  const favs=JSON.parse(localStorage.getItem('favorites')||'[]');
+  tags.forEach((tag,i)=>{
+    const games=state.tagGames.filter(g=>g.tags&&g.tags.includes(tag)).slice(0,15);
+    const w=document.getElementById('tagWrapper'+i);
+    if(w&&games.length)w.innerHTML=games.map(g=>`<div class="swiper-slide"><div class="game-card" onclick="event.stopPropagation();openGame(${g.id})"><div class="star-icon ${favs.includes(g.id)?'starred':''}" onclick="event.stopPropagation();toggleFavorite(${g.id})">★</div><img src="${resolveUrl(g.cover)}" class="card-thumb" loading="lazy"><div class="card-body"><div class="card-title">${g.name}</div><div class="card-tags">${(g.tags||[]).slice(0,2).join(', ')}</div><div class="stat-row"><span class="stat-dot"></span>... Plays</div></div></div></div>`).join('');
+  });
+  return tags.length;
+}
+
+function renderApp(){
+  if(localStorage.getItem('theme')==='classic')toggleTheme(true);
+  renderNavCategories();
+  const popular=state.games.filter(g=>(g.featured||g.special?.includes('popular'))&&!g.special?.includes('tools'));
+  const ports=state.games.filter(g=>g.special?.includes('port')&&!g.special?.includes('tools'));
+  const rnd=[];for(let i=0;i<2;i++){const g=state.games[Math.floor(Math.random()*state.games.length)];if(!g.special?.includes('tools'))rnd.push(g)}
+  const featured=[popular[Math.floor(Math.random()*popular.length)],...rnd,ports[Math.floor(Math.random()*ports.length)],popular[0]].filter(Boolean).slice(0,5);
+  renderHero(featured);
+  renderSwiper('trendingWrapper',state.games.slice(0,15));
+  const tagCount=renderTagSections();state.tagCount=tagCount||0;
+  renderGrid('featuredGrid',state.games.filter(g=>g.featured));
+  const savedSort=localStorage.getItem('sortPreference')||'name';
+  document.getElementById('sortOptions').value=savedSort;sortZones();
+  renderClassicGrid();initSwipers();
+}
+
+function renderNavCategories(){
+  const nc=document.getElementById('navContent');
+  const allLink=document.createElement('div');allLink.className='nav-link active';allLink.textContent='All Games';allLink.onclick=()=>switchView('all');
+  const favLink=document.createElement('div');favLink.className='nav-link';favLink.textContent='⭐ Favorites';favLink.onclick=()=>filterFavorites();
+  nc.innerHTML='';nc.appendChild(allLink);nc.appendChild(favLink);
+  state.categories.forEach(cat=>{
+    const l=document.createElement('div');l.className='nav-link';l.textContent=toTitleCase(cat);l.onclick=()=>filterByCategory(cat,l);nc.appendChild(l);
+  });
+}
+
+function filterFavorites(){
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const favs=JSON.parse(localStorage.getItem('favorites')||'[]');
+  const hits=state.games.filter(g=>favs.includes(g.id));
+  showSearchView(hits,'Favorites','Favorite');
+}
+
+function toggleFavorite(id){
+  const favs=JSON.parse(localStorage.getItem('favorites')||'[]');
+  const i=favs.indexOf(id);
+  const star=event.target;
+  if(i>-1){favs.splice(i,1);star.classList.remove('starred')}
+  else{favs.push(id);star.classList.add('starred')}
+  localStorage.setItem('favorites',JSON.stringify(favs));
+}
+
+function renderHero(games){
+  document.getElementById('heroWrapper').innerHTML=games.map(g=>`
+    <div class="swiper-slide">
+      <div class="slide-bg" style="background-image:url('${resolveUrl(g.cover)}')"></div>
+      <div class="slide-content">
+        <div class="slide-image-wrapper"><img src="${resolveUrl(g.cover)}" class="slide-image" loading="lazy"></div>
+        <div class="slide-info">
+          <h2 class="game-title-hero">${g.name}</h2>
+          <div class="game-meta">${(g.special||['Popular']).map(t=>`<span class="tag-badge">${toTitleCase(t)}</span>`).join('')}</div>
+          ${g.author?`<p style="color:var(--nyx-muted);font-size:.875rem">by ${g.author}</p>`:''}
+          <button class="hero-btn" onclick="event.stopPropagation();openGame(${g.id})">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            Play Now
+          </button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderSwiper(id,games){
+  const el=document.getElementById(id);
+  const favs=JSON.parse(localStorage.getItem('favorites')||'[]');
+  el.innerHTML=games.map(g=>`<div class="swiper-slide"><div class="game-card" onclick="event.stopPropagation();openGame(${g.id})"><div class="star-icon ${favs.includes(g.id)?'starred':''}" onclick="event.stopPropagation();toggleFavorite(${g.id})">★</div><img src="${resolveUrl(g.cover)}" class="card-thumb" loading="lazy"><div class="card-body"><div class="card-title">${g.name}</div><div class="card-tags">${(g.special||[]).slice(0,2).map(toTitleCase).join(', ')}</div><div class="stat-row"><span class="stat-dot"></span>...</div></div></div></div>`).join('');
+  updatePlayCounts();
+}
+
+function renderGrid(id,games){
+  const el=document.getElementById(id);if(!el)return;
+  const favs=JSON.parse(localStorage.getItem('favorites')||'[]');
+  el.innerHTML=games.map((g,i)=>`<div class="game-card" onclick="openGame(${g.id})" style="animation-delay:${Math.min(i,20)*.03}s" data-index="${i}"><div class="star-icon ${favs.includes(g.id)?'starred':''}" onclick="event.stopPropagation();toggleFavorite(${g.id})">★</div><img src="${resolveUrl(g.cover)}" class="card-thumb" loading="lazy"><div class="card-body"><div class="card-title">${g.name}</div><div class="card-tags">${(g.special||[]).slice(0,2).map(toTitleCase).join(', ')}</div><div class="stat-row"><span class="stat-dot"></span>...</div></div></div>`).join('');
+  if(games.length>20){
+    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const c=e.target;const idx=parseInt(c.dataset.index);if(idx>20){c.style.animationDelay='0s';c.style.opacity='1'}obs.unobserve(c)}})},{rootMargin:'100px'});
+    el.querySelectorAll('.game-card').forEach(c=>{if(parseInt(c.dataset.index)>20)obs.observe(c)});
+  }
+  updatePlayCounts();
+}
+
+function sortZones(){
+  const s=document.getElementById('sortOptions').value;
+  localStorage.setItem('sortPreference',s);
+  let sorted=[...state.games];
+  const pinned=sorted.filter(g=>g.id===-1||g.id===596);
+  const reg=sorted.filter(g=>g.id!==-1&&g.id!==596&&g.id!==0&&g.id!==1);
+  if(s==='name')reg.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(s==='id')reg.sort((a,b)=>b.id-a.id);
+  else if(s==='popular')reg.sort((a,b)=>getScore(b,'year')-getScore(a,'year'));
+  renderGrid('allGamesGrid',[...pinned,...reg]);
+}
+
+function renderClassicGrid(){
+  const el=document.getElementById('classicGrid');
+  el.innerHTML=state.games.map(g=>`<div class="classic-card" onclick="openGame(${g.id})"><img src="${resolveUrl(g.cover)}" class="classic-thumb" loading="lazy"><div class="classic-info"><div class="classic-title">${g.name}</div></div></div>`).join('');
+}
+
+let heroSwiper,trendingSwiper;
+function initSwipers(){
+  if(heroSwiper)heroSwiper.destroy(true,true);
+  heroSwiper=new Swiper('.featured-slider',{loop:true,centeredSlides:true,slidesPerView:'auto',autoplay:{delay:5000,disableOnInteraction:false},pagination:{el:'.swiper-pagination',clickable:true},navigation:{nextEl:'.featured-slider .swiper-button-next',prevEl:'.featured-slider .swiper-button-prev'},speed:600,observer:true,observeParents:true});
+  if(trendingSwiper)trendingSwiper.destroy(true,true);
+  trendingSwiper=new Swiper('#trendingSwiper',{slidesPerView:2,spaceBetween:20,slidesPerGroup:1,speed:400,watchSlidesProgress:true,observer:true,observeParents:true,navigation:{nextEl:'#trendingSwiper .swiper-button-next',prevEl:'#trendingSwiper .swiper-button-prev'},breakpoints:{640:{slidesPerView:3},768:{slidesPerView:4},1024:{slidesPerView:5},1280:{slidesPerView:6}}});
+  for(let i=0;i<(state.tagCount||0);i++){
+    const el=document.getElementById('tagSwiper'+i);
+    if(el)new Swiper('#tagSwiper'+i,{slidesPerView:2,spaceBetween:20,slidesPerGroup:1,speed:400,watchSlidesProgress:true,observer:true,observeParents:true,navigation:{nextEl:`#tagSwiper${i} .swiper-button-next`,prevEl:`#tagSwiper${i} .swiper-button-prev`},breakpoints:{640:{slidesPerView:3},768:{slidesPerView:4},1024:{slidesPerView:5},1280:{slidesPerView:6}}});
+  }
+}
+
+function handleSearch(q){
+  const s=document.getElementById('searchView'),m=document.getElementById('modernView'),c=document.getElementById('classicView');
+  if(!q){s.classList.add('hidden');if(state.theme==='classic')c.classList.remove('hidden');else m.classList.remove('hidden');return}
+  m.classList.add('hidden');c.classList.add('hidden');s.classList.remove('hidden');
+  const favs=JSON.parse(localStorage.getItem('favorites')||'[]');
+  const hits=state.games.filter(g=>g.name.toLowerCase().includes(q.toLowerCase()));
+  document.getElementById('searchResults').innerHTML=hits.map(g=>`<div class="game-card" onclick="openGame(${g.id})"><div class="star-icon ${favs.includes(g.id)?'starred':''}" onclick="event.stopPropagation();toggleFavorite(${g.id})">★</div><img src="${resolveUrl(g.cover)}" class="card-thumb" loading="lazy"><div class="card-body"><div class="card-title">${g.name}</div><div class="card-tags">Match</div></div></div>`).join('');
+}
+
+function switchView(v){
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const link=Array.from(document.querySelectorAll('.nav-link')).find(l=>l.textContent==='All Games');
+  if(link)link.classList.add('active');
+  document.getElementById('searchBar').value='';handleSearch('');
+}
+
+function showSearchView(games,title,tag){
+  const s=document.getElementById('searchView'),m=document.getElementById('modernView'),c=document.getElementById('classicView');
+  m.classList.add('hidden');c.classList.add('hidden');s.classList.remove('hidden');
+  document.getElementById('searchBar').value='';
+  const favs=JSON.parse(localStorage.getItem('favorites')||'[]');
+  document.getElementById('searchResults').innerHTML=games.map(g=>`<div class="game-card" onclick="openGame(${g.id})"><div class="star-icon ${favs.includes(g.id)?'starred':''}" onclick="event.stopPropagation();toggleFavorite(${g.id})">★</div><img src="${resolveUrl(g.cover)}" class="card-thumb" loading="lazy"><div class="card-body"><div class="card-title">${g.name}</div><div class="card-tags">${tag}</div></div></div>`).join('');
+}
+
+function filterByCategory(cat,el){
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  if(el)el.classList.add('active');
+  showSearchView(state.games.filter(g=>g.special&&g.special.includes(cat)),toTitleCase(cat),toTitleCase(cat));
+}
+
+async function openGame(id){
+  const g=state.games.find(x=>x.id===id);if(!g)return;
+  const stats=JSON.parse(localStorage.getItem('userStats')||'{"opens":{},"timeStart":null}');
+  stats.opens[id]=(stats.opens[id]||0)+1;stats.timeStart=Date.now();
+  localStorage.setItem('userStats',JSON.stringify(stats));
+  trackRecentlyPlayed(id);
+  document.getElementById('zoneName').textContent=g.name;
+  document.getElementById('zoneId').textContent=id;
+  document.getElementById('zoneAuthor').textContent='by '+(g.author||'Unknown');
+  if(g.authorLink)document.getElementById('zoneAuthor').href=g.authorLink;
+  else document.getElementById('zoneAuthor').href='#';
+  const v=document.getElementById('zoneViewer');
+  v.style.display='flex';
+  document.querySelector('header').style.display='none';
+  document.getElementById('mainContainer').style.display='none';
+  document.querySelector('footer').style.display='none';
+  const url=new URL(location);url.searchParams.set('id',id);history.pushState(null,'',url);
+  if(g.url.startsWith('http')&&!g.url.includes('{')){{window.open(g.url,'_blank');closeZone();return}}
+  try{
+    const u=resolveUrl(g.url);const r=await fetch(u+'?t='+Date.now());let h=await r.text();
+    if(h.trim().startsWith("Couldn't find")){const r2=await fetch(g.url.replace("{HTML_URL}","https://cdn.jsdelivr.net/gh/gn-math/html@main")+'?t='+Date.now());h=await r2.text()}
+    document.getElementById('zoneFrame').contentDocument.open();
+    document.getElementById('zoneFrame').contentDocument.write(h);
+    document.getElementById('zoneFrame').contentDocument.close();
+  }catch{alert('Load failed');closeZone()}
+}
+
+function closeZone(){
+  const stats=JSON.parse(localStorage.getItem('userStats')||'{"opens":{},"timeStart":null,"totalTime":0}');
+  if(stats.timeStart){stats.totalTime=(stats.totalTime||0)+(Date.now()-stats.timeStart);stats.timeStart=null;localStorage.setItem('userStats',JSON.stringify(stats))}
+  document.getElementById('zoneViewer').style.display='none';
+  document.getElementById('zoneFrame').src='';
+  document.querySelector('header').style.display='block';
+  document.getElementById('mainContainer').style.display='block';
+  document.querySelector('footer').style.display='block';
+  const url=new URL(location);url.searchParams.delete('id');history.pushState(null,'',url);
+}
+
+function fullscreenZone(){const f=document.getElementById('zoneFrame');if(f.requestFullscreen)f.requestFullscreen()}
+function aboutBlank(){
+  const id=document.getElementById('zoneId').textContent;
+  const g=state.games.find(x=>x.id==id);if(!g)return;
+  const w=window.open('about:blank','_blank');
+  const u=resolveUrl(g.url);
+  fetch(u).then(r=>r.text()).then(h=>{if(h.trim().startsWith("Couldn't find"))fetch(g.url.replace("{HTML_URL}","https://cdn.jsdelivr.net/gh/gn-math/html@main")).then(r=>r.text()).then(hh=>{w.document.open();w.document.write(hh);w.document.close()});else{w.document.open();w.document.write(h);w.document.close()}});
+}
+function downloadZone(){
+  const id=document.getElementById('zoneId').textContent;const g=state.games.find(x=>x.id==id);
+  const u=resolveUrl(g.url);fetch(u).then(r=>r.text()).then(t=>{const b=new Blob([t],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=g.name+'.html';a.click()});
+}
+
+// ─── Modals ───
+function openModal(t,c){
+  document.getElementById('modalTitle').textContent=t;
+  document.getElementById('modalContent').innerHTML=c;
+  const o=document.getElementById('modalOverlay');o.style.display='flex';setTimeout(()=>o.classList.add('open'),10);
+}
+function closeModal(){const o=document.getElementById('modalOverlay');o.classList.remove('open');setTimeout(()=>o.style.display='none',250)}
+
+function openSettings(){
+  const user=getCurrentUser();
+  const stats=JSON.parse(localStorage.getItem('userStats')||'{"opens":{},"totalTime":0}');
+  const totalOpens=Object.values(stats.opens).reduce((a,b)=>a+b,0);
+  const hours=Math.floor((stats.totalTime||0)/3600000),minutes=Math.floor(((stats.totalTime||0)%3600000)/60000);
+  openModal('Settings',`
+    <div class="setting-row"><span class="setting-label">Classic Theme</span><div class="toggle-switch ${localStorage.getItem('theme')==='classic'?'active':''}" onclick="toggleTheme(!this.classList.contains('active'),this)"></div></div>
+    <div class="setting-row"><span class="setting-label">Performance Mode</span><div class="toggle-switch ${localStorage.getItem('performanceMode')!=='false'?'active':''}" onclick="togglePerformanceMode(this)"></div></div>
+    <div class="setting-row"><span class="setting-label">Close Prevention Popup</span><div class="toggle-switch ${localStorage.getItem('closePreventionEnabled')!=='false'?'active':''}" onclick="toggleClosePrevention(this)"></div></div>
+    <div class="setting-row"><span class="setting-label">Tab Cloak</span><button class="settings-button" onclick="tabCloak()">Configure</button></div>
+    <div class="setting-row"><span class="setting-label">Game Card Size</span><select class="settings-button" style="width:auto" onchange="setGameSize(this.value)">
+      <option value="tiny" ${localStorage.getItem('gameSize')==='tiny'?'selected':''}>Tiny</option>
+      <option value="small" ${localStorage.getItem('gameSize')==='small'?'selected':''}>Small</option>
+      <option value="medium" ${localStorage.getItem('gameSize')==='medium'?'selected':''}>Medium</option>
+      <option value="default" ${!localStorage.getItem('gameSize')||localStorage.getItem('gameSize')==='default'?'selected':''}>Default</option>
+      <option value="large" ${localStorage.getItem('gameSize')==='large'?'selected':''}>Large</option>
+      <option value="xlarge" ${localStorage.getItem('gameSize')==='xlarge'?'selected':''}>Extra Large</option>
+    </select></div>
+    <div class="setting-row"><span class="setting-label">Export Save</span><button class="settings-button" onclick="saveData()">Export</button></div>
+    <div class="setting-row"><span class="setting-label">Import Save</span><button class="settings-button" onclick="document.getElementById('importFile').click()">Import</button></div>
+    <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--nyx-border-soft)">
+      <h3 style="margin-bottom:1rem;color:var(--nyx-text);font-family:var(--nyx-font-display)">Your Stats</h3>
+      <div style="color:var(--nyx-muted);line-height:2">
+        <div><strong>Games Played:</strong> ${totalOpens}</div>
+        <div><strong>Time on Site:</strong> ${hours}h ${minutes}m</div>
+        ${user?`<div><strong>Account:</strong> ${user.username}</div>`:'<div><strong>Account:</strong> Guest</div>'}
+      </div>
+    </div>`);
+}
+
+function toggleTheme(enable,btn){
+  state.theme=enable?'classic':'modern';localStorage.setItem('theme',state.theme);
+  if(btn)btn.classList.toggle('active');
+  if(enable){document.body.classList.add('classic-theme');document.getElementById('modernView').classList.add('hidden');document.getElementById('classicView').classList.remove('hidden')}
+  else{document.body.classList.remove('classic-theme');document.getElementById('modernView').classList.remove('hidden');document.getElementById('classicView').classList.add('hidden');initSwipers()}
+}
+function togglePerformanceMode(btn){
+  const n=!btn.classList.contains('active');
+  n?localStorage.removeItem('performanceMode'):localStorage.setItem('performanceMode','false');
+  n?document.body.classList.add('performance-mode'):document.body.classList.remove('performance-mode');
+  btn.classList.toggle('active');
+}
+function toggleClosePrevention(btn){
+  const n=!btn.classList.contains('active');
+  n?localStorage.removeItem('closePreventionEnabled'):localStorage.setItem('closePreventionEnabled','false');
+  n?window.addEventListener('beforeunload',beforeUnloadHandler):window.removeEventListener('beforeunload',beforeUnloadHandler);
+  btn.classList.toggle('active');
+}
+function beforeUnloadHandler(e){e.preventDefault();e.returnValue='';return''}
+function tabCloak(){
+  const t=prompt('Title:','Google Classroom');const i=prompt('Icon URL:','https://ssl.gstatic.com/classroom/favicon.png');
+  if(t)document.title=t;if(i){let l=document.querySelector("link[rel~='icon']");if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l)}l.href=i}
+}
+function setGameSize(size){
+  localStorage.setItem('gameSize',size);
+  const m={'tiny':'50px','small':'100px','medium':'150px','default':'200px','large':'250px','xlarge':'300px'};
+  let s=document.getElementById('gameSizeStyle');if(!s){s=document.createElement('style');s.id='gameSizeStyle';document.head.appendChild(s)}
+  s.textContent=`.grid-layout{grid-template-columns:repeat(auto-fill,minmax(${m[size]},1fr))}`;
+}
+function toggleSection(id,el){
+  const g=document.getElementById(id);const a=el.querySelector('.collapse-arrow');
+  g.style.display=g.style.display==='none'?'grid':'none';
+  a.style.transform=g.style.display==='none'?'rotate(-90deg)':'';
+}
+
+function openDMCA(){openModal('DMCA','<p>To request removal of your game:</p><ol><li>Join our <a href="https://discord.gg/D4c9VFYWyU" target="_blank" style="color:var(--nyx-accent)">Discord</a> and DM an admin.</li><li>Email <a href="mailto:gn.math.business@gmail.com" style="color:var(--nyx-accent)">gn.math.business@gmail.com</a> with subject starting with <code>!DMCA</code>.</li></ol>')}
+function openPrivacy(){openModal('Privacy Policy','<p>Last updated April 17, 2025</p><p>Nyx (powered by gn-math) does not collect personally identifiable information beyond what is stored locally in your browser. Your username and game history are stored in localStorage and never sent to our servers.</p><p>Third-party services (CDNs, analytics) may collect standard web traffic data per their own privacy policies.</p>')}
+function showContact(){openModal('Contact','<p>Discord: <a href="https://discord.gg/NAFw4ykZ7n" target="_blank" style="color:var(--nyx-accent)">Join Server</a></p><p>Email: <a href="mailto:gn.math.business@gmail.com" style="color:var(--nyx-accent)">gn.math.business@gmail.com</a></p>')}
+
+// ─── Stats system ───
+let _allStatsCache=null,_statsFetchPromise=null;
+function loadCachedStats(){
+  try{const c=localStorage.getItem('statsCache_v2');if(!c)return null;const d=JSON.parse(c);if(!d.timestamp||!d.stats||(Date.now()-d.timestamp)>3600000||Object.keys(d.stats).length<100){localStorage.removeItem('statsCache_v2');return null}return d.stats}catch{return null}
+}
+function saveCachedStats(s){try{localStorage.setItem('statsCache_v2',JSON.stringify({timestamp:Date.now(),stats:s}))}catch{}}
+
+async function getAllStats(force=false){
+  if(!force&&_allStatsCache)return _allStatsCache;
+  if(!force){const c=loadCachedStats();if(c){_allStatsCache=c;return c}}
+  if(_statsFetchPromise)return _statsFetchPromise;
+  _statsFetchPromise=(async()=>{
+    const BASE='https://data.jsdelivr.com/v1/stats/packages/gh/gn-math/html@main/files';
+    const map=Object.create(null);let page=1,empty=0;
+    while(empty<2){
+      const pages=Array.from({length:10},(_,i)=>page+i);
+      const responses=await Promise.all(pages.map(p=>fetch(`${BASE}?period=year&page=${p}&limit=100`).then(r=>r.ok?r.json():[]).catch(()=>[])));
+      let found=false;
+      for(const data of responses){if(!Array.isArray(data)||!data.length)continue;found=true;for(const item of data){if(!item?.name)continue;const m=item.name.match(/^\/(\d+)([.-])/);if(!m)continue;const id=m[1];if(!map[id])map[id]={hits:0};map[id].hits+=item.hits?.total??0}}
+      if(!found)empty++;else empty=0;page+=10;
     }
+    _allStatsCache=map;saveCachedStats(map);_statsFetchPromise=null;updatePlayCounts();return map;
+  })();
+  return _statsFetchPromise;
+}
 
-    function attachCardHandlers(user, favIds, playHist) {
-        document.querySelectorAll('.row-card').forEach(card => {
-            card.addEventListener('click', e => {
-                if (e.target.closest('.fav-btn')) return;
-                const game = allGames.find(g => g.id === card.dataset.id);
-                if (game) openGame(game, user, playHist);
-            });
-        });
+async function getStats(id){id=String(id);const a=await getAllStats();return a[id]?.hits??0}
 
-        document.querySelectorAll('.fav-btn').forEach(btn => {
-            btn.addEventListener('click', async e => {
-                e.stopPropagation();
-                const gameId  = btn.dataset.fav;
-                const isNow   = !favIds.has(gameId);
-                if (isNow) favIds.add(gameId); else favIds.delete(gameId);
+async function showZoneInfo(){
+  const id=Number(document.getElementById('zoneId').textContent);
+  openModal('Info','<p>Loading…</p>');
+  try{
+    const j=await fetch(`https://api.github.com/repos/gn-math/html/commits?path=${id}.html`).then(r=>r.json());
+    const g=state.games.find(a=>a.id===id);
+    const date=new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric'}).format(new Date(j.at(-1).commit.author.date));
+    const plays=await getStats(id);
+    document.getElementById('modalTitle').textContent=`${g?.name||'Game'} Info`;
+    document.getElementById('modalContent').innerHTML=`<p><b>ID:</b> ${id}<br><b>Name:</b> ${g?.name||'?'}<br>${g?.author?`<b>Author:</b> ${g.author}<br>`:''}<b>Date Added:</b> ${date}<br><b>Global Plays:</b> ${Number(plays).toLocaleString('en-US')}</p>`;
+  }catch{document.getElementById('modalContent').innerHTML='<p>Failed to load info.</p>'}
+}
 
-                document.querySelectorAll(`[data-fav="${gameId}"]`).forEach(b => {
-                    b.textContent = isNow ? '❤️' : '🤍';
-                    b.classList.toggle('active', isNow);
-                });
+function sanitizeData(o,ml=1000,ma=10000){
+  if(typeof o==='string')return o.length>ml?o.slice(0,ml)+'...[truncated]':o;
+  if(o instanceof Uint8Array)return o.length>ma?`[too large]`:o;
+  if(Array.isArray(o))return o.map(x=>sanitizeData(x,ml,ma));
+  if(o&&typeof o==='object'){const n={};for(const k in o)if(o.hasOwnProperty(k))n[k]=sanitizeData(o[k],ml,ma);return n}
+  return o;
+}
+async function saveData(){
+  alert("Exporting save data…");const r={};r.cookies=document.cookie;r.localStorage={...localStorage};r.sessionStorage={...sessionStorage};
+  const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([JSON.stringify(r)],{type:'application/octet-stream'}));link.download=Date.now()+'.data';document.body.appendChild(link);link.click();document.body.removeChild(link);
+}
+async function loadData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async ev=>{
+    const data=JSON.parse(ev.target.result);
+    if(data.cookies)data.cookies.split(';').forEach(c=>document.cookie=c.trim());
+    if(data.localStorage)for(const k in data.localStorage)localStorage.setItem(k,data.localStorage[k]);
+    if(data.sessionStorage)for(const k in data.sessionStorage)sessionStorage.setItem(k,data.sessionStorage[k]);
+    alert('Data loaded!');
+  };
+  reader.readAsText(file);
+}
 
-                const favRow = document.getElementById('fav-row');
-                if (favRow) {
-                    const favGames = allGames.filter(g => favIds.has(g.id));
-                    favRow.innerHTML = favGames.length === 0
-                        ? `<div class="row-empty" style="width:100%">No favourites yet — click ❤ on any game card.</div>`
-                        : favGames.map(g => rowCard(g,null,playHist,favIds,false)).join('');
-                    attachCardHandlers(user, favIds, playHist);
-                }
+// Close prevention
+if(localStorage.getItem('closePreventionEnabled')!=='false')window.addEventListener('beforeunload',beforeUnloadHandler);
+if(localStorage.getItem('performanceMode')!=='false')document.body.classList.add('performance-mode');
+const savedGameSize=localStorage.getItem('gameSize');if(savedGameSize)setGameSize(savedGameSize);
 
-                const fc = document.getElementById('fav-count');
-                if (fc) fc.textContent = favIds.size;
-
-                try {
-                    await updateDoc(doc(db,'users',user.uid), { favorites:[...favIds] });
-                } catch {}
-            });
-        });
-    }
-
-    /* ════════════════════════
-       GAME MODAL
-    ════════════════════════ */
-    async function openGame(game, user, playHist) {
-        currentGame = game;
-        const modal  = document.getElementById('game-modal');
-        const iframe = document.getElementById('game-iframe');
-        const loader = document.getElementById('iframe-loader');
-
-        document.getElementById('modal-title').textContent = game.title;
-        loader.classList.remove('hidden');
-        iframe.src = '';
-        modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => { iframe.src = game.gameFileURL; }, 50);
-        iframe.onload = () => setTimeout(() => loader.classList.add('hidden'), 300);
-
-        if (user) {
-            try {
-                const newCount = (playHist[game.id] || 0) + 1;
-                playHist[game.id] = newCount;
-                const gameSnap = await getDoc(doc(db,'games',game.id));
-                const gpc      = gameSnap.exists() ? (gameSnap.data().playCount||0) : 0;
-                await Promise.all([
-                    updateDoc(doc(db,'users',user.uid), { [`playHistory.${game.id}`]: newCount }),
-                    updateDoc(doc(db,'games',game.id),  { playCount: gpc + 1 })
-                ]);
-            } catch {}
-        }
-    }
-
-    function closeModal() {
-        const modal  = document.getElementById('game-modal');
-        const iframe = document.getElementById('game-iframe');
-        modal.classList.remove('open');
-        document.body.style.overflow = '';
-        setTimeout(() => { iframe.src = ''; }, 300);
-        currentGame = null;
-    }
-
-    document.getElementById('mc-close').onclick = closeModal;
-    document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
-
-    document.getElementById('mc-fs').onclick = () => {
-        const f = document.getElementById('game-iframe');
-        (f.requestFullscreen||f.webkitRequestFullscreen||f.mozRequestFullScreen||function(){}).call(f);
-    };
-    document.getElementById('mc-tab').onclick = () => {
-        if (currentGame) window.open(currentGame.gameFileURL, '_blank');
-    };
-    document.getElementById('mc-dl').onclick = async () => {
-        if (!currentGame) return;
-        const btn  = document.getElementById('mc-dl');
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<span>…</span>';
-        try {
-            const res  = await fetch(currentGame.gameFileURL);
-            const blob = await res.blob();
-            const a    = Object.assign(document.createElement('a'), {
-                href:     URL.createObjectURL(blob),
-                download: currentGame.title.replace(/\s+/g,'_')+'.html'
-            });
-            document.body.appendChild(a); a.click(); document.body.removeChild(a);
-        } catch { window.open(currentGame.gameFileURL,'_blank'); }
-        finally  { btn.innerHTML = orig; }
-    };
-
-    /* ════════════════════════════════════════
-       ADMIN DASHBOARD
-    ════════════════════════════════════════ */
-    async function renderAdmin(user) {
-        document.getElementById('sb-avatar').textContent = 'AD';
-        document.getElementById('sb-name').textContent   = 'Admin';
-        currentUserDoc = { username:'Admin', tier:'Admin' };
-
-        const [userSnap, gameSnap] = await Promise.all([
-            getDocs(collection(db,'users')),
-            getDocs(collection(db,'games'))
-        ]);
-
-        const users = [];
-        userSnap.forEach(d => users.push({ uid:d.id, ...d.data() }));
-        const cnt = { Free:0, Gold:0, Diamond:0 };
-        users.forEach(u => { cnt[u.tier]=(cnt[u.tier]||0)+1; });
-
-        const games = [];
-        gameSnap.forEach(d => games.push({ id:d.id, ...d.data() }));
-        games.sort((a,b) => (b.uploadedAt||'').localeCompare(a.uploadedAt||''));
-
-        const userRows = users.map(u => `
-            <tr>
-                <td>
-                    <div style="display:flex;align-items:center;gap:10px">
-                        <div style="width:28px;height:28px;border-radius:50%;background:var(--violet);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">
-                            ${(u.username||'?').slice(0,2).toUpperCase()}
-                        </div>
-                        <span style="font-weight:500">${escHtml(u.username||'—')}</span>
-                    </div>
-                </td>
-                <td style="color:var(--muted)">${escHtml(u.email)}</td>
-                <td class="uid-cell">${u.uid.slice(0,12)}…</td>
-                <td>
-                    <select class="tier-select" onchange="window.updateTier('${u.uid}',this.value,this)">
-                        <option value="Free"    ${u.tier==='Free'   ?'selected':''}>Free</option>
-                        <option value="Gold"    ${u.tier==='Gold'   ?'selected':''}>Gold</option>
-                        <option value="Diamond" ${u.tier==='Diamond'?'selected':''}>Diamond</option>
-                    </select>
-                </td>
-            </tr>`).join('');
-
-        const gameListHTML = games.length === 0
-            ? `<div style="text-align:center;padding:28px;color:var(--muted);font-size:0.83rem">No games uploaded yet.</div>`
-            : games.map(g => adminGameItem(g)).join('');
-
-        document.getElementById('app-content').innerHTML = `
-            <div class="page-header fade">
-                <div class="page-title">Admin Dashboard</div>
-                <div class="page-subtitle">Manage users, subscriptions and the game library</div>
-            </div>
-
-            <div class="stats-row fade">
-                <span class="stat-pill violet">⬡ ${users.length} Users</span>
-                <span class="stat-pill gold">✦ ${cnt.Gold} Gold</span>
-                <span class="stat-pill sky">◈ ${cnt.Diamond} Diamond</span>
-                <span class="stat-pill violet">🎮 ${games.length} Games</span>
-            </div>
-
-            <!-- User Table -->
-            <div class="section-card fade fade-d1" style="padding:0;overflow:hidden">
-                <div style="padding:18px 22px 14px;border-bottom:1px solid var(--border)">
-                    <div class="sec-title" style="margin:0">👥 User Management</div>
-                </div>
-                <div class="table-wrap" style="border:none;border-radius:0">
-                    <table>
-                        <thead><tr><th>User</th><th>Email</th><th>UID</th><th>Tier</th></tr></thead>
-                        <tbody>${userRows}</tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Game Upload -->
-            <div class="section-card fade fade-d2">
-                <div class="sec-title">🎮 Upload New Game</div>
-                <div class="upload-zone">
-                    <div class="thumb-drop" id="thumb-drop">
-                        <input type="file" id="thumb-file" accept="image/*" title="">
-                        <img id="thumb-preview" alt="">
-                        <div class="drop-hint" id="drop-hint">
-                            <div class="drop-icon">🖼️</div>
-                            Click to add<br>thumbnail
-                        </div>
-                    </div>
-                    <div class="upload-fields">
-                        <label class="f-label">Game Title</label>
-                        <input class="f-input" type="text"  id="game-title" placeholder="e.g. Brotato">
-                        <label class="f-label">Game HTML File</label>
-                        <input class="f-input" type="file" id="game-file" accept=".html">
-                        <div id="prog-wrap" class="progress-wrap"><div class="progress-bar" id="prog-bar"></div></div>
-                        <div id="upload-msg" class="msg-inline"></div>
-                        <div style="display:flex;align-items:center;margin-top:12px">
-                            <button class="btn-sm" id="btn-upload">⬆ Upload Game</button>
-                            <button class="btn-sec" id="btn-clear">Clear</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Game List -->
-            <div class="section-card fade fade-d3">
-                <div class="sec-title">
-                    📋 Uploaded Games
-                    <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);font-weight:400" id="gcb">(${games.length})</span>
-                </div>
-                <div id="games-admin-list">${gameListHTML}</div>
-            </div>
-        `;
-
-        /* Thumbnail preview */
-        document.getElementById('thumb-file').onchange = e => {
-            const f = e.target.files[0]; if(!f) return;
-            const r = new FileReader();
-            r.onload = ev => {
-                document.getElementById('thumb-preview').src           = ev.target.result;
-                document.getElementById('thumb-preview').style.display = 'block';
-                document.getElementById('drop-hint').style.display     = 'none';
-            };
-            r.readAsDataURL(f);
-        };
-
-        document.getElementById('btn-clear').onclick  = clearForm;
-        document.getElementById('btn-upload').onclick = () => doUpload(user);
-    }
-
-    function adminGameItem(game) {
-        const date  = game.uploadedAt
-            ? new Date(game.uploadedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
-            : '—';
-        const thumb = game.thumbnailURL
-            ? `<img class="game-admin-thumb" src="${escHtml(game.thumbnailURL)}" alt="">`
-            : `<div class="game-admin-ph">${(game.title||'?')[0]}</div>`;
-        return `
-            <div class="game-admin-item" id="gai-${game.id}">
-                ${thumb}
-                <div class="game-admin-info">
-                    <div class="game-admin-title">${escHtml(game.title)}</div>
-                    <div class="game-admin-date">Uploaded ${date}</div>
-                    <div class="game-admin-plays">🎮 ${(game.playCount||0).toLocaleString()} plays</div>
-                </div>
-                <button class="btn-danger-sm" onclick="window.deleteGame('${game.id}','${escHtml(game.thumbnailPath||'')}','${escHtml(game.gameFilePath||'')}')">Delete</button>
-            </div>`;
-    }
-
-    /* ── Upload using Storage SDK (fixes "Failed to fetch") ── */
-    async function doUpload(user) {
-        const title     = (document.getElementById('game-title').value || '').trim();
-        const thumbFile = document.getElementById('thumb-file').files[0];
-        const gameFile  = document.getElementById('game-file').files[0];
-        const msgEl     = document.getElementById('upload-msg');
-        const progWrap  = document.getElementById('prog-wrap');
-        const progBar   = document.getElementById('prog-bar');
-        const show      = (t,ty) => { msgEl.textContent=t;msgEl.className=`msg-inline ${ty}`;msgEl.style.display='block'; };
-
-        if (!title)    return show('Please enter a game title.', 'error');
-        if (!gameFile) return show('Please select an HTML file.', 'error');
-
-        const gameId = `game_${Date.now()}`;
-        progWrap.style.display = 'block';
-        progBar.style.width    = '0%';
-        show('Uploading…', 'success');
-
-        try {
-            let thumbURL = '', thumbPath = '';
-
-            if (thumbFile) {
-                thumbPath = `games/${gameId}/thumbnail.${thumbFile.name.split('.').pop()}`;
-                show('Uploading thumbnail…', 'success');
-                progBar.style.width = '25%';
-                const tRef = sRef(storage, thumbPath);
-                await uploadBytes(tRef, thumbFile);
-                thumbURL = await getDownloadURL(tRef);
-                progBar.style.width = '50%';
-            }
-
-            const gamePath = `games/${gameId}/game.html`;
-            show('Uploading game file…', 'success');
-            progBar.style.width = '60%';
-            const gRef = sRef(storage, gamePath);
-            await uploadBytes(gRef, gameFile);
-            const gameFileURL = await getDownloadURL(gRef);
-            progBar.style.width = '85%';
-
-            await setDoc(doc(db, 'games', gameId), {
-                title, thumbnailURL: thumbURL, thumbnailPath: thumbPath,
-                gameFileURL, gameFilePath: gamePath,
-                playCount: 0, uploadedAt: new Date().toISOString()
-            });
-
-            progBar.style.width = '100%';
-            show('✓ Game uploaded successfully!', 'success');
-            clearForm();
-
-            // Refresh list
-            const snap = await getDocs(collection(db, 'games'));
-            const gs   = [];
-            snap.forEach(d => gs.push({ id:d.id, ...d.data() }));
-            gs.sort((a,b) => (b.uploadedAt||'').localeCompare(a.uploadedAt||''));
-            document.getElementById('games-admin-list').innerHTML =
-                gs.length === 0
-                    ? `<div style="text-align:center;padding:28px;color:var(--muted);font-size:0.83rem">No games yet.</div>`
-                    : gs.map(g => adminGameItem(g)).join('');
-            const gcb = document.getElementById('gcb');
-            if (gcb) gcb.textContent = `(${gs.length})`;
-
-        } catch(err) {
-            console.error('Upload error:', err);
-            show('Upload failed: ' + err.message, 'error');
-            progWrap.style.display = 'none';
-        }
-    }
-
-    function clearForm() {
-        ['game-title'].forEach(id => { const e=document.getElementById(id);if(e)e.value=''; });
-        ['thumb-file','game-file'].forEach(id => { const e=document.getElementById(id);if(e)e.value=''; });
-        const prev = document.getElementById('thumb-preview');
-        if (prev) { prev.src=''; prev.style.display='none'; }
-        const hint = document.getElementById('drop-hint');
-        if (hint) hint.style.display = 'flex';
-        const pw   = document.getElementById('prog-wrap');
-        if (pw) pw.style.display = 'none';
-        const pb   = document.getElementById('prog-bar');
-        if (pb) pb.style.width = '0%';
-        const um   = document.getElementById('upload-msg');
-        if (um) um.style.display = 'none';
-    }
-
-    /* ── Delete game ── */
-    window.deleteGame = async (gameId, thumbPath, gamePath) => {
-        if (!confirm('Delete this game permanently?')) return;
-        try {
-            if (thumbPath) {
-                try { await deleteObject(sRef(storage, thumbPath)); } catch {}
-            }
-            if (gamePath) {
-                try { await deleteObject(sRef(storage, gamePath)); } catch {}
-            }
-            await deleteDoc(doc(db, 'games', gameId));
-            const el = document.getElementById(`gai-${gameId}`);
-            if (el) el.remove();
-        } catch(err) { alert('Delete failed: ' + err.message); }
-    };
-
-    /* ── Tier update ── */
-    window.updateTier = async (uid, newTier, sel) => {
-        try {
-            await updateDoc(doc(db,'users',uid), { tier:newTier });
-            sel.style.borderColor = '#a78bfa';
-            setTimeout(() => { sel.style.borderColor=''; }, 1200);
-        } catch(err) { alert('Error: '+err.message); }
-    };
-
-    function escHtml(s) {
-        return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
+// ─── BOOT ───
+function waitForSwiper(){
+  if(typeof Swiper!=='undefined'){
+    initAuthUI();
+    init();
+    const sp=new URLSearchParams(location.search);
+    if(sp.get('privacy'))openPrivacy();
+  }else setTimeout(waitForSwiper,50);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',waitForSwiper);
+else waitForSwiper();
 </script>
 </body>
 </html>
