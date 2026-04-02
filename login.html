@@ -1022,7 +1022,7 @@
             try {
                 const { user } = await signInWithEmailAndPassword(auth, email, password);
                 // Go straight to home — no OTP required for login
-                window.location.href = 'home.html';
+                window.location.href = 'nyxgn.html';
             } catch {
                 showMsg('login-msg', 'Invalid email or password.');
             } finally {
@@ -1043,7 +1043,7 @@
 
                 if (snap.exists()) {
                     // Returning user — go straight home
-                    window.location.href = 'home.html';
+                    window.location.href = 'nyxgn.html';
                 } else {
                     // New Google user — ask for a username
                     ssoUser = user;
@@ -1077,7 +1077,7 @@
                     totalPlayed: 0,
                     created: Date.now()
                 });
-                window.location.href = 'home.html';
+                window.location.href = 'nyxgn.html';
             } catch (err) {
                 showMsg('sso-msg', err.message);
                 setLoad('btn-sso-text', 'sso-spinner', false);
