@@ -717,6 +717,9 @@ body.classic-theme main{max-width:none !important}
   .auth-btn span.auth-text{display:none}
 }
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
 </head>
 <body class="performance-mode">
 
@@ -779,6 +782,7 @@ body.classic-theme main{max-width:none !important}
     <div class="nav-content" id="navContent">
       <div class="nav-link active" onclick="switchView('all')">All Games</div>
       <div class="nav-link" onclick="filterFavorites()">⭐ Favorites</div>
+      <div class="nav-link" id="recentPlayedNav" style="display:none" onclick="filterRecentlyPlayed()">🕹️ Recently Played</div>
     </div>
   </div>
 </header>
@@ -980,9 +984,19 @@ function initAuthUI(){
 }
 
 function openAuth(mode){
-  document.getElementById('authOverlay').style.display='flex';
-  setTimeout(()=>document.getElementById('authOverlay').classList.add('open'),10);
-  renderAuthForm(mode);
+  window.location.href='login.html';
+}
+function filterRecentlyPlayed(){
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const rpNav=document.getElementById('recentPlayedNav');
+  if(rpNav)rpNav.classList.add('active');
+  const user=getCurrentUser();
+  if(!user||!user.recentlyPlayed||user.recentlyPlayed.length===0){
+    showSearchView([],'Recently Played','Recent');
+    return;
+  }
+  const hits=user.recentlyPlayed.map(id=>state.games.find(g=>g.id===id)).filter(Boolean);
+  showSearchView(hits,'Recently Played','Recent');
 }
 function closeAuth(){
   const o=document.getElementById('authOverlay');
@@ -1052,9 +1066,13 @@ function doLogin(){
 }
 
 function signOut(){
+  if(typeof firebase!=='undefined'&&firebase.auth)firebase.auth().signOut().catch(()=>{});
   saveCurrentUser(null);
   closeDropdown();
   initAuthUI();
+  // Hide recently played nav
+  const rpNav=document.getElementById('recentPlayedNav');
+  if(rpNav)rpNav.style.display='none';
 }
 
 // ─── DROPDOWN ───
@@ -1173,12 +1191,10 @@ function trackRecentlyPlayed(id){
   user.recentlyPlayed=arr;
   user.totalPlayed=(user.totalPlayed||0)+1;
   saveCurrentUser(user);
-  // also update in users store
-  const users=getNyxUsers();
-  if(users[user.username]){
-    users[user.username].recentlyPlayed=arr;
-    users[user.username].totalPlayed=user.totalPlayed;
-    saveNyxUsers(users);
+  // Sync to Firebase Realtime Database
+  if(typeof currentFirebaseUser!=='undefined'&&currentFirebaseUser){
+    fbDB.ref('users/'+currentFirebaseUser.uid+'/recentlyPlayed').set(arr).catch(()=>{});
+    fbDB.ref('users/'+currentFirebaseUser.uid+'/totalPlayed').set(user.totalPlayed).catch(()=>{});
   }
 }
 
@@ -1203,16 +1219,101 @@ const CONFIG={
   stats:"https://data.jsdelivr.com/v1/stats/packages/gh/gn-math/html@main/files?period="
 };
 
-// Commit-based URL resolution removed — uses CONFIG.html default (@main) like the original gn-math.
+// ═══════════════════════════════════════════
+// FIREBASE INTEGRATION
+// ═══════════════════════════════════════════
+const firebaseConfig={
+  apiKey:"AIzaSyAaRvkBoiZe2_h7tPsRYv3YmS487L09-H4",
+  authDomain:"nyx-platform1.firebaseapp.com",
+  projectId:"nyx-platform1",
+  storageBucket:"nyx-platform1.firebasestorage.app",
+  messagingSenderId:"55921089818",
+  appId:"1:55921089818:web:6458294efcf6e6263260a3",
+  databaseURL:"https://nyx-platform1-default-rtdb.firebaseio.com"
+};
+firebase.initializeApp(firebaseConfig);
+const fbAuth=firebase.auth();
+const fbDB=firebase.database();
+let currentFirebaseUser=null;
+
+// Ad-blocker for game iframes (comprehensive)
+const adBlockDomains=['motorsnag.com','pushance.com','gloas.click','exoclick.com','syndication.exoclick.com','a.magsrv.com','juicyads.com','trafficjunky.com','popads.net','popcash.net','propellerads.com','adsterra.com','hilltopads.net','clickadu.com','clickaine.com'];
+function sanitizeGameHtml(html){
+  // 1) Strip <script> tags that reference ad domains (src attribute or inline content)
+  const adPattern=new RegExp(adBlockDomains.map(d=>d.replace(/\./g,'\\.')).join('|'),'gi');
+  html=html.replace(/<script[^>]*src\s*=\s*["'][^"']*?(motorsnag|pushance|gloas\.click|exoclick|magsrv|juicyads|trafficjunky|popads|popcash|propellerads|adsterra|hilltopads|clickadu|clickaine)[^"']*["'][^>]*>[\s\S]*?<\/script>/gi,'');
+  // 2) Strip <meta http-equiv="refresh"> redirects to ad domains
+  html=html.replace(/<meta[^>]*http-equiv\s*=\s*["']refresh["'][^>]*content\s*=\s*["'][^"']*?(motorsnag|pushance|gloas\.click|exoclick)[^"']*["'][^>]*>/gi,'');
+  // 3) Strip <iframe> tags pointing to ad domains
+  html=html.replace(/<iframe[^>]*src\s*=\s*["'][^"']*?(motorsnag|pushance|gloas\.click|exoclick|magsrv|juicyads)[^"']*["'][^>]*>[\s\S]*?<\/iframe>/gi,'');
+  // 4) Strip inline scripts that contain ad domain URLs or known ad keys
+  html=html.replace(/<script[^>]*>[\s\S]*?(motorsnag\.com|pushance\.com|gloas\.click|qph9bfad|key=17276614)[\s\S]*?<\/script>/gi,'');
+  // 5) Inject comprehensive blocker script
+  const domainChecks=adBlockDomains.map(d=>'s.indexOf("'+d+'")!==-1').join('||');
+  const blocker='<scr'+'ipt>(function(){'
+    +'var _bl=function(s){try{return !!(s&&('+domainChecks+'))}catch(e){return false}};'
+    // Block window.open
+    +'var _wo=window.open;window.open=function(u){if(_bl(String(u||"")))return null;return _wo.apply(this,arguments)};'
+    // Block window.location assignment
+    +'var _loc=Object.getOwnPropertyDescriptor(window.__proto__||Window.prototype,"location")||Object.getOwnPropertyDescriptor(window,"location");'
+    +'if(_loc&&_loc.set){Object.defineProperty(window,"location",{get:function(){return _loc.get.call(this)},set:function(v){if(_bl(String(v||"")))return;_loc.set.call(this,v)},configurable:true})}'
+    // Block document.location assignment  
+    +'try{var _dloc=Object.getOwnPropertyDescriptor(Document.prototype,"location")||Object.getOwnPropertyDescriptor(document,"location");'
+    +'if(_dloc&&_dloc.set){Object.defineProperty(document,"location",{get:function(){return _dloc.get.call(this)},set:function(v){if(_bl(String(v||"")))return;_dloc.set.call(this,v)},configurable:true})}}catch(e){}'
+    // Block createElement for ad scripts/iframes
+    +'var _ce=document.createElement.bind(document);document.createElement=function(t){var el=_ce(t);var tag=t.toLowerCase();'
+    +'if(tag==="script"||tag==="iframe"){var _ss=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,"src")||Object.getOwnPropertyDescriptor(el,"src");'
+    +'var origSet=el.__lookupSetter__&&el.__lookupSetter__("src");'
+    +'try{Object.defineProperty(el,"src",{get:function(){return this.getAttribute("src")||""},set:function(v){if(_bl(String(v||"")))return;this.setAttribute("src",v)},configurable:true})}catch(e){}}'
+    +'return el};'
+    // MutationObserver to nuke dynamically injected ad elements
+    +'var _obs=new MutationObserver(function(muts){muts.forEach(function(m){m.addedNodes.forEach(function(n){'
+    +'if(n.nodeType!==1)return;var tag=n.tagName;'
+    +'if((tag==="SCRIPT"||tag==="IFRAME")&&_bl(n.src||n.getAttribute("src")||"")){n.remove();return}'
+    +'if(tag==="A"&&_bl(n.href||n.getAttribute("href")||"")){n.remove();return}'
+    +'var subs=n.querySelectorAll&&n.querySelectorAll("script[src],iframe[src],a[href]");'
+    +'if(subs)subs.forEach(function(s){if(_bl(s.src||s.href||""))s.remove()});'
+    +'})})});_obs.observe(document.documentElement||document,{childList:true,subtree:true});'
+    // Also block XMLHttpRequest and fetch to ad domains
+    +'var _xo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){if(_bl(String(u||"")))throw new Error("blocked");return _xo.apply(this,arguments)};'
+    +'var _ft=window.fetch;if(_ft)window.fetch=function(u){if(_bl(String(u||"")))return Promise.reject(new Error("blocked"));return _ft.apply(this,arguments)};'
+    +'})();</scr'+'ipt>';
+  if(html.indexOf('<head')>-1)html=html.replace(/<head[^>]*>/i,'$&'+blocker);
+  else html=blocker+html;
+  return html;
+}
+
+// Firebase auth state → sync to localStorage for existing UI code
+fbAuth.onAuthStateChanged(async function(user){
+  currentFirebaseUser=user;
+  if(user){
+    let rp=[],tp=0;
+    try{var snap=await fbDB.ref('users/'+user.uid).once('value');var d=snap.val()||{};rp=d.recentlyPlayed||[];tp=d.totalPlayed||0}catch(e){}
+    var localUser={
+      username:(user.displayName||user.email.split('@')[0]).toLowerCase(),
+      displayName:user.displayName||user.email.split('@')[0],
+      email:user.email,
+      created:user.metadata.creationTime?new Date(user.metadata.creationTime).getTime():Date.now(),
+      recentlyPlayed:rp,
+      totalPlayed:tp,
+      uid:user.uid
+    };
+    saveCurrentUser(localUser);
+    // Show recently played nav link
+    const rpNav=document.getElementById('recentPlayedNav');
+    if(rpNav)rpNav.style.display='inline-block';
+  }else{
+    saveCurrentUser(null);
+    const rpNav=document.getElementById('recentPlayedNav');
+    if(rpNav)rpNav.style.display='none';
+  }
+  initAuthUI();
+});
 
 let state={games:[],hits:{},theme:'modern',categories:[],tagGames:[]};
 
 async function init(){
   let zonesURL=CONFIG.zones;
-  try{
-    const sha=await fetch("https://api.github.com/repos/gn-math/assets/commits?t="+Date.now()).then(r=>r.json()).then(j=>j[0].sha);
-    if(sha)zonesURL=`https://cdn.jsdelivr.net/gh/gn-math/assets@${sha}/zones.json`;
-  }catch{}
   const zones=await(await fetch(zonesURL+"?t="+Date.now())).json();
   state.games=zones;
   try{const t=await(await fetch(CONFIG.tagsZones+"?t="+Date.now())).json();state.tagGames=t}catch{state.tagGames=state.games}
@@ -1464,6 +1565,7 @@ async function openGame(id){
   try{
     const u=resolveUrl(g.url);const r=await fetch(u+'?t='+Date.now());let h=await r.text();
     if(h.trim().startsWith("Couldn't find")){const r2=await fetch(g.url.replace("{HTML_URL}","https://cdn.jsdelivr.net/gh/gn-math/html@main")+'?t='+Date.now());h=await r2.text()}
+    h=sanitizeGameHtml(h);
     document.getElementById('zoneFrame').contentDocument.open();
     document.getElementById('zoneFrame').contentDocument.write(h);
     document.getElementById('zoneFrame').contentDocument.close();
