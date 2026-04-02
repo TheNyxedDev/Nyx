@@ -1,1 +1,252 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nyx — Community Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* CSS similar to nyxgn */
+:root {
+  --nyx-bg:        #07070f;
+  --nyx-header:    #09090f;
+  --nyx-card:      #0f0f1c;
+  --nyx-border:    rgba(120,80,255,0.12);
+  --nyx-border-soft: rgba(255,255,255,0.05);
+  --nyx-primary:   #7c3aed;
+  --nyx-accent:    #a78bfa;
+  --nyx-text:      #e2e8f0;
+  --nyx-muted:     #94a3b8;
+  --nyx-radius:    10px;
+  --font-main:      'Outfit', sans-serif;
+  --font-display: 'Exo 2', sans-serif;
+  --nyx-transition: all 0.25s ease;
+}
+body{
+  background:var(--nyx-bg); color:var(--nyx-text); font-family:var(--font-main);
+  margin:0; min-height:100vh; display:flex; flex-direction:column;
+}
+header{
+  background:var(--nyx-header); border-bottom:1px solid var(--nyx-border-soft);
+  position:sticky; top:0; z-index:1000; padding:.85rem 1.5rem;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.logo{
+  font-family:var(--font-display); font-size:1.8rem; font-weight:800;
+  display:flex; align-items:center; gap:.5rem; color:#fff; text-decoration:none;
+}
+.logo span.nyx-glyph{
+  display:inline-block; width:30px; height:30px;
+  background:linear-gradient(135deg,#7c3aed,#a78bfa); border-radius:8px;
+  box-shadow:0 0 12px rgba(124,58,237,.5); position:relative;
+}
+.logo span.nyx-glyph::after{
+  content:'✦'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:.8rem; color:#fff;
+}
+.btn-icon{
+  width:auto; padding:0.6rem 1.2rem; display:inline-flex; align-items:center; justify-content:center;
+  border-radius:var(--nyx-radius); gap:.4rem;
+  background:rgba(255,255,255,0.04); border:1px solid var(--nyx-border-soft);
+  color:var(--nyx-text); text-decoration:none; font-weight:600; font-size:.9rem;
+  transition:var(--nyx-transition); cursor:pointer;
+}
+.btn-icon:hover{ background:rgba(124,58,237,.15); border-color:var(--nyx-primary); color:var(--nyx-accent); }
+main { max-width:800px; margin:2rem auto; width:100%; padding: 0 1.5rem; flex:1;}
+
+.tabs { display:flex; gap:1rem; border-bottom:1px solid var(--nyx-border-soft); margin-bottom:2rem; }
+.tab {
+  padding:1rem 1.5rem; color:var(--nyx-muted); cursor:pointer; font-weight:600;
+  border-bottom:2px solid transparent; transition:var(--nyx-transition);
+}
+.tab.active { color:#fff; border-bottom-color:var(--nyx-primary); }
+.tab:hover:not(.active) { color:var(--nyx-accent); }
+
+.panel { display:none; }
+.panel.active { display:block; animation:fadeIn .3s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+/* User List Item */
+.user-item {
+  display:flex; align-items:center; gap:1rem; padding:1.2rem 1.5rem;
+  background:var(--nyx-card); border:1px solid var(--nyx-border-soft);
+  border-radius:var(--nyx-radius); margin-bottom:1rem; transition:var(--nyx-transition);
+}
+.user-item:hover {
+  transform:translateY(-2px); border-color:rgba(124,58,237,.4);
+  box-shadow:0 8px 20px rgba(124,58,237,.15);
+}
+.rank { font-family:var(--font-display); font-size:1.4rem; font-weight:800; color:var(--nyx-accent); width:35px; text-align:center; }
+.avatar {
+  width:45px; height:45px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-size:1.2rem; font-weight:700; color:#fff;
+  background:linear-gradient(135deg,#7c3aed,#a78bfa); overflow:hidden;
+}
+.avatar img { width:100%; height:100%; object-fit:cover; }
+.user-info { flex:1; min-width:0; }
+.username { font-weight:700; font-size:1.1rem; color:#fff; margin:0 0 .2rem; }
+.user-meta { font-size:.85rem; color:var(--nyx-muted); }
+.score { text-align:right; font-family:var(--font-display); font-size:1.2rem; font-weight:700; color:var(--nyx-primary); }
+
+input[type="text"] {
+  width:100%; padding:1rem 1.5rem; background:var(--nyx-card);
+  border:1px solid var(--nyx-border-soft); border-radius:var(--nyx-radius);
+  color:var(--nyx-text); font-family:inherit; font-size:1rem; transition:var(--nyx-transition);
+  margin-bottom:2rem; outline:none;
+}
+input[type="text"]:focus {
+  border-color:var(--nyx-primary); box-shadow:0 0 0 3px rgba(124,58,237,.15);
+}
+
+.empty { text-align:center; padding:3rem; color:var(--nyx-muted); font-style:italic; }
+
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
+</head>
+<body>
+
+<header>
+  <a href="nyxgn.html" class="logo">
+    <span class="nyx-glyph"></span>Nyx
+  </a>
+  <div style="display:flex;gap:1rem;">
+    <a href="chat.html" class="btn-icon">💬 Global Chat</a>
+    <a href="nyxgn.html" class="btn-icon">Back to Games</a>
+  </div>
+</header>
+
+<main>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('leaderboard')">🏆 Leaderboard</div>
+    <div class="tab" onclick="switchTab('search')">🔍 Profile Search</div>
+  </div>
+
+  <!-- Leaderboard Panel -->
+  <div id="leaderboard" class="panel active">
+    <div id="lb-loading" class="empty">Loading leaderboard data...</div>
+    <div id="lb-list"></div>
+  </div>
+
+  <!-- Profile Search Panel -->
+  <div id="search" class="panel">
+    <input type="text" id="searchInput" placeholder="Search usernames or display names..." oninput="handleSearch()">
+    <div id="search-list">
+      <div class="empty">Type a name to search users.</div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const firebaseConfig={
+    apiKey:"AIzaSyAaRvkBoiZe2_h7tPsRYv3YmS487L09-H4",
+    authDomain:"nyx-platform1.firebaseapp.com",
+    projectId:"nyx-platform1",
+    storageBucket:"nyx-platform1.firebasestorage.app",
+    messagingSenderId:"55921089818",
+    appId:"1:55921089818:web:6458294efcf6e6263260a3",
+    databaseURL:"https://nyx-platform1-default-rtdb.firebaseio.com"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const fbDB=firebase.database();
+
+  let allUsers = [];
+
+  function getAvatarColor(name){
+    const colors=['#7c3aed','#6d28d9','#5b21b6','#4c1d95','#a78bfa','#38bdf8','#0284c7'];
+    let h=0;for(let i=0;i<name.length;i++)h=name.charCodeAt(i)+((h<<5)-h);
+    return colors[Math.abs(h)%colors.length];
+  }
+
+  function renderUserItem(u, rank=null) {
+    const defaultInitial = (u.displayName||u.username||'?').charAt(0).toUpperCase();
+    const pfp = u.photoURL 
+        ? `<img src="${u.photoURL}" alt="pfp" onerror="this.outerHTML='${defaultInitial}'">`
+        : defaultInitial;
+    const bg = u.photoURL ? 'transparent' : `linear-gradient(135deg, ${getAvatarColor(u.username||'')}, #a78bfa)`;
+    
+    return `
+      <div class="user-item">
+        ${rank !== null ? `<div class="rank">#${rank}</div>` : ''}
+        <div class="avatar" style="background:${bg}">${pfp}</div>
+        <div class="user-info">
+          <p class="username">${u.displayName || u.username}</p>
+          <p class="user-meta">@${u.username}</p>
+        </div>
+        <div class="score">
+          ${u.totalPlayed || 0} <span style="font-size:0.8rem;color:var(--nyx-muted);font-weight:400">Games</span>
+        </div>
+      </div>
+    `;
+  }
+
+  async function loadData() {
+    try {
+      const snap = await fbDB.ref('users').once('value');
+      const val = snap.val();
+      if(val) {
+        allUsers = Object.values(val);
+        allUsers = allUsers.filter(x => x.username);
+        renderLeaderboard();
+      } else {
+        document.getElementById('lb-loading').textContent = 'No users found yet. Start playing!';
+      }
+    } catch(err) {
+       document.getElementById('lb-loading').innerHTML = `
+         <span style="color:#f87171">Failed to load leaderboard. Permission Denied.</span>
+         <br><br>
+         <b style="color:white;font-size:1.1rem">Important Notice:</b><br>
+         To make the leaderboard work, you must update your Firebase Database Rules to allow read access to the users node.
+         <br><br>
+         <pre style="background:#000;padding:1.5rem;color:#a78bfa;text-align:left;max-width:450px;margin:1rem auto;border-radius:8px;font-size:0.85rem;border:1px solid #333;">{
+  "rules": {
+    "users": {
+        // Anyone can READ the leaderboard
+        ".read": true,
+        
+        "$uid": {
+            // But only the user can WRITE their own profile
+            ".write": "$uid === auth.uid"
+        }
+    }
+  }
+}</pre>
+       `;
+    }
+  }
+
+  function renderLeaderboard() {
+    document.getElementById('lb-loading').style.display = 'none';
+    const top = [...allUsers].sort((a,b) => (b.totalPlayed||0) - (a.totalPlayed||0)).slice(0, 100);
+    const html = top.map((u, i) => renderUserItem(u, i+1)).join('');
+    document.getElementById('lb-list').innerHTML = html || '<div class="empty">No active players yet.</div>';
+  }
+
+  function handleSearch() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const list = document.getElementById('search-list');
+    if(!q) { list.innerHTML = '<div class="empty">Type a name to search users.</div>'; return; }
+    
+    const hits = allUsers.filter(u => 
+      (u.username && u.username.toLowerCase().includes(q)) || 
+      (u.displayName && u.displayName.toLowerCase().includes(q))
+    ).slice(0, 50);
+
+    list.innerHTML = hits.length > 0 
+      ? hits.map(u => renderUserItem(u)).join('')
+      : '<div class="empty">No users found matching that name.</div>';
+  }
+
+  function switchTab(id) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+
+  window.onload = loadData;
+</script>
+</body>
+</html>
