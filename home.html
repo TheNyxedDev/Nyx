@@ -1196,12 +1196,13 @@ XMLHttpRequest.prototype.open=function(m,url){if(isBlockedDomain(url))return;ret
 HTMLCanvasElement.prototype.toDataURL=function(){return""};
 
 const CONFIG={
-  zones:"https://cdn.jsdelivr.net/gh/gn-math/assets@latest/zones.json",
+  zones:"https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json", 
   tagsZones:"https://cdn.jsdelivr.net/gh/sealiee11/gnmathstuff@main/zones.json",
   covers:"https://cdn.jsdelivr.net/gh/gn-math/covers@main",
-  html:null,
+  html:"https://cdn.jsdelivr.net/gh/gn-math/html@main", 
   stats:"https://data.jsdelivr.com/v1/stats/packages/gh/gn-math/html@main/files?period="
 };
+
 fetch(location.origin+"/commits").then(r=>r.text()).then(h=>{CONFIG.html=`https://cdn.jsdelivr.net/gh/gn-math/html@${h.trim()}`}).catch(()=>{CONFIG.html="https://cdn.jsdelivr.net/gh/gn-math/html@main"});
 
 let state={games:[],hits:{},theme:'modern',categories:[],tagGames:[]};
