@@ -1203,7 +1203,7 @@ const CONFIG={
   stats:"https://data.jsdelivr.com/v1/stats/packages/gh/gn-math/html@main/files?period="
 };
 
-fetch(location.origin+"/commits").then(r=>r.text()).then(h=>{CONFIG.html=`https://cdn.jsdelivr.net/gh/gn-math/html@${h.trim()}`}).catch(()=>{CONFIG.html="https://cdn.jsdelivr.net/gh/gn-math/html@main"});
+// Commit-based URL resolution removed — uses CONFIG.html default (@main) like the original gn-math.
 
 let state={games:[],hits:{},theme:'modern',categories:[],tagGames:[]};
 
