@@ -1,87 +1,591 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nyx | Home</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Nyx — The Ultimate Gaming Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
-        :root { --primary: #7289da; --bg: #0f1218; --card: #1c212c; --text: #ffffff; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
-
-        /* HEADER */
-        .main-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 30px; background: var(--card); height: 70px; border-bottom: 1px solid #333;
-            position: sticky; top: 0; z-index: 1000;
+        :root {
+            --nyx-bg: #07070f;
+            --nyx-bg-deep: #040408;
+            --nyx-header: #09090f;
+            --nyx-card: #0f0f1c;
+            --nyx-card-hover: #161628;
+            --nyx-border: rgba(120, 80, 255, 0.12);
+            --nyx-border-soft: rgba(255, 255, 255, 0.05);
+            --nyx-primary: #7c3aed;
+            --nyx-primary-glow: rgba(124, 58, 237, 0.35);
+            --nyx-accent: #a78bfa;
+            --nyx-text: #e2e8f0;
+            --nyx-muted: #94a3b8;
+            --nyx-dim: #475569;
+            --nyx-radius: 10px;
+            --nyx-radius-lg: 16px;
+            --nyx-shadow-neon: 0 0 20px rgba(124, 58, 237, 0.4), 0 0 40px rgba(124, 58, 237, 0.15);
+            --nyx-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-main: 'Outfit', sans-serif;
+            --font-display: 'Exo 2', sans-serif;
         }
 
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .logo-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-        .logo-text { font-size: 24px; font-weight: 700; color: var(--primary); letter-spacing: 0.5px; }
-
-        .nav-links { display: flex; gap: 20px; margin-left: 30px; }
-        .nav-links a { color: #8a8f98; text-decoration: none; font-weight: 600; font-size: 14px; transition: 0.3s; }
-        .nav-links a:hover { color: white; }
-
-        /* PROFILE DROPDOWN */
-        .header-right { position: relative; }
-        .profile-trigger { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px; border-radius: 8px; }
-        .nav-pfp { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
-        
-        .dropdown-menu {
-            position: absolute; right: 0; top: 55px; width: 220px;
-            background: #1c212c; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            border: 1px solid #333; display: none; padding: 15px; z-index: 1001;
+        * {
+            box-sizing: border-box;
         }
-        .dropdown-menu.show { display: block; }
-        .user-info { text-align: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
-        .plan-badge { background: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: bold; }
 
-        .dropdown-links a { display: block; padding: 10px; color: #ccc; text-decoration: none; font-size: 14px; border-radius: 6px; }
-        .dropdown-links a:hover { background: #2d3446; color: white; }
+        body {
+            background: var(--nyx-bg);
+            color: var(--nyx-text);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3 {
+            font-family: var(--font-display);
+            margin: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Background Effects */
+        .ambient-glow {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            background: var(--nyx-primary);
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            top: -100px;
+            left: -200px;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            bottom: 100px;
+            right: -150px;
+            background: #38bdf8;
+            opacity: 0.1;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(9, 9, 15, 0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--nyx-border-soft);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: 0.04em;
+            color: #fff;
+        }
+
+        .logo span.nyx-glyph {
+            display: inline-flex;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            border-radius: 8px;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 12px rgba(124, 58, 237, 0.5);
+            font-size: 0.8rem;
+            position: relative;
+        }
+
+        .logo span.nyx-glyph::after {
+            content: '✦';
+            color: #fff;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.6rem 1.4rem;
+            border-radius: var(--nyx-radius);
+            font-weight: 600;
+            font-family: var(--font-main);
+            cursor: pointer;
+            transition: var(--nyx-transition);
+            border: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(124, 58, 237, 0.5);
+            color: var(--nyx-accent);
+        }
+
+        .btn-outline:hover {
+            background: rgba(124, 58, 237, 0.12);
+            border-color: var(--nyx-primary);
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--nyx-shadow-neon);
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 10;
+            padding: 180px 1.5rem 100px;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            color: var(--nyx-accent);
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.2);
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--nyx-muted);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3.5rem;
+            color: var(--nyx-dim);
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding-top: 2rem;
+            border-top: 1px solid var(--nyx-border-soft);
+        }
+
+        .hero-stats span strong {
+            color: var(--nyx-text);
+            font-size: 1.4rem;
+            font-family: var(--font-display);
+            margin-right: 0.3rem;
+        }
+
+        /* Features Section */
+        .features {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 50px 1.5rem 100px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--nyx-muted);
+            margin-bottom: 4rem;
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--nyx-card);
+            border: 1px solid var(--nyx-border-soft);
+            border-radius: var(--nyx-radius-lg);
+            padding: 2.5rem;
+            transition: var(--nyx-transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--nyx-primary), var(--nyx-accent), transparent);
+            opacity: 0;
+            transition: var(--nyx-transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(124, 58, 237, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), var(--nyx-shadow-neon);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--nyx-accent);
+            box-shadow: inset 0 0 20px rgba(124, 58, 237, 0.1);
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .feature-card p {
+            color: var(--nyx-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Showcase Banner */
+        .showcase {
+            margin: 50px 1.5rem 100px;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(15, 15, 28, 1));
+            border: 1px solid var(--nyx-border);
+            border-radius: var(--nyx-radius-lg);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .showcase::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(124, 58, 237, 0.2), transparent 60%);
+            pointer-events: none;
+        }
+
+        .showcase h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            position: relative;
+            z-index: 2;
+        }
+
+        .showcase p {
+            color: var(--nyx-text);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--nyx-card);
+            border-top: 1px solid var(--nyx-border-soft);
+            padding: 3rem 1.5rem;
+            margin-top: auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--nyx-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--nyx-dim);
+            font-size: 0.85rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--nyx-muted);
+            font-size: 0.9rem;
+            transition: var(--nyx-transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--nyx-accent);
+        }
+
+        @media(max-width: 768px) {
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+                border-top: none;
+                padding-top: 1rem;
+            }
+
+            .hero {
+                padding-top: 140px;
+                padding-bottom: 60px;
+            }
+
+            .showcase {
+                padding: 3rem 1.5rem;
+            }
+
+            .header-content {
+                padding: 1rem;
+            }
+
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
+
 <body>
 
-    <header class="main-header">
-        <div class="header-left">
-            <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkdfHzyRnUdHmkGbNXkFPgicepqP4km32J9QLIFcVmEpJgU47T7Fy6ndc5aUrlySGOslQsyiknEB7bezBD-yg6Fk1a8i0lIQk3dCudfF2YVi6HmcpPf3SwCy_6QV7-xSQcFfGmU7XgCynwobfr22spOw6TnOWZ8ZN3VHy8MUL8Xvos2ovIOHHYMQMC4=w16383" alt="Logo" class="logo-img">
-            <span class="logo-text">Nyx</span>
-            
-            <nav class="nav-links">
-                <a href="index.html">Games</a>
-                <a href="minecraft.html">Minecraft</a>
-                <a href="fidget.html">Fidgeting Toys</a>
-            </nav>
-        </div>
+    <div class="ambient-glow">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
 
-        <div class="header-right">
-            <div class="profile-trigger" onclick="toggleDropdown()">
-                <span id="nav-username">User</span>
-                <img src="https://via.placeholder.com/35" id="nav-pfp" class="nav-pfp">
-            </div>
-            <div class="dropdown-menu" id="userMenu">
-                <div class="user-info">
-                    <strong id="drop-username">Username</strong><br>
-                    <span id="nav-plan" class="plan-badge">FREE</span>
-                </div>
-                <div class="dropdown-links">
-                    <a href="settings.html">Account Settings</a>
-                    <a href="customize.html">Customize Profile</a>
-                    <a href="#" onclick="handleLogout()" style="color: #ff4d4d;">Logout</a>
-                </div>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <span class="nyx-glyph"></span>Nyx
+            </a>
+            <div class="header-actions">
+                <a href="login.html" class="btn btn-outline">Sign In</a>
+                <a href="nyxgn.html" class="btn btn-primary">Launch Nyx</a>
             </div>
         </div>
     </header>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="auth.js"></script>
-    <script>
-        function toggleDropdown() { document.getElementById("userMenu").classList.toggle("show"); }
-        window.onclick = function(e) { if (!e.target.closest('.profile-trigger')) document.getElementById("userMenu").classList.remove("show"); }
-    </script>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">
+            <span
+                style="display:inline-block; width:8px; height:8px; background:#10b981; border-radius:50%; box-shadow:0 0 8px #10b981;"></span>
+            V2.0 is highly optimized and lightning fast
+        </div>
+        <h1>The Ultimate Gaming Portal</h1>
+        <p>Bypass restrictions effortlessly. Nyx delivers an unparalleled, heavily optimized gaming experience with
+            next-generation stealth features and seamless cloud saves.</p>
+
+        <div class="hero-actions">
+            <a href="nyxgn.html" class="btn btn-primary"
+                style="padding: 1rem 2.5rem; font-size: 1.1rem; border-radius: 50px;">Start Playing Now</a>
+            <a href="login.html" class="btn btn-outline"
+                style="padding: 1rem 2.5rem; font-size: 1.1rem; border-radius: 50px;">Create Free Account</a>
+        </div>
+
+        <div class="hero-stats">
+            <span><strong>500+</strong> Games</span>
+            <span><strong>10K+</strong> Downloads*</span>
+            <span><strong>100%</strong> Unblocked</span>
+            <span><strong>0</strong> Ads</span>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <h2 class="section-title">Why choose Nyx?</h2>
+        <p class="section-subtitle">We rebuilt the unblocked gaming experience from the ground up to be far better than
+            the rest.</p>
+
+        <div class="grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Blazing Fast</h3>
+                <p>Powered by global CDNs and an ultra-lightweight React-free architecture. Games load instantly without
+                    buffering, heavily outperforming legacy sites.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">☁️</div>
+                <h3>Cloud Sync</h3>
+                <p>Create a free account to automatically sync your recently played games and favorites across any
+                    device using our Realtime infrastructure. Never lose your progress.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Stealth Mode</h3>
+                <p>Built-in privacy tools including Tab Cloaking (spoof tab titles/icons), Panic Button close
+                    prevention, and a discreet, dark-mode styling that blends in anywhere.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚫</div>
+                <h3>Ad-Free Built-in</h3>
+                <p>Nyx features an aggressive, embedded HTML sanitizer that systematically strips out third-party
+                    trackers, annoying popups, and malicious redirects right from the game frames.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <h3>Data Export</h3>
+                <p>Enjoy true data ownership. Export your save files, high scores, and local data directly to your
+                    device and import them back at any time instantly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>Premium UI</h3>
+                <p>Immerse yourself in our beautiful "Dark Terminal Glass" aesthetic. Dynamic layouts, micro-animations,
+                    and responsive design give Nyx a native application feel.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Showcase -->
+    <section class="showcase">
+        <h2>Ready to level up your downtime?</h2>
+        <p>Join thousands of players enjoying uninterrupted, high-performance web gaming today.
+        </p>
+        <a href="login.html" class="btn btn-primary"
+            style="padding: 1rem 2.5rem; font-size: 1.1rem; border-radius: 50px; display: inline-block;">Join Nyx
+            Today</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div>
+                <div class="footer-logo">Nyx</div>
+                <div class="footer-text">© 2026 Nyx Platform. Your portal to unblocked games. *means from original
+                    source not this website. (gn-math official)
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="nyxgn.html">Games</a>
+                <a href="login.html">Sign In</a>
+                <a href="https://discord.gg/NAFw4ykZ7n" target="_blank">Discord (GN-math)</a>
+                <a href="https://github.com/gn-math" target="_blank">GitHub (GN-math)</a>
+            </div>
+        </div>
+    </footer>
+
 </body>
+
 </html>
